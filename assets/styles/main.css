@@ -1,0 +1,62 @@
+@font-face {
+    font-family: 'Soleil';
+    src: url('~assets/fonts/soleil-regular-webfont.woff') format('woff');
+    font-style: normal;
+    font-weight: normal;
+}
+@font-face {
+    font-family: 'Soleil';
+    src: url('~assets/fonts/soleil-light-webfont.woff') format('woff');
+    font-style: lighter;
+    font-weight: lighter;
+}
+@font-face {
+    font-family: 'Soleil';
+    src: url('~assets/fonts/soleil-bold-webfont.woff') format('woff');
+    font-style: bold;
+    font-weight: bold;
+}
+
+body {
+    font-family: 'Soleil', sans-serif;
+    font-weight: normal;
+    color: white;
+}
+
+.nav li{
+    font-weight: lighter
+}
+
+.nav-item {
+    margin: 0 calc(20px - 0.5rem);
+    font-size: 15px;
+}
+
+.nav-item button {
+    font-weight: normal
+}
+
+nav .btn {
+    width: 140px;
+    color: #07834E;
+    background: white;
+    height: 40px;
+    padding: 0 5px;
+    border: 2px solid #FFFFFF;
+    border-radius: 2px;
+}
+
+.white-btn {
+    width: 180px;
+    height: 52px;
+    padding: 0 5px;
+    border: 1px solid #FFFFFF;
+    border-radius: 2px;
+    color: #07834E;
+    background: white;
+}
+
+@media (min-width: 1200px){
+.container {
+    /* max-width: 1440px; */
+}}
