@@ -17,10 +17,33 @@
     font-weight: bold;
 }
 
+:root {
+    --black-text: #091F0E;
+    --gray-text: #747A76;
+    --green-color: #34996E ;
+    --orange-color: #FDA57D ;
+    --light-green-color: #26B14F;
+    --dark-green-color: #07834E;
+    --border-gray: #E7E7E7; 
+    --other-green-color: #1D8E63; 
+
+}
+
+h1,
+h2.h3,h4,h5,h6 {
+  
+}
+
+button, button:focus, input, input:focus {
+    outline: 0 !important;
+    box-shadow: none;
+}
+
 body {
     font-family: 'Soleil', sans-serif;
     font-weight: normal;
-    color: white;
+    color:  #747A76;
+    font-size: 15px;
 }
 
 .nav li{
@@ -46,15 +69,67 @@ nav .btn {
     border-radius: 2px;
 }
 
+.navbar-toggler {
+    border: 0;
+}
+
 .white-btn {
-    width: 180px;
+    width: 170px;
     height: 52px;
     padding: 0 5px;
-    border: 1px solid #FFFFFF;
+    border: none;
+    /* border: 1px solid #FFFFFF; */
     border-radius: 2px;
     color: #07834E;
     background: white;
 }
+.green-btn {
+    width: 170px;
+    height: 52px;
+    padding: 0 5px;
+    border: none;
+    /* border: 1px solid #FFFFFF; */
+    border-radius: 2px;
+    background: #34996E;
+    color: white;
+}
+
+.orange-btn {
+    width: 170px;
+    height: 52px;
+    padding: 0 5px;
+    border: none;
+    border-radius: 2px;
+    background: var(--orange-color);
+    color: white;
+}
+
+li {
+    list-style: none;
+}
+
+.nuxt-link-exact-active {
+    font-weight: 600
+}
+
+button {
+    transition: box-shadow 0.3s ease-in-out
+}
+
+.green-btn:hover, .green-btn:target  {
+    box-shadow: 0 2px 0px #9e9e9e;
+   
+    
+}
+
+.white-btn:hover, .white-btn:target {
+    box-shadow: 0 2px 0px #044c2d;
+}
+.orange-btn:hover, .orange-btn:target {
+    box-shadow: 0 2px 0px #ef4c02;
+}
+
+
 
 @media (min-width: 1200px){
 .container {
