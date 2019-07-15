@@ -334,126 +334,17 @@
         </div>
       </section>
     </div>
-    <div class="container-fluid px-0">
-      <section class="footer px-md-5 pt-1 ">
-        <div class="container px-md-5 d-flex flex-column justify-content-between pt-5">
-          <div class="top-content d-flex align-items-center py-5 mx-md-4"  style="height: 55%">
-            <div class="pt-md-5 pb-md-3">
-              <div class="row">
-                <div class="col-md-7">
-                  <h2 class="font-weight-bold pb-4">
-                    Join Nigerians on Equilira to discuss isssues
-                    of common interest in the community, constructively.
-                  </h2>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-7 pb-5">
-                  <a href class="mr-4">
-                    <img src="~assets/icons/play-store-icon.svg" alt />
-                  </a>
-                  <a href>
-                    <img src="~assets/icons/app-store-icon.svg" alt />
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- <div class="row" > -->
-          <footer class="px-5 pt-5 pb-3 mx-md-4 d-md-flex flex-column justify-content-md-center" style="height: 45%">
-            <!-- <div class="col-md-12"> -->
-            <div class="row">
-              <div class="col-md-5">
-                <nuxt-link to="/">
-                  <img src="~assets/icons/green-logo.svg" alt style="position: relative;top: -5px;" />
-                </nuxt-link>
-                <p class="py-2 w-md-75">
-                  People’s parliament, committed to unity and to encouraging fairness,
-                  just and equitable life, resulting collective progress and greatness
-                  for our country and humanity in general.
-                </p>
-              </div>
-              <div class="col-md-7">
-                <div class="row justify-content-around">
-                  <div class="col-md-3">
-                    <h6>COMPANY</h6>
-                    <ul class="py-2 px-0">
-                      <li>
-                        <a href>Home</a>
-                      </li>
-                      <li>
-                        <a href>Partner With Us</a>
-                      </li>
-                      <li>
-                        <a href>About Us</a>
-                      </li>
-                      <li>
-                        <a href>Contact Us</a>
-                      </li>
-                    </ul>
-                  </div>
-                  <div class="col-md-3">
-                    <h6>LEGAL</h6>
-                    <ul class="py-2 px-0">
-                      <li>
-                        <a href>Privacy Policy</a>
-                      </li>
-                      <li>
-                        <a href>Terms and Conditions</a>
-                      </li>
-                    </ul>
-                  </div>
-                  <div class="col-md-3">
-                    <h6>SOCIAL</h6>
-                    <ul class="py-2 px-0">
-                      <li>
-                        <a href>Facebook</a>
-                      </li>
-                      <li>
-                        <a href>Twitter</a>
-                      </li>
-                      <li>
-                        <a href>Instagram</a>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-5">
-                <p>© The Equilibra 2019. All rights reserved.</p>
-              </div>
-              <div class="col-md-3">
-                <div class="social-media-icons ">
-                  <a href class="ml-md-4 mr-md-0 ml-0 mr-3" >
-                    <img src="~assets/icons/facebook.svg" alt />
-                  </a>
-                  <a href class="ml-md-4 mr-md-0 ml-0 mr-3">
-                    <img src="~assets/icons/instagram.svg" alt />
-                  </a>
-                  <a href class="ml-md-4 mr-md-0 ml-0 mr-3">
-                    <img src="~assets/icons/twitter.svg" alt />
-                  </a>
-                </div>
-              </div>
-            </div>
-            <!-- </div> -->
-          </footer>
-        </div>
-
-        <!-- </div> -->
-      </section>
-    </div>
   </div>
 </template>
 
 <script>
 import Map from "~/components/Map";
+import Footer from "~/components/Shared/footer";
 export default {
+  layout: 'footerOnly',
   components: {
-    Map
+    Map,
+    Footer
   }
 };
 </script>

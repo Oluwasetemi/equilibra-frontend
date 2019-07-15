@@ -23,7 +23,7 @@
       region by the then regim of General Yakubu Gowon. Jigawa State
       was carved out of Kano State in the state creation exercise of 1991.
     </p>
-    <a href>Read More</a>
+    <nuxt-link to="/state/kaduna" >Read More</nuxt-link>
   </div>
 </template>
 
