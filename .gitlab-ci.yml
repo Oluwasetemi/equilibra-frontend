@@ -28,4 +28,4 @@ test_server:
    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
    # sync the files and restart the app
    - rsync -avrc --delete --exclude=.env "$PWD/" root@$SERVER_IP:/var/www/html/$PROJECT_NAME/
-   - ssh root@$SERVER_IP "cd /var/www/html/$PROJECT_NAME; npm install; npm run build"
+   - ssh root@$SERVER_IP "cd /var/www/html/$PROJECT_NAME; npm install; npm run generate"
