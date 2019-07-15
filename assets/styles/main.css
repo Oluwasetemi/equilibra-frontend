@@ -34,7 +34,7 @@ h2.h3,h4,h5,h6 {
   
 }
 
-button, button:focus, input, input:focus {
+button, button:focus, input, input:focus, .btn:focus {
     outline: 0 !important;
     box-shadow: none;
 }
@@ -43,7 +43,7 @@ body {
     font-family: 'Soleil', sans-serif;
     font-weight: normal;
     color:  #747A76;
-    font-size: 15px;
+    font-size: 14px;
 }
 
 .nav li{
@@ -116,10 +116,13 @@ button {
     transition: box-shadow 0.3s ease-in-out
 }
 
+.btn:hover {
+    color: #212529;
+    text-decoration: none;
+}
+
 .green-btn:hover, .green-btn:target  {
     box-shadow: 0 2px 0px #9e9e9e;
-   
-    
 }
 
 .white-btn:hover, .white-btn:target {
