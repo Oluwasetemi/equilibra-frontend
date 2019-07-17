@@ -667,7 +667,7 @@ text {
 }
 
 .active {
-  visibility: visible;
+  visibility: visible !important;
 }
 
 text {
