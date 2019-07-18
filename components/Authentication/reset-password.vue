@@ -1,15 +1,15 @@
 <template>
-  <div class="card-container pt-3">
+<div class="card-container pt-3">
     <div class="card border-0 mt-4 px-3 py-4">
       <div class="p-4 text-center">
-        <img src="~assets/icons/confirm-email-icon.svg" alt height="280px" />
-        <p
-          class="text-center pt-3"
-        >A verification email has been sent to your email .Click the button below if you didn’t receive email.</p>
-        <button class="w-100 mt-2">RESEND EMAIL CONFIRMATION</button>
+          <img src="~assets/icons/confirm-email-icon.svg" alt="" height="280px">
+          <p class="text-center pt-3">
+              A Password reset email has been sent to your email .Click the button below if you didn’t receive email.
+          </p>
+          <button class="w-100 mt-2 auth">RESEND PASSWORD RESET EMAIL</button>
       </div>
     </div>
-  </div>
+</div>
 </template>
 
 <script>
@@ -64,7 +64,7 @@ p {
   position: relative;
 }
 
-button {
+button.auth {
   background: #168a59;
   border: none;
   height: 40px;

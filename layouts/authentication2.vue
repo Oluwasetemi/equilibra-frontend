@@ -30,7 +30,7 @@ export default {
 
 <style scoped>
 .right-section {
-  background-image: url("~assets/images/senate-building.png");
+  background-image: url("~assets/images/govt-building.png");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
