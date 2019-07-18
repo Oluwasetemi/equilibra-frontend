@@ -38,9 +38,32 @@
                 <a class="nav-link" href="#">Contact Us</a>
               </li>
               <li class="nav-item ml-4">
-                <nuxt-link to="/sign-up" tag="button" class="btn">
-                  Join Us
-                </nuxt-link>
+                <div class="dropdown" style="background: white;" v-if="userIsLoggedIn">
+                  <a
+                    href="#"
+                    class="dropdown-toggle d-flex align-items-center m-0"
+                    id="dropdownMenuButton"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                  >
+                    <img src="~assets/images/avatar.png" alt height="38px" class="mr-1 avatar" />
+                    <div class="inline-block px-2" style="color: black">Lois Durello</div>
+                    <img
+                      src="~assets/icons/thin-downward-arrow.svg"
+                      alt
+                      class="position-relative"
+                      style="left: 8px;"
+                    />
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="#">Account Settings</a>
+                    <a class="dropdown-item" href="#">Feedback</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">Logout</a>
+                  </div>
+                </div>
+                <nuxt-link to="/sign-up" tag="button" class="btn" v-if="!userIsLoggedIn">Join Us</nuxt-link>
               </li>
             </ul>
           </div>
@@ -49,28 +72,35 @@
       <div class="container">
         <div class="row">
           <div class="col-md-12">
-            <div class="hero-text mt-md-5 text-center">
+            <div class="hero-text mt-md-5 text-md-center">
               <h1
-                class="font-weight-bold pt-3"
+                class="font-weight-bold pt-5 pt-md-3"
               >Lorem ipsum dolor sit amet, consectetur adipiscing elit</h1>
               <h5
-                class="pt-3 mx-auto w-50"
+                class="pt-3 mx-auto w-md-50"
               >Ut enim ad minim veniam, quis nostrud exercitation aliquip ex ea commodo consequat</h5>
               <div class="pt-3">
-                <button class="white-btn px-md-5" style="width: unset">Get Started with Equilibra</button>
+                <button class="white-btn px-5" style="width: unset">Get Started with Equilibra</button>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="container pb-5">
+    <div class="container pb-5 mt-4">
+      <div class="row" v-if="userIsLoggedIn">
+        <div class="col-md-12">
+          <h4 class="pb-2">
+            <span class="ml-3">Federal</span>
+          </h4>
+        </div>
+      </div>
       <div class="row">
         <div class="col-md-4" v-for="(item, i) in cards" :key="i">
           <div class="card border-0 my-4">
             <div
               class="background-img d-flex align-items-end"
-              :style ="{backgroundImage: `url(${item.backgroundImage})`}"
+              :style="{backgroundImage: `url(${item.backgroundImage})`}"
             >
               <img src="~/assets/icons/forum-card-icon.svg" alt class="position-relative card-icon" />
             </div>
@@ -89,18 +119,106 @@
             </div>
           </div>
         </div>
-        <div class="col-md-4"></div>
-        <div class="col-md-4"></div>
       </div>
+      <template v-if="userIsLoggedIn">
+        <div class="row">
+          <div class="col-md-12">
+            <h4 class="pb-2 pt-2">
+              <span class="ml-3">Niger - State of Origin</span>
+            </h4>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4" v-for="(item, i) in originCards" :key="i">
+            <div class="card border-0 my-4">
+              <div
+                class="background-img d-flex align-items-end"
+                :style="{backgroundImage: `url(${item.backgroundImage})`}"
+              >
+                <img
+                  src="~/assets/icons/forum-card-icon.svg"
+                  alt
+                  class="position-relative card-icon"
+                />
+              </div>
+              <div class="card-content p-4">
+                <h3 class="pt-3">{{ item.title }}</h3>
+                <p>
+                  We are positively minded Nigerians, committed to unity and to
+                  encouraging fairness, just and equitable lifee.
+                </p>
+                <nuxt-link
+                  tag="button"
+                  class="border-0 p-3 w-100"
+                  :to="item.link"
+                  style="background: #26B14F;"
+                >Join {{item.title}}</nuxt-link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+
+      <template v-if="userIsLoggedIn">
+        <div class="row">
+          <div class="col-md-12">
+            <h4 class="pb-2 pt-2">
+              <span class="ml-3">Taraba - State of Origin</span>
+            </h4>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4" v-for="(item, i) in residenceCards" :key="i">
+            <div class="card border-0 my-4">
+              <div
+                class="background-img d-flex align-items-end"
+                :style="{backgroundImage: `url(${item.backgroundImage})`}"
+              >
+                <img
+                  src="~/assets/icons/forum-card-icon.svg"
+                  alt
+                  class="position-relative card-icon"
+                />
+              </div>
+              <div class="card-content p-4">
+                <h3 class="pt-3">{{ item.title }}</h3>
+                <p>
+                  We are positively minded Nigerians, committed to unity and to
+                  encouraging fairness, just and equitable lifee.
+                </p>
+                <nuxt-link
+                  tag="button"
+                  class="border-0 p-3 w-100"
+                  :to="item.link"
+                  style="background: #26B14F;"
+                >Join {{item.title}}</nuxt-link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
     </div>
   </div>
 </template>
 
 <script>
-import judiciaryImage from '~/assets/images/judiciary_BG.svg'
-import senateImage from '~/assets/images/senate-BG.svg'
-import executiveImage from '~/assets/images/executive_BG.svg'
-import repsImage from '~/assets/images/representatives-BG.svg'
+// Federal Image backgrounds
+import judiciaryImage from "~/assets/images/judiciary_BG.svg";
+import senateImage from "~/assets/images/senate-BG.svg";
+import executiveImage from "~/assets/images/executive_BG.svg";
+import repsImage from "~/assets/images/representatives-BG.svg";
+
+// Origin Image backgrounds
+import originJudiciaryImage from "~/assets/images/origin-judiciary-BG.svg";
+import originHOAImage from "~/assets/images/origin-HOA-BG.svg";
+import originExecutiveImage from "~/assets/images/origin-executive-BG.svg";
+import originLGAImage from "~/assets/images/origin-LGA-BG.svg";
+
+// Residence Image backgrounds
+import residenceJudiciaryImage from "~/assets/images/residence-judiciary-BG.svg";
+import residenceHOAImage from "~/assets/images/residence-HOA-BG.svg";
+import residenceExecutiveImage from "~/assets/images/residence-executive-BG.svg";
+import residenceLGAImage from "~/assets/images/residence-LGA-BG.svg";
 import Map from "~/components/Map";
 import Footer from "~/components/Shared/footer";
 export default {
@@ -111,6 +229,7 @@ export default {
   },
   data() {
     return {
+      userIsLoggedIn: false,
       cards: [
         {
           title: "Judiciary",
@@ -140,6 +259,66 @@ export default {
           backgroundImage: repsImage,
           link: "/rooms/house-of-representatives"
         }
+      ],
+      originCards: [
+        {
+          title: "Judiciary",
+          description:
+            " We are positively minded Nigerians, committed to unity and to encouraging fairness, just and equitable life.",
+          backgroundImage: originJudiciaryImage,
+          link: "/rooms/judiciary"
+        },
+        {
+          title: "Executive",
+          description:
+            " We are positively minded Nigerians, committed to unity and to encouraging fairness, just and equitable life.",
+          backgroundImage: originExecutiveImage,
+          link: "/rooms/judiciary"
+        },
+        {
+          title: "House of Assembly",
+          description:
+            " We are positively minded Nigerians, committed to unity and to encouraging fairness, just and equitable life.",
+          backgroundImage: originHOAImage,
+          link: "/rooms/judiciary"
+        },
+        {
+          title: "Gassol",
+          description:
+            " We are positively minded Nigerians, committed to unity and to encouraging fairness, just and equitable life.",
+          backgroundImage: originLGAImage,
+          link: "/rooms/house-of-representatives"
+        }
+      ],
+      residenceCards: [
+        {
+          title: "Judiciary",
+          description:
+            " We are positively minded Nigerians, committed to unity and to encouraging fairness, just and equitable life.",
+          backgroundImage: residenceJudiciaryImage,
+          link: "/rooms/judiciary"
+        },
+        {
+          title: "Executive",
+          description:
+            " We are positively minded Nigerians, committed to unity and to encouraging fairness, just and equitable life.",
+          backgroundImage: residenceExecutiveImage,
+          link: "/rooms/judiciary"
+        },
+        {
+          title: "House of Assembly",
+          description:
+            " We are positively minded Nigerians, committed to unity and to encouraging fairness, just and equitable life.",
+          backgroundImage: residenceHOAImage,
+          link: "/rooms/judiciary"
+        },
+        {
+          title: "Gassol",
+          description:
+            " We are positively minded Nigerians, committed to unity and to encouraging fairness, just and equitable life.",
+          backgroundImage: residenceLGAImage,
+          link: "/rooms/house-of-representatives"
+        }
       ]
     };
   }
@@ -155,8 +334,8 @@ export default {
 .header {
   background-image: url("~assets/images/forums-BG.svg");
   background-repeat: no-repeat;
-  background-size: contain;
-  height: 480px;
+  background-size: 100% 100%;
+  height: 437px;
   color: white;
 }
 
@@ -201,6 +380,7 @@ h4 {
   font-size: 18px;
   font-weight: 400;
   color: var(--black-text);
+  border-bottom: solid 1px rgba(22, 138, 89, 0.2);
 }
 
 p {
@@ -252,9 +432,29 @@ p {
 }
 
 .card button:hover {
-    box-shadow: 0 2px 0px #107742
+  box-shadow: 0 2px 0px #107742;
 }
 
+div.dropdown {
+  width: 160px;
+  background: #ffffff;
+  box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.16);
+  border-radius: 2px;
+}
+
+div.dropdown-menu {
+  border: none;
+  margin-top: 10px;
+}
+
+.navbar-light .nav-item a.dropdown-item {
+  color: black;
+  font-size: 14px;
+}
+
+.avatar {
+  border-radius: 2px 0 0 2px;
+}
 @media screen and (min-width: 1441px) {
   .header {
     background-size: cover;

@@ -201,7 +201,7 @@
           <div class="col-md-5">
             <figure class="pr-md-5">
               <img
-                src="~assets/images/northern-girl.png"
+                src="~assets/images/northern-girl2.png"
                 alt
                 style="border: 10px solid white"
                 height="380px"
