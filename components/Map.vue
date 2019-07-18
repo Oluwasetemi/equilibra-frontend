@@ -1,6 +1,6 @@
 <template>
-  <section class="map pt-5 position-relative">
-    <object type="image/svg+xml" data="my_SVG_file.svg">
+  <section class="map pt-5 position-relative w-100">
+    <!-- <object type="image/svg+xml" data="my_SVG_file.svg"> -->
       <!-- <xml version="1.0" encoding="UTF-8" standalone="no"> -->
       <!-- Created for MapSVG plugin: http://mapsvg.com -->
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 530 430">
@@ -591,7 +591,7 @@
           >ZM</text>
         </g>
       </svg>
-    </object>
+    <!-- </object> -->
     <Tooltip />
   </section>
 </template>
