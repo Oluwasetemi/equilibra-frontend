@@ -52,7 +52,7 @@ body {
 
 .nav-item {
     margin: 0 calc(20px - 0.5rem);
-    font-size: 15px;
+    font-size: 14px;
 }
 
 .nav-item button {
@@ -64,6 +64,7 @@ nav .btn {
     color: #07834E;
     background: white;
     height: 40px;
+    font-size: 14px;
     padding: 0 5px;
     border: 2px solid #FFFFFF;
     border-radius: 2px;
@@ -132,7 +133,21 @@ button {
     box-shadow: 0 2px 0px #ef4c02;
 }
 
-
+.form-control {
+    border: 1px solid #E5E5E5;
+    border-radius: 0;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+    font-size: 12px;
+    -webkit-appearance: none;
+    height: 38px;
+}
+.form-control:focus,
+.form-control:target {
+    border: 1px solid #168A59; 
+    box-shadow: none;
+    outline: 0
+}
 
 @media (min-width: 1200px){
 .container {

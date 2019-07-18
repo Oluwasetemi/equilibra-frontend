@@ -38,7 +38,9 @@
                 <a class="nav-link" href="#">Contact Us</a>
               </li>
               <li class="nav-item ml-4">
-                <button class="btn">Join Us</button>
+                <nuxt-link to="/sign-up" tag="button" class="btn">
+                  Join Us
+                </nuxt-link>
               </li>
             </ul>
           </div>
