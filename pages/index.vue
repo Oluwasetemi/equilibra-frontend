@@ -32,7 +32,9 @@
                 <!-- <a class="" href="#"></a> -->
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Forums</a>
+              <nuxt-link to="/forums" class="nav-link">
+                  Forums
+                </nuxt-link>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#">Blog</a>
