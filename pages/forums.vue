@@ -29,10 +29,10 @@
                 <!-- <a class="" href="#"></a> -->
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Forums</a>
+                <nuxt-link to="/forums" class="nav-link">Forums</nuxt-link>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Blog</a>
+                <a class="nav-link" href="http://www.theequilibra.com/blog/">Blog</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#">Contact Us</a>
@@ -334,7 +334,8 @@ export default {
 .header {
   background-image: url("~assets/images/forums-BG.svg");
   background-repeat: no-repeat;
-  background-size: 100% 100%;
+  background-size: cover;
+  background-position-x: center;
   height: 437px;
   color: white;
 }
