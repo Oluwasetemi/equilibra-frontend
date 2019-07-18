@@ -2,7 +2,7 @@
   <div class="tooltipp px-3 py-3">
     <div class="mb-3 d-flex align-items-center">
       <figure class="d-inline-block mb-0 mr-2">
-        <img src="~assets/images/el-rufai.png" alt />
+        <img src="~assets/images/el-rufai.png" alt height="60px"/>
       </figure>
 
       <div class="details d-inline-block">
