@@ -18,7 +18,7 @@
                     <img src="~assets/icons/play-store-icon.svg" alt class="mb-2"/>
                   </a>
                   <a href>
-                    <img src="~assets/icons/app-store-icon.svg" alt />
+                    <img src="~assets/icons/app-store-icon.svg" alt class="mb-2"/>
                   </a>
                 </div>
               </div>
