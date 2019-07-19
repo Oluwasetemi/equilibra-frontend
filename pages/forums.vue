@@ -29,10 +29,10 @@
                 <!-- <a class="" href="#"></a> -->
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Forums</a>
+                <nuxt-link to="/forums" class="nav-link">Forums</nuxt-link>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Blog</a>
+                <a class="nav-link" href="http://www.theequilibra.com/blog/">Blog</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#">Contact Us</a>
@@ -57,7 +57,7 @@
                     />
                   </a>
                   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item" href="#">Account Settings</a>
+                      <nuxt-link class="dropdown-item" to="account-settings">Account Settings</nuxt-link>
                     <a class="dropdown-item" href="#">Feedback</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="#">Logout</a>
@@ -229,7 +229,7 @@ export default {
   },
   data() {
     return {
-      userIsLoggedIn: false,
+      userIsLoggedIn: true,
       cards: [
         {
           title: "Judiciary",
@@ -334,7 +334,8 @@ export default {
 .header {
   background-image: url("~assets/images/forums-BG.svg");
   background-repeat: no-repeat;
-  background-size: 100% 100%;
+  background-size: cover;
+  background-position-x: center;
   height: 437px;
   color: white;
 }

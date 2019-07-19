@@ -213,7 +213,7 @@ export default {
 </script>
 
 <style scoped>
-.contaner {
+.container {
   background: #fdfdfd;
 }
 
