@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-light d-flex justify-space-between mx-4">
+  <nav class="navbar navbar-expand-lg navbar-light d-flex justify-space-between mx-4 pt-3">
     <nuxt-link to="/" class="navbar-brand">
       <img src="~/assets/icons/green-logo.svg" alt />
     </nuxt-link>
@@ -26,7 +26,7 @@
           <!-- <a class="" href="#"></a> -->
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Forums</a>
+          <nuxt-link to="/forums" class="nav-link">Forums</nuxt-link>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">Blog</a>

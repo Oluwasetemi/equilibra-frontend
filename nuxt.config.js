@@ -22,7 +22,12 @@ export default {
           'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css'
       },
       { rel: 'stylesheet', href: '/styles/style.css' },
-      { rel: 'stylesheet', href: '/fonts/feather/style.css' }
+      { rel: 'stylesheet', href: '/fonts/feather/style.css' },
+      {
+        rel: 'stylesheet',
+        href:
+          'https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css'
+      }
     ],
     script: [
       {

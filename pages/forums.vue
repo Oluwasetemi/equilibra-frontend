@@ -57,7 +57,7 @@
                     />
                   </a>
                   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item" href="#">Account Settings</a>
+                      <nuxt-link class="dropdown-item" to="account-settings">Account Settings</nuxt-link>
                     <a class="dropdown-item" href="#">Feedback</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="#">Logout</a>
@@ -229,7 +229,7 @@ export default {
   },
   data() {
     return {
-      userIsLoggedIn: false,
+      userIsLoggedIn: true,
       cards: [
         {
           title: "Judiciary",
