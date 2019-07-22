@@ -42,7 +42,7 @@
               <li class="nav-item">
                 <a class="nav-link" href="#">Contact Us</a>
               </li>
-              <li class="nav-item ml-md-4">
+              <li class="nav-item ml-lg-4">
                 <nuxt-link to="/sign-up" tag="button" class="btn">
                   Join Us
                 </nuxt-link>
@@ -53,8 +53,8 @@
       </header>
       <div class="container">
         <div class="row">
-          <div class="col-md-5">
-            <div class="hero-text mt-md-5 pt-md-5 pt-4">
+          <div class="col-md-5 d-flex align-items-md-center">
+            <div class="hero-text" style="margin-top: -80px">
               <h1 class="font-weight-bold pt-3">The People’s Parliament!</h1>
               <h5
                 class="pt-3"
@@ -363,7 +363,7 @@ export default {
   background-image: url("~assets/images/headerBG.svg");
   background-repeat: no-repeat;
   background-size: contain;
-  height: 719px;
+  min-height: 719px;
   color: white;
 }
 
@@ -576,7 +576,7 @@ footer p {
 }
 @media (max-width: 991px) {
     .header {
-  background-size: auto;
+  background-size: cover;
 }
 
 }

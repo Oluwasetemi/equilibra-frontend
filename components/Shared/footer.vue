@@ -284,13 +284,11 @@ section.footer h2 {
 }
 
 section.footer {
-   background-image: url("~assets/images/top-phone.svg"),url("~assets/images/right-phone.svg"), url("~assets/images/bottom-phone.svg") ;
-   background-repeat: no-repeat, no-repeat, no-repeat;
-   /* background-size: 24%, 18%, 24%; */
-   /* background-attachment: fixed; */
-   background-size: 319px, 229px, 319px;
-   background-position: 820px 30px, 1080px 100px, 990px bottom;
-   /* background-position: 83% 30px, right 100px, right bottom; */
+   background-image: url("~assets/images/Footer.png") ;
+    background-position-y: bottom;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position-x: 100px;
 
 }
 

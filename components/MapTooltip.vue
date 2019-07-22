@@ -1,5 +1,5 @@
-<template>
-  <div class="tooltipp px-3 py-3">
+<template slot="title">
+  <div class="tooltipp px-3 py-3 " id="customdiv" style="display: none">
     <div class="mb-3 d-flex align-items-center">
       <figure class="d-inline-block mb-0 mr-2">
         <img src="~assets/images/el-rufai.png" alt height="60px"/>
@@ -27,6 +27,13 @@
   </div>
 </template>
 
+<script>
+
+export default {
+  
+}
+</script>
+
 <style scoped>
 .tooltipp {
   height: 282px;
@@ -34,8 +41,8 @@
   background: white;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 border-radius: 2px;
-  position: absolute;
-  visibility: hidden;
+  /* position: absolute; */
+  /* visibility: hidden; */
   /* pointer-events: none; */
 }
 
