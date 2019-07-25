@@ -8,7 +8,7 @@
             <h6 class="subheading d-inline-block">PERSONAL INFORMATION</h6>
           </div>
           <p
-            style="color: #091F0E"
+            style="color: #091F0E; font-size: 15px"
           >Use this page to update your contact information and change password.</p>
           <div class="change-photo d-md-flex">
             <label for="profile-pic" style="cursor: pointer">
@@ -169,7 +169,7 @@ h4 {
 
 label {
   color: #2c7742;
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 1.25px;
   /* font-weight: 600; */
 }
@@ -191,11 +191,11 @@ h6 {
 .change-photo a {
   text-decoration-line: underline;
   color: #009966;
-  font-size: 12px;
+  font-size: 13px;
 }
 .change-photo p {
   color: #666666;
-  font-size: 11px;
+  font-size: 12px;
 }
 .green-btn {
   width: 200px;

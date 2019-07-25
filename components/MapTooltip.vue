@@ -1,5 +1,5 @@
 <template slot="title">
-  <div class="tooltipp px-3 py-3 " id="customdiv" style="display: none">
+  <div class="tooltipp px-4 py-3 " id="customdiv" style="display: none">
     <div class="mb-3 d-flex align-items-center">
       <figure class="d-inline-block mb-0 mr-2">
         <img src="~assets/images/el-rufai.png" alt height="60px"/>
@@ -36,8 +36,9 @@ export default {
 
 <style scoped>
 .tooltipp {
-  height: 282px;
-  width: 302px;
+  height: 300px;
+  
+  width: 340px;
   background: white;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 border-radius: 2px;
@@ -48,13 +49,13 @@ border-radius: 2px;
 
 span.name {
   color: var(--black-text);
-  font-size: 17px;
+  font-size: 19px;
   font-weight: 600;
 }
 
 span.post {
   color: #168a59;
-  font-size: 13px;
+  font-size: 15px;
 }
 
 span.state {
@@ -69,7 +70,7 @@ p.description {
 }
 a {
   color: var(--dark-green-color);
-  font-size: 11px;
+  font-size: 13px;
 }
 
 img {
@@ -81,7 +82,7 @@ img {
   border-radius: 4px;
   padding: 9.1px 10px;
   color: var(--dark-green-color);
-  font-size: 13px;
+  font-size: 15px;
 }
 
 figure {

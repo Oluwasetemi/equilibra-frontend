@@ -1,75 +1,75 @@
 <template>
   <div class="main-container">
     <div class="container-fluid px-0 header">
-      <header class="px-md-3 pt-2">
-        <nav class="navbar navbar-expand-lg navbar-light d-flex justify-space-between">
-          <nuxt-link to="/" class="navbar-brand">
-            <img src="~/assets/icons/logo.svg" alt />
-          </nuxt-link>
-
-          <button
-            class="navbar-toggler"
-            type="button"
-            data-toggle="collapse"
-            data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span class="navbar-toggler-icon"></span>
-          </button>
-
-          <div
-            class="collapse navbar-collapse d-lg-flex justify-content-md-end"
-            id="navbarSupportedContent"
-          >
-            <ul class="navbar-nav">
-              <li class="nav-item">
-                <nuxt-link to="/" class="nav-link">Home</nuxt-link>
-                <!-- <a class="" href="#"></a> -->
-              </li>
-              <li class="nav-item">
-                <nuxt-link to="/forums" class="nav-link">Forums</nuxt-link>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="http://www.theequilibra.com/blog/">Blog</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Contact Us</a>
-              </li>
-              <li class="nav-item ml-4">
-                <div class="dropdown" style="background: white;" v-if="userIsLoggedIn">
-                  <a
-                    href="#"
-                    class="dropdown-toggle d-flex align-items-center m-0"
-                    id="dropdownMenuButton"
-                    data-toggle="dropdown"
-                    aria-haspopup="true"
-                    aria-expanded="false"
-                  >
-                    <img src="~assets/images/avatar.png" alt height="38px" class="mr-1 avatar" />
-                    <div class="inline-block px-2" style="color: black">Lois Durello</div>
-                    <img
-                      src="~assets/icons/thin-downward-arrow.svg"
-                      alt
-                      class="position-relative"
-                      style="left: 8px;"
-                    />
-                  </a>
-                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                      <nuxt-link class="dropdown-item" to="account-settings">Account Settings</nuxt-link>
-                    <a class="dropdown-item" href="#">Feedback</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Logout</a>
-                  </div>
-                </div>
-                <nuxt-link to="/sign-up" tag="button" class="btn" v-if="!userIsLoggedIn">Join Us</nuxt-link>
-              </li>
-            </ul>
-          </div>
-        </nav>
-      </header>
       <div class="container">
+        <header class="pt-3">
+          <nav class="navbar navbar-expand-lg navbar-light d-flex justify-space-between px-0">
+            <nuxt-link to="/" class="navbar-brand">
+              <img src="~/assets/icons/logo.svg" alt />
+            </nuxt-link>
+
+            <button
+              class="navbar-toggler"
+              type="button"
+              data-toggle="collapse"
+              data-target="#navbarSupportedContent"
+              aria-controls="navbarSupportedContent"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div
+              class="collapse navbar-collapse d-lg-flex justify-content-md-end"
+              id="navbarSupportedContent"
+            >
+              <ul class="navbar-nav">
+                <li class="nav-item">
+                  <nuxt-link to="/" class="nav-link">Home</nuxt-link>
+                  <!-- <a class="" href="#"></a> -->
+                </li>
+                <li class="nav-item">
+                  <nuxt-link to="/forums" class="nav-link">Forums</nuxt-link>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="http://www.theequilibra.com/blog/">Blog</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">Contact Us</a>
+                </li>
+                <li class="nav-item ml-4">
+                  <div class="dropdown" style="background: white;" v-if="userIsLoggedIn">
+                    <a
+                      href="#"
+                      class="dropdown-toggle d-flex align-items-center m-0"
+                      id="dropdownMenuButton"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                    >
+                      <img src="~assets/images/avatar.png" alt height="38px" class="mr-1 avatar" />
+                      <div class="inline-block px-2" style="color: black">Lois Durello</div>
+                      <img
+                        src="~assets/icons/thin-downward-arrow.svg"
+                        alt
+                        class="position-relative"
+                        style="left: 8px;"
+                      />
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                      <nuxt-link class="dropdown-item" to="account-settings">Account Settings</nuxt-link>
+                      <a class="dropdown-item" href="#">Feedback</a>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="#">Logout</a>
+                    </div>
+                  </div>
+                  <nuxt-link to="/sign-up" tag="button" class="btn" v-if="!userIsLoggedIn">Join Us</nuxt-link>
+                </li>
+              </ul>
+            </div>
+          </nav>
+        </header>
         <div class="row">
           <div class="col-md-12">
             <div class="hero-text mt-md-5 text-md-center">
@@ -236,7 +236,7 @@ export default {
           description:
             " We are positively minded Nigerians, committed to unity and to encouraging fairness, just and equitable life.",
           backgroundImage: judiciaryImage,
-          link: "/rooms/judiciary"
+          link: "/rooms"
         },
         {
           title: "Executive",
@@ -348,23 +348,23 @@ export default {
 }
 
 h1 {
-  font-size: 30px;
+  font-size: 32px;
 }
 h5 {
   font-size: 18px;
   line-height: 1.5em;
-  font-weight: 400;
+  font-weight: 100;
   display: inline-block;
 }
 
 h6 {
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 400;
   letter-spacing: 2px;
 }
 
 h3 {
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 600;
   color: var(--black-text);
   line-height: 1.5em;
@@ -378,7 +378,7 @@ h3 {
 }
 
 h4 {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 400;
   color: var(--black-text);
   border-bottom: solid 1px rgba(22, 138, 89, 0.2);
@@ -407,7 +407,7 @@ p {
   border-radius: 10px;
   border: solid 3px white;
   left: 25px;
-  top: 25px;
+  top: 30px;
 }
 
 .card button {
@@ -429,7 +429,7 @@ p {
 }
 
 .card p {
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .card button:hover {
@@ -437,7 +437,7 @@ p {
 }
 
 div.dropdown {
-  width: 160px;
+  width: 170px;
   background: #ffffff;
   box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.16);
   border-radius: 2px;
@@ -450,11 +450,17 @@ div.dropdown-menu {
 
 .navbar-light .nav-item a.dropdown-item {
   color: black;
-  font-size: 14px;
+  font-size: 16px;
+  font-weight: 100;
 }
 
 .avatar {
   border-radius: 2px 0 0 2px;
+}
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1261px !important;
+  }
 }
 @media screen and (min-width: 1441px) {
   .header {

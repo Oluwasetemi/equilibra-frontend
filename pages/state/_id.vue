@@ -373,7 +373,7 @@ header {
 }
 
 p {
-  font-size: 16px;
+  font-size: 18px;
 }
 
 span.title {
