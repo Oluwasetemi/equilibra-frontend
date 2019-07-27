@@ -45,7 +45,8 @@ button,
 button:focus,
 input,
 input:focus,
-.btn:focus {
+.btn:focus,
+textarea:focus {
   outline: 0 !important;
   box-shadow: none;
 }
@@ -164,10 +165,12 @@ button {
   height: 38px;
 }
 .form-control:focus,
-.form-control:target {
-  border: 1px solid #168a59;
-  box-shadow: none;
-  outline: 0;
+.form-control:target,
+textarea:focus,
+textarea:target {
+  border: 1px solid #168a59 !important;
+  box-shadow: none  !important;
+  outline: 0  !important;
 }
 
 @media (min-width: 1200px) {

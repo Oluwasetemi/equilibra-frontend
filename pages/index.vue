@@ -360,7 +360,7 @@ export default {
   background-image: url("~assets/images/headerBG.svg");
   background-repeat: no-repeat;
   background-size: contain;
-  min-height: 719px;
+  min-height: 50vw;
   color: white;
   font-weight: 100;
 }

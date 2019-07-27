@@ -57,14 +57,23 @@ export default {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: [],
+  plugins: [
+    // '~/plugins/'
+  ],
   /*
    ** Nuxt.js modules
    */
   modules: [
     // Doc: https://bootstrap-vue.js.org/docs/
-    'bootstrap-vue/nuxt'
+    'bootstrap-vue/nuxt',
+    // '@nuxtjs/apollo',
+    '@nuxtjs/axios'
   ],
+
+  axios: {
+    baseURL: 'http://api.equilibra.test.natterbase.com'
+  },
+
   bootstrapVue: {
     bootstrapCSS: true,
     bootstrapVueCSS: false

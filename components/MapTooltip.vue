@@ -1,8 +1,8 @@
 <template slot="title">
-  <div class="tooltipp px-4 py-3 " id="customdiv" style="display: none">
+  <div class="tooltipp px-4 py-3" id="customdiv" style="display: none">
     <div class="mb-3 d-flex align-items-center">
       <figure class="d-inline-block mb-0 mr-2">
-        <img src="~assets/images/el-rufai.png" alt height="60px"/>
+        <img src="~assets/images/el-rufai.png" alt height="60px" />
       </figure>
 
       <div class="details d-inline-block">
@@ -23,25 +23,22 @@
       region by the then regim of General Yakubu Gowon. Jigawa State
       was carved out of Kano State in the state creation exercise of 1991.
     </p>
-    <nuxt-link to="/state/kaduna" >Read More</nuxt-link>
+    <nuxt-link to="/state/kaduna">Read More</nuxt-link>
   </div>
 </template>
 
 <script>
-
-export default {
-  
-}
+export default {};
 </script>
 
 <style scoped>
 .tooltipp {
   height: 300px;
-  
+
   width: 340px;
   background: white;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-border-radius: 2px;
+  border-radius: 2px;
   /* position: absolute; */
   /* visibility: hidden; */
   /* pointer-events: none; */
@@ -56,6 +53,7 @@ span.name {
 span.post {
   color: #168a59;
   font-size: 15px;
+  font-weight: 100;
 }
 
 span.state {
@@ -67,10 +65,12 @@ p.description {
   font-size: 13px;
   color: var(--gray-text);
   line-height: 1.3rem;
+  font-weight: 100;
 }
 a {
   color: var(--dark-green-color);
   font-size: 13px;
+   font-weight: 100;
 }
 
 img {
@@ -83,13 +83,14 @@ img {
   padding: 9.1px 10px;
   color: var(--dark-green-color);
   font-size: 15px;
+  font-weight: 100;
 }
 
 figure {
-    border-radius: 50%;
-    /* width: 40px;
+  border-radius: 50%;
+  /* width: 40px;
     height: 40px; */
-    padding: 2px;
-    border: 1px solid #EAF7ED;
+  padding: 2px;
+  border: 1px solid #eaf7ed;
 }
 </style>

@@ -1,13 +1,16 @@
 <template>
   <div
     class="modal fade"
-    id="exampleModal"
+    id="commentModal"
     role="dialog"
-    aria-labelledby="exampleModalLabel"
+    aria-labelledby="commentModalLabel"
     aria-hidden="true"
   >
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
         <div class="user-details d-flex px-3 py-2 border-bottom">
           <figure class="m-0 pr-1 d-inline-block">
             <img src="~/assets/images/avatar.png" alt class="rounded-circle" height="40px" />
@@ -62,7 +65,9 @@
                 <div class="actions mr-2 pt-2">
                   <a
                     href="#"
-                    class="likes-button liked d-inline-flex align-items-center justify-content-around px-1"
+                    class="likes-button d-inline-flex align-items-center justify-content-around px-1"
+                    @click.stop="liked = !liked"
+                    :class="{liked}"
                   >
                     <span class="likes-icon"></span>
                     <span class="px-1">4</span>
@@ -71,20 +76,50 @@
               </div>
             </div>
             <div class="options position-absolute d-flex">
-              <a
-                href
-                class="inline-block px-2 border-right text-center"
-                data-toggle="tooltip"
-                title="Like"
-              >
-                <span class="like-icon-outline liked"></span>
-                <!-- <img src="~/assets/icons/like-icon-outline.svg" alt /> -->
-              </a>
-              <a href class="inline-block px-2 text-center" data-toggle="tooltip" title="Share">
-                <img src="~/assets/icons/share.svg" alt />
-              </a>
+              <div class="text-center dropdown" data-toggle="tooltip" title="Like">
+                <a href="#" class="inline-block px-2 border-right text-center">
+                  <img src="~/assets/icons/like-icon-outline.svg" alt />
+                  <!-- <img src="~/assets/icons/like-icon-red-filled.svg" alt=""> -->
+                </a>
+              </div>
+              <div class="text-center dropdown" data-toggle="tooltip" title="Delete">
+                <a
+                  id="deleteComment"
+                  href="#"
+                  class="inline-block px-2 text-center border-right"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  <img src="~/assets/icons/delete-icon.svg" alt />
+                </a>
+                <deleteCommentCard class="dropdown-menu" aria-labelledby="deleteComment" />
+              </div>
+              <div class="text-center dropdown" data-toggle="tooltip" title="Share">
+                <a
+                  href="#"
+                  class="inline-block px-2"
+                  id="shareLink"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  <img src="~/assets/icons/share.svg" alt />
+                </a>
+                <shareLinkCard class="dropdown-menu" aria-labelledby="shareLink" />
+              </div>
             </div>
-            <a href="#" class="report text-center">Report Post</a>
+            <span class="text-center dropdown">
+              <a
+                href="#"
+                id="reportComment"
+                class="report text-center"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >Report Post</a>
+              <reportCommentCard aria-labelledby="reportComment" />
+            </span>
           </div>
         </div>
         <form
@@ -114,19 +149,17 @@
                 placeholder="Type a message..."
               />
               <div class="text-center">
-                <img
-                  ref="imageContent"
-                  src=""
-                  alt
-                  height="340px"
-                  class="pb-4"
-                  style="max-width: 80%"
-                />
+                <img ref="imageContent" src alt height="340px" class="pb-4" style="max-width: 80%" />
               </div>
             </div>
 
             <a href class="mt-2 pt-1">
-              <span class="post-comment-icon" data-toggle="tooltip" title="Post" style="position: relative;top: 7px;"></span>
+              <span
+                class="post-comment-icon"
+                data-toggle="tooltip"
+                title="Post"
+                style="position: relative;top: 7px;"
+              ></span>
             </a>
           </div>
         </form>
@@ -136,13 +169,23 @@
 </template>
 
 <script>
+import shareLinkCard from "~/components/Rooms/share-link";
+import reportCommentCard from "~/components/Rooms/report-comment";
+import deleteCommentCard from "~/components/Rooms/delete-comment";
 export default {
   data() {
     return {
+      showLink: false,
+      liked: false,
       formActive: false,
       imageContent: false,
       setClass: false
     };
+  },
+  components: {
+    shareLinkCard,
+    reportCommentCard,
+    deleteCommentCard
   },
   methods: {
     previewImage() {
@@ -173,12 +216,24 @@ export default {
   border-color: #e7e7e7 !important;
 }
 
+.dropdown-menu {
+  left: unset !important;
+  right: 0;
+  border: none;
+}
+
+.share-link {
+  z-index: 10;
+  right: 30px;
+  top: 15px;
+}
+
 .new-comment,
 input {
   font-size: 14px;
   font-weight: 100;
 }
-.modal-dialog {
+.modal-content {
   background: white;
   transition: all 0.5s;
 }
@@ -199,13 +254,14 @@ input:focus ~ a span {
 }
 
 .likes-button.liked {
-    background: rgba(254, 34, 34, 0.1);
-    border-color: #FE2222;
-    color: #FE2222;
+  background: rgba(254, 34, 34, 0.1);
+  border-color: #fe2222;
+  color: #fe2222;
 }
 
-.likes-button.liked .likes-icon, .like-icon-outline.liked {
-  background-color: #FE2222;
+.likes-button.liked .likes-icon,
+.like-icon-outline.liked {
+  background-color: #fe2222;
 }
 
 .borderGreen.border-top {
@@ -219,7 +275,7 @@ a.report {
   position: absolute;
   right: 15px;
   padding: 4px;
-  bottom: -5px;
+  bottom: -10px;
   font-size: 11px;
   color: #000000;
   background: white;
@@ -235,7 +291,7 @@ a.report {
 }
 
 .comment:hover {
-  transition: all 600ms;
+  /* transition: all 600ms; */
   background: #dceee6;
 }
 
@@ -245,8 +301,10 @@ a.report {
   transition: all 600ms;
 }
 
-.options a {
+.options a,
+div.dropdown {
   width: 40px;
+  height: 24px;
   background: #ffffff;
 }
 
@@ -395,7 +453,7 @@ a {
   mask: url("~assets/icons/like-icon-outline.svg");
   mask-size: cover;
   display: inline-block;
-  background-color:#000000;
+  background-color: #000000;
   width: 12.57px;
   height: 11px;
 }
@@ -414,6 +472,20 @@ a {
   background-color: #9fa3a3;
   width: 20px;
   height: 17px;
+}
+
+button.close {
+  position: absolute;
+  right: 0;
+  background: #dceee6;
+  border-radius: 0px 4px 0px 0px;
+  height: 34px;
+  width: 40px;
+}
+
+.close span {
+  color: #07834e;
+  font-weight: 100;
 }
 
 @media (min-width: 576px) {

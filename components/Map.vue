@@ -502,66 +502,59 @@ export default {
     }
   },
   mounted() {
+    let self = this;
     function enableThumbPopover() {
       var counter;
       console.log($(".tooltipp").html());
       // debugger
-      $('[data-toggle="popover"]').popover({
-        trigger: "click",
-        animation: true,
-        html: true,
-        title: function() {
-          return $(this)
-            .parent()
-            .find('[data-toggle="popover"] > .title')
-            .html();
-        },
-        content: function() {
-          return $(".tooltipp").html();
-        },
-        container: "body",
-        placement: "auto"
-      })
-      .on("click", function() {
-        var _this = this; // thumbcontainer
+      $('[data-toggle="popover"]')
+        .popover({
+          trigger: "click",
+          animation: true,
+          html: true,
+          title: function() {
+            return $(this)
+              .parent()
+              .find('[data-toggle="popover"] > .title')
+              .html();
+          },
+          content: function() {
+            return $(".tooltipp").html();
+          },
+          container: "body",
+          placement: "auto"
+        })
+        .on("click", function() {
+          var _this = this; // thumbcontainer
 
-        console.log("thumbcontainer mouseenter");
-        // clear the counter
-        clearTimeout(counter);
-        // debugger
-        // Close all other Popovers
+          console.log("thumbcontainer mouseenter");
+          // clear the counter
+          clearTimeout(counter);
+          // Close all other Popovers
 
           $('[data-toggle="popover"]')
             .not(_this)
             .popover("hide");
 
-        // start new timeout to show popover
-        counter = setTimeout(function() {
-          $(".popover").click(function(event) {
-            // debugger;
-            event.preventDefault();
-          });
-          if ($(_this).is(":hover")) {
-            $(_this).popover("show");
-          }
-
-          $(".popover").on("click", function() {
-            $('[data-toggle="popover"]').popover("hide");
-          });
-        }, 0);
-      })
-      .on("click", function() {
-        var _this = this;
-
-        setTimeout(function() {
-          if (!$(".popover:hover").length) {
-            if (!$(_this).is(":hover")) {
-              // change $(this) to $(_this)
-              $(_this).popover("hide");
+          // start new timeout to show popover
+          counter = setTimeout(function() {
+            if ($(_this).is(":hover")) {
+              $(_this).popover("show");
             }
-          }
-        }, 1000);
-      });
+          }, 0);
+        })
+        .on("click", function() {
+          var _this = this;
+
+          setTimeout(function() {
+            if (!$(".popover:hover").length) {
+              if (!$(_this).is(":hover")) {
+                $(_this).popover("hide");
+                self.activeState = null;
+              }
+            }
+          }, 1000);
+        });
     }
 
     $(document).ready(function() {
@@ -597,9 +590,10 @@ export default {
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   border-radius: 2px;
 }
-.popover .popover-header {
+.popover .popover-header , .popover .arrow{
   display: none !important;
 }
+
 </style>
 
     <style scoped>
@@ -622,6 +616,11 @@ path {
 
 path:hover {
   fill: #c2c6cc;
+}
+
+path:focus {
+  outline: 0;
+  box-shadow: none;
 }
 text {
   fill: #7a838e;

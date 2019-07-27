@@ -1,5 +1,6 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-light d-flex justify-space-between px-4">
+    <signUpModal/>
     <div class="container">
       <nuxt-link to="/" class="navbar-brand ml-lg-2">
         <img src="~/assets/icons/logo.svg" alt />
@@ -36,13 +37,25 @@
             <a class="nav-link" href="#">Contact Us</a>
           </li>
           <li class="nav-item ml-lg-4">
-            <nuxt-link to="/sign-up" tag="button" class="btn">Join Us</nuxt-link>
+            <button class="btn" data-toggle="modal" data-target="#signUpModal">Join Us</button>
+            <!-- <nuxt-link to="/sign-up" tag="button" class="btn"></nuxt-link> -->
           </li>
         </ul>
       </div>
     </div>
   </nav>
 </template>
+
+
+<script>
+import signUpModal from '~/components/authentication/sign-up'
+export default {
+  components: {
+    signUpModal
+  }
+}
+</script>
+
 
 <style scoped>
 .navbar-light .nav-item a,

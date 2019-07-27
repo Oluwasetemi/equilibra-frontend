@@ -1,5 +1,6 @@
 <template>
   <div class="position-relative card-with-shadow pb-4">
+    <info :info = information />
     <div class="card border-0">
       <div
         class="background-img d-flex align-items-end"
@@ -8,7 +9,12 @@
         <img src="~/assets/icons/forum-card-icon.svg" alt class="position-relative card-icon" />
       </div>
       <div class="card-content py-4" style="padding-left: 20px; padding-right: 20px">
-        <h3 class="pt-3 font-weight-bold">{{ title }}</h3>
+        <h3 class="pt-3 font-weight-bold">
+          <span>{{ title }}</span>
+          <a href="#" class="ml-1 position-relative" style="top: -3px" data-toggle="modal" data-target="#roomInfoModal">
+            <img src="~/assets/icons/info-icon.svg" data-toggle="tooltip" title="Quick info" />
+          </a>
+        </h3>
         <p>
           We are positively minded Nigerians, committed to unity and to
           encouraging fairness, just and equitable lifee.
@@ -26,11 +32,35 @@
 
 
 <script>
-// import judiciaryImage from '~/assets/images/judiciary_BG.svg';
+import info from "~/components/Rooms/room-info";
+import imgURL from "~/assets/images/tanko.png";
 export default {
   props: ["imageURL", "title", "link"],
-  mounted() {
-    console.log(this.imageURL);
+  components: {
+    info
+  },
+  data() {
+    return {
+      information: {
+        name: "Ibrahim Tanko Muhammad",
+        imgURL,
+        post: "Chief Justice of Nigeria",
+        roomDetails: [
+          {
+            value: "100,056",
+            title: "Number of Awaiting trial detainees-nationwide (Ppl)"
+          },
+          {
+            value: "68%",
+            title: "Prison congestion rate (%)"
+          },
+          {
+            value: "71%",
+            title: "Average judgement delivery rate (%)"
+          }
+        ]
+      }
+    };
   }
 };
 </script>

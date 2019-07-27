@@ -36,6 +36,7 @@
                 id="email"
                 placeholder="Email Address"
                 class="form-control"
+                v-model="payload.email"
               />
             </div>
             <div class="form-input my-2">
@@ -45,6 +46,7 @@
                 id="password"
                 placeholder="Password"
                 class="form-control"
+                v-model="payload.password"
               />
             </div>
             <div class="form-input my-2">
@@ -65,7 +67,7 @@
               <div class="row">
                 <div class="col-6">
                   <div class="form-input position-relative">
-                    <select name id class="form-control mt-0">
+                    <select name id class="form-control mt-0" v-model="month">
                       <option value>Month</option>
                       <option :value="month" v-for="(month, i) in months" :key="i">{{ month }}</option>
                     </select>
@@ -79,15 +81,15 @@
 
                 <div class="col-3 px-0">
                   <div class="form-input position-relative">
-                    <select name id class="form-control mt-0">
+                    <select name id class="form-control mt-0" v-model="year">
                       <option value>Year</option>
                       <option :year="year" v-for="(year, i) in years" :key="i">{{ year }}</option>
                     </select>
                     <img
-                        src="~/assets/icons/downward-arrow.svg"
-                        alt
-                        class="position-absolute down-arrow"
-                      />
+                      src="~/assets/icons/downward-arrow.svg"
+                      alt
+                      class="position-absolute down-arrow"
+                    />
                   </div>
                 </div>
               </div>
@@ -115,6 +117,12 @@ export default {
   data() {
     return {
       ConfirmEmailCard: false,
+      month,
+      year,
+      payload: {
+        email,
+        password
+      },
       months: [
         "January",
         "February",
@@ -128,7 +136,7 @@ export default {
         "October",
         "November",
         "December"
-      ]
+      ],
     };
   },
   computed: {
@@ -139,7 +147,15 @@ export default {
         years.push(i);
       }
       return years;
+    },
+    getDateString() {
+      return new Date(`${this.month}-${1}-${this.year}`).toISOString()
     }
+  },
+  methods: {
+    createAccount() {
+      this.payload.dob = this.getDateString()
+    },
   }
 };
 </script>
@@ -212,7 +228,7 @@ p {
 }
 
 .border-bottom {
-    border-color: #EAEAEA;
+  border-color: #eaeaea;
 }
 
 button.auth {

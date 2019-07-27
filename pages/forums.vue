@@ -97,39 +97,7 @@
       </div>
       <div class="row">
         <div class="col-md-4" v-for="(item, i) in cards" :key="i">
-          <div class="card border-0 my-4">
-            <div
-              class="background-img d-flex align-items-end"
-              :style="{backgroundImage: `url(${item.backgroundImage})`}"
-            >
-              <img src="~/assets/icons/forum-card-icon.svg" alt class="position-relative card-icon" />
-            </div>
-            <div class="card-content p-4">
-              <h3 class="pt-3">{{ item.title }}</h3>
-              <p>
-                We are positively minded Nigerians, committed to unity and to
-                encouraging fairness, just and equitable lifee.
-              </p>
-              <nuxt-link
-                tag="button"
-                class="border-0 p-3 w-100"
-                :to="item.link"
-                style="background: #26B14F;"
-              >Join {{item.title}}</nuxt-link>
-            </div>
-          </div>
-        </div>
-      </div>
-      <template v-if="userIsLoggedIn">
-        <div class="row">
-          <div class="col-md-12">
-            <h4 class="pb-2 pt-2">
-              <span class="ml-3">Niger - State of Origin</span>
-            </h4>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-4" v-for="(item, i) in originCards" :key="i">
+          <div class="position-relative card-with-shadow pb-4">
             <div class="card border-0 my-4">
               <div
                 class="background-img d-flex align-items-end"
@@ -153,6 +121,46 @@
                   :to="item.link"
                   style="background: #26B14F;"
                 >Join {{item.title}}</nuxt-link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <template v-if="userIsLoggedIn">
+        <div class="row">
+          <div class="col-md-12">
+            <h4 class="pb-2 pt-2">
+              <span class="ml-3">Niger - State of Origin</span>
+            </h4>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4" v-for="(item, i) in originCards" :key="i">
+            <div class="position-relative card-with-shadow pb-4">
+              <div class="card border-0 my-4">
+                <div
+                  class="background-img d-flex align-items-end"
+                  :style="{backgroundImage: `url(${item.backgroundImage})`}"
+                >
+                  <img
+                    src="~/assets/icons/forum-card-icon.svg"
+                    alt
+                    class="position-relative card-icon"
+                  />
+                </div>
+                <div class="card-content p-4">
+                  <h3 class="pt-3">{{ item.title }}</h3>
+                  <p>
+                    We are positively minded Nigerians, committed to unity and to
+                    encouraging fairness, just and equitable lifee.
+                  </p>
+                  <nuxt-link
+                    tag="button"
+                    class="border-0 p-3 w-100"
+                    :to="item.link"
+                    style="background: #26B14F;"
+                  >Join {{item.title}}</nuxt-link>
+                </div>
               </div>
             </div>
           </div>
@@ -169,29 +177,31 @@
         </div>
         <div class="row">
           <div class="col-md-4" v-for="(item, i) in residenceCards" :key="i">
-            <div class="card border-0 my-4">
-              <div
-                class="background-img d-flex align-items-end"
-                :style="{backgroundImage: `url(${item.backgroundImage})`}"
-              >
-                <img
-                  src="~/assets/icons/forum-card-icon.svg"
-                  alt
-                  class="position-relative card-icon"
-                />
-              </div>
-              <div class="card-content p-4">
-                <h3 class="pt-3">{{ item.title }}</h3>
-                <p>
-                  We are positively minded Nigerians, committed to unity and to
-                  encouraging fairness, just and equitable lifee.
-                </p>
-                <nuxt-link
-                  tag="button"
-                  class="border-0 p-3 w-100"
-                  :to="item.link"
-                  style="background: #26B14F;"
-                >Join {{item.title}}</nuxt-link>
+            <div class="position-relative card-with-shadow pb-4">
+              <div class="card border-0 my-4">
+                <div
+                  class="background-img d-flex align-items-end"
+                  :style="{backgroundImage: `url(${item.backgroundImage})`}"
+                >
+                  <img
+                    src="~/assets/icons/forum-card-icon.svg"
+                    alt
+                    class="position-relative card-icon"
+                  />
+                </div>
+                <div class="card-content p-4">
+                  <h3 class="pt-3">{{ item.title }}</h3>
+                  <p>
+                    We are positively minded Nigerians, committed to unity and to
+                    encouraging fairness, just and equitable lifee.
+                  </p>
+                  <nuxt-link
+                    tag="button"
+                    class="border-0 p-3 w-100"
+                    :to="item.link"
+                    style="background: #26B14F;"
+                  >Join {{item.title}}</nuxt-link>
+                </div>
               </div>
             </div>
           </div>
@@ -398,8 +408,9 @@ p {
   background: #ffffff;
   border: none;
   position: relative;
-  box-shadow: 0px 2px 50px rgba(0, 0, 0, 0.2);
+  /* box-shadow: 0px 2px 50px rgba(0, 0, 0, 0.2); */
   border-radius: 4px 4px 0px 0px;
+  z-index: 3;
 }
 
 .card-icon {
@@ -419,11 +430,11 @@ p {
   content: "";
   display: block;
   position: absolute;
-  width: 80%;
+  width: 90%;
   height: 98px;
   bottom: 50px;
   z-index: 2;
-  left: 10%;
+  left: 5%;
   background: rgba(0, 0, 0, 0.0001);
   box-shadow: 0px 3px 100px rgba(0, 0, 0, 0.12);
 }

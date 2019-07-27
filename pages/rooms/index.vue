@@ -1,8 +1,11 @@
 <template>
   <div class="px-md-3 pl-0 forum-container py-4 scrollable">
     <CommentModal />
+    <SuggestTopicModal />
+    <ChangeTopicModal />
+
     <div class="border">
-      <div class="forum-header px-4 d-flex align-items-center">
+      <div class="forum-header px-4 py-2 d-flex align-items-center">
         <div class="header-content">
           <div class="d-flex justify-content-between">
             <h4 class="d-inline-block mb-2">Vent the steam</h4>
@@ -17,10 +20,10 @@
             is sed do eiusmod tempor incididunt ut labore et dolore magna aliqua um dolor sit ame.
           </p>
           <div
-            class="d-flex justify-content-between align-items-end"
+            class="d-flex justify-content-between align-items-end flex-wrap"
             v-if="$route.path == '/rooms'"
           >
-            <div class="timer d-flex align-items-center">
+            <div class="timer d-flex align-items-center mt-2">
               <img src="~/assets/icons/timer.svg" alt class="mr-2" />
               <span>
                 <span style="font-size: 15px" class="pr-1">5</span>Day(s)
@@ -28,9 +31,17 @@
                 <span class="ml-2" style="font-size: 14px">56</span> Minute(s)
               </span>
             </div>
-            <div class="topic-actions">
-              <button class="suggest-topic mr-2">Suggest Topic</button>
-              <button class="change-topic ml-2">Change Current Topic</button>
+            <div class="topic-actions mt-2">
+              <button
+                class="suggest-topic mr-2"
+                data-toggle="modal"
+                data-target="#suggestTopic"
+              >Suggest Topic</button>
+              <button
+                class="change-topic ml-2"
+                data-toggle="modal"
+                data-target="#changeTopic"
+              >Change Current Topic</button>
             </div>
           </div>
         </div>
@@ -40,15 +51,16 @@
           <figure class="m-0 d-flex align-items-center pr-2 pl-3 px d-inline-block">
             <img src="~/assets/images/avatar.png" alt class="rounded-circle" height="40px" />
           </figure>
+          <form autocomplete="off" class="d-flex align-items-center" style="flex-grow: 1">
+            <div class="form-input position-relative d-inline-block px-3" style="flex-grow: 1">
+              <input type="text" name="comment" id="comment" class="w-100 form-control" />
+              <img src alt class="position-absolute" />
+            </div>
 
-          <div class="form-input position-relative d-inline-block px-3" style="flex-grow: 1">
-            <input type="text" name="comment" id="comment" class="w-100 form-control" />
-            <img src alt class="position-absolute" />
-          </div>
-
-          <div class="px-2" style="flex: 0 0 140px">
-            <button class="post">Post</button>
-          </div>
+            <div class="px-2" style="flex: 0 0 140px">
+              <button class="post">Post</button>
+            </div>
+          </form>
         </div>
       </div>
       <div class="comments">
@@ -75,12 +87,13 @@
                 </p>
               </div>
               <div class="actions mr-2">
-                <a href="#" class="likes" data-toggle="tooltip" title="Like">
-                  <img src="~/assets/icons/like-icon-outline.svg" alt />
-                  <span class="px-1">4</span>
+                <a href="#" class="likes" data-toggle="tooltip" title="Like" @click="liked = !liked">
+                  <img src="~/assets/icons/like-icon-outline.svg" alt v-if="!liked"/>
+                  <img src="~/assets/icons/like-icon-red-filled.svg" alt v-if="liked"/>
+                  <span class="px-1">{{!liked ? 4 : 4+1}}</span>
                 </a>
-                <a href="#" class="replies ml-2" data-toggle="modal" data-target="#exampleModal">
-                  <span data-toggle="tooltip" title="Replies">
+                <a href="#" class="replies ml-2" data-toggle="modal" data-target="#commentModal">
+                  <span data-toggle="tooltip" title="Reply">
                     <img src="~/assets/icons/replies-icon.svg" alt />
                     <span class="px-1">10</span>
                   </span>
@@ -96,12 +109,15 @@
 
 <script>
 import CommentModal from "~/components/Rooms/view-comment-modal";
+import SuggestTopicModal from "~/components/Rooms/suggest-topic";
+import ChangeTopicModal from "~/components/Rooms/change-topic";
 import imageUrl from "~/assets/images/judiciary_BG.svg";
 import Card from "~/components/Forums/forum-card";
 export default {
   layout: "greenNavOnly",
   data() {
     return {
+      liked: false,
       imageUrl2: { imageUrl },
       groups: [
         {
@@ -136,7 +152,9 @@ export default {
   },
   components: {
     Card,
-    CommentModal
+    CommentModal,
+    SuggestTopicModal,
+    ChangeTopicModal
   }
 };
 </script>
@@ -223,7 +241,7 @@ button.change-topic {
   background-repeat: no-repeat;
   background-size: cover;
   background-position-x: center;
-  height: 158px;
+  min-height: 158px;
   color: white;
 }
 
