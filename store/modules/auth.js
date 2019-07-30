@@ -2,7 +2,14 @@ export const state = () => ({
   token: ''
 });
 
-export const getters = {};
+export const getters = {
+  isAuthenticated() {
+    return this.$fb.getLoginStatus(function(response) {
+      console.log(this.$fb)
+      return response
+  });
+  }
+};
 
 export const mutations = {
   setToken(state, token) {

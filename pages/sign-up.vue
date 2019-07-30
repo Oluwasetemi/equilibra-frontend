@@ -17,6 +17,7 @@
               <span>Use Facebook Account</span>
             </button>
           </div>
+          <!-- <div class="g-signin2" data-onsuccess="onSignIn"></div> -->
           <div class="separator text-center w-100">
             <div class="d-inline-block line"></div>
             <span
@@ -58,6 +59,7 @@
                 class="form-control"
               />
             </div>
+            <!-- <div class="g-signin2" data-onsuccess="onSignIn"></div> -->
             <div class="form-input">
               <div class="row">
                 <div class="col-12">
@@ -108,6 +110,9 @@
 </template>
 
 <script>
+var auth2;
+var googleUser; // The current user
+
 import ConfirmEmailCard from "~/components/Authentication/confirm-email";
 export default {
   layout: "authentication",
@@ -117,11 +122,11 @@ export default {
   data() {
     return {
       ConfirmEmailCard: false,
-      month,
-      year,
+      month: "",
+      year: "",
       payload: {
-        email,
-        password
+        email: "",
+        password: ""
       },
       months: [
         "January",
@@ -136,7 +141,7 @@ export default {
         "October",
         "November",
         "December"
-      ],
+      ]
     };
   },
   computed: {
@@ -149,13 +154,32 @@ export default {
       return years;
     },
     getDateString() {
-      return new Date(`${this.month}-${1}-${this.year}`).toISOString()
+      return new Date(`${this.month}-${1}-${this.year}`).toISOString();
     }
   },
   methods: {
     createAccount() {
-      this.payload.dob = this.getDateString()
-    },
+      this.payload.dob = this.getDateString();
+    }
+  },
+  mounted() {
+    console.log(this.$glogin);
+  },
+  head() {
+    return {
+      meta: [
+        {
+          name: "google-signin-client_id",
+          content:
+            "769165313432-rq98o9410ntrgg2obvkhl86k82bueoq0.apps.googleusercontent.com"
+        }
+      ],
+      script: [
+        {
+          src: "https://apis.google.com/js/platform.js"
+        },
+      ],
+    };
   }
 };
 </script>
@@ -169,7 +193,8 @@ h4 {
   color: #000000;
 }
 p {
-  font-size: 12px;
+  font-size: 14px;
+  font-weight: 100;
 }
 .facebook {
   background: #3b5998;
@@ -177,12 +202,14 @@ p {
   color: white;
   margin-bottom: 1rem;
   margin-top: 1rem;
+  font-weight: 100;
 }
 .google {
   color: #464646;
   background: #fefefe;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.04);
   border-radius: 4px;
+  font-weight: 100;
 }
 
 .card {
@@ -201,7 +228,7 @@ p {
   background: #168a59;
   border: none;
   letter-spacing: 0.8px;
-  font-size: 12px;
+  font-size: 14px;
   height: 40px;
   color: white;
 }
@@ -237,8 +264,12 @@ button.auth {
   height: 40px;
   color: white;
   font-weight: 600;
-  font-size: 11px;
+  font-size: 13px;
   letter-spacing: 0.8px;
+}
+
+::placeholder {
+  font-weight: 100;
 }
 
 @media screen and (max-width: 767px) {

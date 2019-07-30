@@ -1,9 +1,9 @@
 <template>
-  <section class="map pt-5 position-relative w-100">
+  <section class="map  position-relative w-100 pt-3">
     <!-- <object type="image/svg+xml" data="my_SVG_file.svg"> -->
     <!-- <xml version="1.0" encoding="UTF-8" standalone="no"> -->
     <!-- Created for MapSVG plugin: http://mapsvg.com -->
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 530 430" ref="svg" id="map">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 530 350" ref="svg" id="map" class="m-auto">
       <g
         @click="setActiveState($event)"
         data-code="AD"
@@ -505,7 +505,6 @@ export default {
     let self = this;
     function enableThumbPopover() {
       var counter;
-      console.log($(".tooltipp").html());
       // debugger
       $('[data-toggle="popover"]')
         .popover({
@@ -526,15 +525,19 @@ export default {
         })
         .on("click", function() {
           var _this = this; // thumbcontainer
-
-          console.log("thumbcontainer mouseenter");
           // clear the counter
           clearTimeout(counter);
           // Close all other Popovers
 
+          if(self.activeState == _this.parentElement.dataset.code) {
+            $('[data-toggle="popover"]').popover("hide")
+            return
+          }
+
           $('[data-toggle="popover"]')
             .not(_this)
             .popover("hide");
+
 
           // start new timeout to show popover
           counter = setTimeout(function() {
@@ -574,6 +577,7 @@ export default {
       if (hideTooltip && this.activeState) {
         this.activeState = "";
         tooltipp.classList.remove("active");
+        $('[data-toggle="popover"]').popover('hide')
       }
     };
   }

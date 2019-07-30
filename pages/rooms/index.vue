@@ -114,6 +114,7 @@ import ChangeTopicModal from "~/components/Rooms/change-topic";
 import imageUrl from "~/assets/images/judiciary_BG.svg";
 import Card from "~/components/Forums/forum-card";
 export default {
+  middleware: "auth",
   layout: "greenNavOnly",
   data() {
     return {

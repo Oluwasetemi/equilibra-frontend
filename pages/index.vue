@@ -47,7 +47,7 @@
         </header>
         <div class="row">
           <div class="col-md-5 d-flex align-items-md-center">
-            <div class="hero-text" style="margin-top: -80px">
+            <div class="hero-text">
               <h1 class="font-weight-bold pt-3">The People’s Parliament!</h1>
               <h5
                 class="pt-3"
@@ -57,8 +57,8 @@
               </div>
             </div>
           </div>
-          <div class="col-md-7">
-            <Map />
+          <div class="col-md-7 d-flex align-items-md-center ">
+            <Map class="pt-5"/>
           </div>
         </div>
       </div>

@@ -163,6 +163,7 @@ button {
   font-size: 12px;
   -webkit-appearance: none;
   height: 38px;
+  font-weight: 100;
 }
 .form-control:focus,
 .form-control:target,
@@ -171,6 +172,10 @@ textarea:target {
   border: 1px solid #168a59 !important;
   box-shadow: none  !important;
   outline: 0  !important;
+}
+
+select {
+  font-weight: 100;
 }
 
 @media (min-width: 1200px) {
