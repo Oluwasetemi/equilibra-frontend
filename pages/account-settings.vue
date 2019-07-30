@@ -35,7 +35,7 @@ export default {
 }
 h4 {
   color: #091f0e;
-  font-size: 22px;
+  font-size: 24px;
   letter-spacing: 1.15px;
 }
 .card {
@@ -93,4 +93,9 @@ input.form-control:disabled {
   box-sizing: border-box;
   border-radius: 4px;
 }
+
+@media (min-width: 1200px){
+.container {
+    max-width: 1250px;
+}}
 </style>

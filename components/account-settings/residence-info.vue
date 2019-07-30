@@ -130,8 +130,11 @@
 }
 h4 {
   color: #091f0e;
-  font-size: 22px;
+  font-size: 24px;
   letter-spacing: 1.15px;
+}
+p {
+  font-size: 14px;
 }
 .card {
   background: #ffffff;
@@ -143,7 +146,7 @@ h4 {
 
 label {
   color: #2c7742;
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 1.25px;
   /* font-weight: 600; */
 }
@@ -167,11 +170,11 @@ h6 {
 .change-photo a {
   text-decoration-line: underline;
   color: #009966;
-  font-size: 12px;
+  font-size: 13px;
 }
 .change-photo p {
   color: #666666;
-  font-size: 11px;
+  font-size: 12px;
 }
 .green-btn {
   width: 200px;

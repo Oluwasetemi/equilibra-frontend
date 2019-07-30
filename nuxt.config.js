@@ -43,7 +43,11 @@ export default {
         src:
           'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js',
         type: 'text/javascript'
-      }
+      },
+      {
+        src: "https://apis.google.com/js/platform.js",
+        type: 'text/javascript'
+      },
     ]
   },
   /*
@@ -57,14 +61,30 @@ export default {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: [],
+  plugins: [
+    '~/plugins/',
+    {
+      src: '~/plugins/fb-sdk.js',
+      mode: 'client'
+    },
+    {
+      src: '~/plugins/g-login.js',
+      mode: 'client'
+    }
+  ],
   /*
    ** Nuxt.js modules
    */
   modules: [
     // Doc: https://bootstrap-vue.js.org/docs/
-    'bootstrap-vue/nuxt'
+    'bootstrap-vue/nuxt',
+    '@nuxtjs/apollo'
   ],
+
+  axios: {
+    baseURL: 'http://api.equilibra.test.natterbase.com'
+  },
+
   bootstrapVue: {
     bootstrapCSS: true,
     bootstrapVueCSS: false
@@ -77,5 +97,13 @@ export default {
      ** You can extend webpack config here
      */
     extend(config, ctx) {}
+  },
+  apollo: {
+    clientConfigs: {
+      default: {
+        httpEndpoint: 'http://api.equilibra.test.natterbase.com/'
+        //  wsEndpoint: 'ws://api.equilibra.test.natterbase.com/'
+      }
+    }
   }
 };

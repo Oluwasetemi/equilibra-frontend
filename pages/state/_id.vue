@@ -2,13 +2,148 @@
   <div class="container pt-4 pb-5 mb-5">
     <div class="row">
       <div class="col-lg-12">
-        <header class="d-flex flex-column justify-content-end px-4 pb-2">
-          <h2 class="font-weight-bold">KADUNA</h2>
-          <p class="subtitle" style="font-size: 22px">Kaduna</p>
+        <header class="px-4 pb-2">
+          <div class="row" style="min-height: 517px;">
+            <div class="col-lg-7 d-flex flex-column justify-content-end">
+              <h2 class="font-weight-bold">KADUNA</h2>
+              <p class="subtitle" style="font-size: 22px">Kaduna</p>
+            </div>
+            <div class="col-lg-5 d-none d-lg-block">
+              <div class="card-container position-lg-absolute">
+                <div class="card px-4 pt-4 ml-auto">
+                  <div class="mb-3 d-flex align-items-center">
+                    <figure class="d-inline-block mb-0 mr-2 rounded-circle border p-1" style="border-color: #EAF7ED !important;">
+                      <img src="~assets/images/el-rufai.png" alt class="rounded-circle photo" cl />
+                    </figure>
+
+                    <div class="details d-inline-block">
+                      <div class="d-flex flex-column justify-content-center">
+                        <span class="name m-0" style="line-height: 1.3em;">Nasir El Rufai</span>
+                        <span class="post m-0" style="line-height: 1.3em;">Executive Governor</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="detail d-flex align-items-center pb-3 mb-3">
+                    <figure class="detail-icon d-inline-block mb-0 mr-4 rounded-circle">
+                      <img src="~assets/icons/population.svg" alt />
+                    </figure>
+                    <div class="details d-inline-block">
+                      <div class="d-flex flex-column justify-content-center">
+                        <span class="figures m-0" style="line-height: 1.3em;">8.3 Million</span>
+                        <span class="heading m-0">Population</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="detail d-flex align-items-center pb-3 mb-3">
+                    <figure class="detail-icon d-inline-block mb-0 mr-4 rounded-circle">
+                      <img src="~assets/icons/lgas.svg" alt />
+                    </figure>
+                    <div class="details d-inline-block">
+                      <div class="d-flex flex-column justify-content-center">
+                        <span class="figures m-0" style="line-height: 1.3em;">23</span>
+                        <span class="heading m-0">Number of LGAs</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="detail d-flex align-items-center pb-3 mb-3">
+                    <figure class="detail-icon d-inline-block mb-0 mr-4 rounded-circle">
+                      <img src="~assets/icons/senators.svg" alt />
+                    </figure>
+                    <div class="details d-inline-block">
+                      <div class="d-flex flex-column justify-content-center">
+                        <span class="figures m-0" style="line-height: 1.3em;">3</span>
+                        <span class="heading m-0">Senators</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="detail d-flex align-items-center pb-3 mb-3">
+                    <figure class="detail-icon d-inline-block mb-0 mr-4 rounded-circle">
+                      <img src="~assets/icons/population.svg" alt />
+                    </figure>
+                    <div class="details d-inline-block">
+                      <div class="d-flex flex-column justify-content-center">
+                        <span class="figures m-0" style="line-height: 1.3em;">16</span>
+                        <span class="heading m-0">Federal Constituencies</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="detail d-flex align-items-center pb-3 mb-3">
+                    <figure class="detail-icon d-inline-block mb-0 mr-4 rounded-circle">
+                      <img src="~assets/icons/constituencies.svg" alt />
+                    </figure>
+                    <div class="details d-inline-block">
+                      <div class="d-flex flex-column justify-content-center">
+                        <span class="figures m-0" style="line-height: 1.3em;">34</span>
+                        <span class="heading m-0">State Constituencies</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="detail d-flex align-items-center pb-3 mb-3">
+                    <figure class="detail-icon d-inline-block mb-0 mr-4 rounded-circle">
+                      <img src="~assets/icons/population.svg" alt />
+                    </figure>
+                    <div class="details d-inline-block">
+                      <div class="d-flex flex-column justify-content-center">
+                        <span class="figures m-0" style="line-height: 1.3em;">NaN%</span>
+                        <span class="heading m-0">Infant Mortality Rate</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="detail d-flex align-items-center pb-3 mb-3">
+                    <figure class="detail-icon d-inline-block mb-0 mr-4 rounded-circle">
+                      <img src="~assets/icons/infant-mortality.svg" alt />
+                    </figure>
+                    <div class="details d-inline-block">
+                      <div class="d-flex flex-column justify-content-center">
+                        <span class="figures m-0" style="line-height: 1.3em;">31.91%</span>
+                        <span class="heading m-0">Access To Portable Water</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="detail d-flex align-items-center pb-3 mb-3">
+                    <figure class="detail-icon d-inline-block mb-0 mr-4 rounded-circle">
+                      <img src="~assets/icons/literacy.svg" alt />
+                    </figure>
+                    <div class="details d-inline-block">
+                      <div class="d-flex flex-column justify-content-center">
+                        <span class="figures m-0" style="line-height: 1.3em;">47.31%</span>
+                        <span class="heading m-0">Literacy Rate</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="detail d-flex align-items-center pb-3 mb-3">
+                    <figure class="detail-icon d-inline-block mb-0 mr-4 rounded-circle">
+                      <img src="~assets/icons/employment.svg" alt />
+                    </figure>
+                    <div class="details d-inline-block">
+                      <div class="d-flex flex-column justify-content-center">
+                        <span class="figures m-0" style="line-height: 1.3em;">30.3%</span>
+                        <span class="heading m-0">Unemployment Rate</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="detail d-flex align-items-center pb-3 mb-3">
+                    <figure class="detail-icon d-inline-block mb-0 mr-4 rounded-circle">
+                      <img src="~assets/icons/girl-marriage.svg" alt />
+                    </figure>
+                    <div class="details d-inline-block">
+                      <div class="d-flex flex-column justify-content-center">
+                        <span class="figures m-0" style="line-height: 1.3em;">30.3%</span>
+                        <span class="heading m-0">Girls married before age 15</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="pt-3">
+                  <button class="green-btn">Join Equilibra</button>
+                </div>
+              </div>
+            </div>
+          </div>
         </header>
       </div>
     </div>
-
+  <article>
     <div class="row">
       <div class="col-lg-7">
         <div class="row">
@@ -30,138 +165,139 @@
           </div>
         </div>
       </div>
-      <div class="col-lg-5">
-        <div class="card-container position-lg-absolute">
-        <div class="card px-4 pt-4 mx-lg-5">
-          <div class="mb-3 d-flex align-items-center">
-            <figure class="d-inline-block mb-0 mr-2 rounded-circle border p-1">
-              <img src="~assets/images/el-rufai.png" alt class="rounded-circle photo" cl />
-            </figure>
+      <div class="col-lg-5 d-lg-none ">
+                      <div class="card-container position-lg-absolute mt-4">
+                <div class="card px-4 pt-4 ml-auto">
+                  <div class="mb-3 d-flex align-items-center">
+                    <figure class="d-inline-block mb-0 mr-2 rounded-circle border p-1" style="border-color: #EAF7ED;">
+                      <img src="~assets/images/el-rufai.png" alt class="rounded-circle photo" cl />
+                    </figure>
 
-            <div class="details d-inline-block">
-              <div class="d-flex flex-column justify-content-center">
-                <span class="name m-0" style="line-height: 1.3em;">Nasir El Rufai</span>
-                <span class="post m-0" style="line-height: 1.3em;">Executive Governor</span>
+                    <div class="details d-inline-block">
+                      <div class="d-flex flex-column justify-content-center">
+                        <span class="name m-0" style="line-height: 1.3em;">Nasir El Rufai</span>
+                        <span class="post m-0" style="line-height: 1.3em;">Executive Governor</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="detail d-flex align-items-center pb-3 mb-3">
+                    <figure class="detail-icon d-inline-block mb-0 mr-4 rounded-circle">
+                      <img src="~assets/icons/population.svg" alt />
+                    </figure>
+                    <div class="details d-inline-block">
+                      <div class="d-flex flex-column justify-content-center">
+                        <span class="figures m-0" style="line-height: 1.3em;">8.3 Million</span>
+                        <span class="heading m-0">Population</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="detail d-flex align-items-center pb-3 mb-3">
+                    <figure class="detail-icon d-inline-block mb-0 mr-4 rounded-circle">
+                      <img src="~assets/icons/lgas.svg" alt />
+                    </figure>
+                    <div class="details d-inline-block">
+                      <div class="d-flex flex-column justify-content-center">
+                        <span class="figures m-0" style="line-height: 1.3em;">23</span>
+                        <span class="heading m-0">Number of LGAs</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="detail d-flex align-items-center pb-3 mb-3">
+                    <figure class="detail-icon d-inline-block mb-0 mr-4 rounded-circle">
+                      <img src="~assets/icons/senators.svg" alt />
+                    </figure>
+                    <div class="details d-inline-block">
+                      <div class="d-flex flex-column justify-content-center">
+                        <span class="figures m-0" style="line-height: 1.3em;">3</span>
+                        <span class="heading m-0">Senators</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="detail d-flex align-items-center pb-3 mb-3">
+                    <figure class="detail-icon d-inline-block mb-0 mr-4 rounded-circle">
+                      <img src="~assets/icons/population.svg" alt />
+                    </figure>
+                    <div class="details d-inline-block">
+                      <div class="d-flex flex-column justify-content-center">
+                        <span class="figures m-0" style="line-height: 1.3em;">16</span>
+                        <span class="heading m-0">Federal Constituencies</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="detail d-flex align-items-center pb-3 mb-3">
+                    <figure class="detail-icon d-inline-block mb-0 mr-4 rounded-circle">
+                      <img src="~assets/icons/constituencies.svg" alt />
+                    </figure>
+                    <div class="details d-inline-block">
+                      <div class="d-flex flex-column justify-content-center">
+                        <span class="figures m-0" style="line-height: 1.3em;">34</span>
+                        <span class="heading m-0">State Constituencies</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="detail d-flex align-items-center pb-3 mb-3">
+                    <figure class="detail-icon d-inline-block mb-0 mr-4 rounded-circle">
+                      <img src="~assets/icons/population.svg" alt />
+                    </figure>
+                    <div class="details d-inline-block">
+                      <div class="d-flex flex-column justify-content-center">
+                        <span class="figures m-0" style="line-height: 1.3em;">NaN%</span>
+                        <span class="heading m-0">Infant Mortality Rate</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="detail d-flex align-items-center pb-3 mb-3">
+                    <figure class="detail-icon d-inline-block mb-0 mr-4 rounded-circle">
+                      <img src="~assets/icons/infant-mortality.svg" alt />
+                    </figure>
+                    <div class="details d-inline-block">
+                      <div class="d-flex flex-column justify-content-center">
+                        <span class="figures m-0" style="line-height: 1.3em;">31.91%</span>
+                        <span class="heading m-0">Access To Portable Water</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="detail d-flex align-items-center pb-3 mb-3">
+                    <figure class="detail-icon d-inline-block mb-0 mr-4 rounded-circle">
+                      <img src="~assets/icons/literacy.svg" alt />
+                    </figure>
+                    <div class="details d-inline-block">
+                      <div class="d-flex flex-column justify-content-center">
+                        <span class="figures m-0" style="line-height: 1.3em;">47.31%</span>
+                        <span class="heading m-0">Literacy Rate</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="detail d-flex align-items-center pb-3 mb-3">
+                    <figure class="detail-icon d-inline-block mb-0 mr-4 rounded-circle">
+                      <img src="~assets/icons/employment.svg" alt />
+                    </figure>
+                    <div class="details d-inline-block">
+                      <div class="d-flex flex-column justify-content-center">
+                        <span class="figures m-0" style="line-height: 1.3em;">30.3%</span>
+                        <span class="heading m-0">Unemployment Rate</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="detail d-flex align-items-center pb-3 mb-3">
+                    <figure class="detail-icon d-inline-block mb-0 mr-4 rounded-circle">
+                      <img src="~assets/icons/girl-marriage.svg" alt />
+                    </figure>
+                    <div class="details d-inline-block">
+                      <div class="d-flex flex-column justify-content-center">
+                        <span class="figures m-0" style="line-height: 1.3em;">30.3%</span>
+                        <span class="heading m-0">Girls married before age 15</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="pt-3">
+                  <button class="green-btn">Join Equilibra</button>
+                </div>
               </div>
-            </div>
-          </div>
-          <div class="detail d-flex align-items-center pb-3 mb-3">
-            <figure class="detail-icon d-inline-block mb-0 mr-4 rounded-circle">
-              <img src="~assets/icons/population.svg" alt />
-            </figure>
-            <div class="details d-inline-block">
-              <div class="d-flex flex-column justify-content-center">
-                <span class="figures m-0" style="line-height: 1.3em;">8.3 Million</span>
-                <span class="heading m-0">Population</span>
-              </div>
-            </div>
-          </div>
-          <div class="detail d-flex align-items-center pb-3 mb-3">
-            <figure class="detail-icon d-inline-block mb-0 mr-4 rounded-circle">
-              <img src="~assets/icons/lgas.svg" alt />
-            </figure>
-            <div class="details d-inline-block">
-              <div class="d-flex flex-column justify-content-center">
-                <span class="figures m-0" style="line-height: 1.3em;">23</span>
-                <span class="heading m-0">Number of LGAs</span>
-              </div>
-            </div>
-          </div>
-          <div class="detail d-flex align-items-center pb-3 mb-3">
-            <figure class="detail-icon d-inline-block mb-0 mr-4 rounded-circle">
-              <img src="~assets/icons/senators.svg" alt />
-            </figure>
-            <div class="details d-inline-block">
-              <div class="d-flex flex-column justify-content-center">
-                <span class="figures m-0" style="line-height: 1.3em;">3</span>
-                <span class="heading m-0">Senators</span>
-              </div>
-            </div>
-          </div>
-          <div class="detail d-flex align-items-center pb-3 mb-3">
-            <figure class="detail-icon d-inline-block mb-0 mr-4 rounded-circle">
-              <img src="~assets/icons/population.svg" alt />
-            </figure>
-            <div class="details d-inline-block">
-              <div class="d-flex flex-column justify-content-center">
-                <span class="figures m-0" style="line-height: 1.3em;">16</span>
-                <span class="heading m-0">Federal Constituencies</span>
-              </div>
-            </div>
-          </div>
-          <div class="detail d-flex align-items-center pb-3 mb-3">
-            <figure class="detail-icon d-inline-block mb-0 mr-4 rounded-circle">
-              <img src="~assets/icons/constituencies.svg" alt />
-            </figure>
-            <div class="details d-inline-block">
-              <div class="d-flex flex-column justify-content-center">
-                <span class="figures m-0" style="line-height: 1.3em;">34</span>
-                <span class="heading m-0">State Constituencies</span>
-              </div>
-            </div>
-          </div>
-          <div class="detail d-flex align-items-center pb-3 mb-3">
-            <figure class="detail-icon d-inline-block mb-0 mr-4 rounded-circle">
-              <img src="~assets/icons/population.svg" alt />
-            </figure>
-            <div class="details d-inline-block">
-              <div class="d-flex flex-column justify-content-center">
-                <span class="figures m-0" style="line-height: 1.3em;">NaN%</span>
-                <span class="heading m-0">Infant Mortality Rate</span>
-              </div>
-            </div>
-          </div>
-          <div class="detail d-flex align-items-center pb-3 mb-3">
-            <figure class="detail-icon d-inline-block mb-0 mr-4 rounded-circle">
-              <img src="~assets/icons/infant-mortality.svg" alt />
-            </figure>
-            <div class="details d-inline-block">
-              <div class="d-flex flex-column justify-content-center">
-                <span class="figures m-0" style="line-height: 1.3em;">31.91%</span>
-                <span class="heading m-0">Access To Portable Water</span>
-              </div>
-            </div>
-          </div>
-          <div class="detail d-flex align-items-center pb-3 mb-3">
-            <figure class="detail-icon d-inline-block mb-0 mr-4 rounded-circle">
-              <img src="~assets/icons/literacy.svg" alt />
-            </figure>
-            <div class="details d-inline-block">
-              <div class="d-flex flex-column justify-content-center">
-                <span class="figures m-0" style="line-height: 1.3em;">47.31%</span>
-                <span class="heading m-0">Literacy Rate</span>
-              </div>
-            </div>
-          </div>
-          <div class="detail d-flex align-items-center pb-3 mb-3">
-            <figure class="detail-icon d-inline-block mb-0 mr-4 rounded-circle">
-              <img src="~assets/icons/employment.svg" alt />
-            </figure>
-            <div class="details d-inline-block">
-              <div class="d-flex flex-column justify-content-center">
-                <span class="figures m-0" style="line-height: 1.3em;">30.3%</span>
-                <span class="heading m-0">Unemployment Rate</span>
-              </div>
-            </div>
-          </div>
-          <div class="detail d-flex align-items-center pb-3 mb-3">
-            <figure class="detail-icon d-inline-block mb-0 mr-4 rounded-circle">
-              <img src="~assets/icons/girl-marriage.svg" alt />
-            </figure>
-            <div class="details d-inline-block">
-              <div class="d-flex flex-column justify-content-center">
-                <span class="figures m-0" style="line-height: 1.3em;">30.3%</span>
-                <span class="heading m-0">Girls married before age 15</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="mx-lg-5 pt-3">
-          <button class="green-btn">Join Equilibra</button>
-        </div>
-        </div>
       </div>
     </div>
+      </article>
   </div>
 </template>
 
@@ -220,23 +356,24 @@ export default {
 .card {
   border-radius: 0;
   background: #ffffff;
-  
+  min-width: 350px;
   border: 1px solid rgba(222, 225, 229, 0.17);
 }
 
 .card-container {
-    top: -468px;
-}   
+  top: 35px;
+  right: 25px;
+}
 header {
   background-image: url("~assets/images/kaduna.png");
   background-repeat: no-repeat;
-  background-size: contain;
+  background-size: cover;
   min-height: 508px;
   color: white;
 }
 
 p {
-  font-size: 16px;
+  font-size: 18px;
 }
 
 span.title {
@@ -268,8 +405,12 @@ span.post {
   height: 100px;
 }
 
-@media (min-width: 992px){
-.card-container{
-    position: absolute
-}}
+article {
+  padding-bottom: 150px
+}
+@media (min-width: 992px) {
+  .card-container {
+    position: absolute;
+  }
+}
 </style>

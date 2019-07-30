@@ -1,60 +1,53 @@
 <template>
   <div class="main-container">
     <div class="container-fluid px-0 header">
-      <header class="px-md-3 pt-2">
-        
-        <nav class="navbar navbar-expand-lg navbar-light d-flex justify-space-between">
-          <nuxt-link to="/" class="navbar-brand">
-             <img src="~/assets/icons/logo.svg" alt />
-          </nuxt-link>
-         
-          <button
-            class="navbar-toggler"
-            type="button"
-            data-toggle="collapse"
-            data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span class="navbar-toggler-icon"></span>
-          </button>
-
-          <div
-            class="collapse navbar-collapse d-lg-flex justify-content-md-end"
-            id="navbarSupportedContent"
-          >
-            <ul class="navbar-nav">
-              <li class="nav-item">
-                <nuxt-link to="/" class="nav-link">
-                  Home
-                </nuxt-link>
-                <!-- <a class="" href="#"></a> -->
-              </li>
-              <li class="nav-item">
-              <nuxt-link to="/forums" class="nav-link">
-                  Forums
-                </nuxt-link>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Blog</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Contact Us</a>
-              </li>
-              <li class="nav-item ml-md-4">
-                <nuxt-link to="/sign-up" tag="button" class="btn">
-                  Join Us
-                </nuxt-link>
-              </li>
-            </ul>
-          </div>
-        </nav>
-      </header>
       <div class="container">
+        <header class="pt-3">
+          <nav class="navbar navbar-expand-lg navbar-light d-flex justify-space-between px-md-0">
+            <nuxt-link to="/" class="navbar-brand">
+              <img src="~/assets/icons/logo.svg" alt />
+            </nuxt-link>
+
+            <button
+              class="navbar-toggler"
+              type="button"
+              data-toggle="collapse"
+              data-target="#navbarSupportedContent"
+              aria-controls="navbarSupportedContent"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div
+              class="collapse navbar-collapse d-lg-flex justify-content-md-end"
+              id="navbarSupportedContent"
+            >
+              <ul class="navbar-nav">
+                <li class="nav-item">
+                  <nuxt-link to="/" class="nav-link">Home</nuxt-link>
+                  <!-- <a class="" href="#"></a> -->
+                </li>
+                <li class="nav-item">
+                  <nuxt-link to="/forums" class="nav-link">Forums</nuxt-link>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">Blog</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">Contact Us</a>
+                </li>
+                <li class="nav-item ml-lg-4">
+                  <nuxt-link to="/sign-up" tag="button" class="btn">Join Us</nuxt-link>
+                </li>
+              </ul>
+            </div>
+          </nav>
+        </header>
         <div class="row">
-          <div class="col-md-5">
-            <div class="hero-text mt-md-5 pt-md-5 pt-4">
+          <div class="col-md-5 d-flex align-items-md-center">
+            <div class="hero-text">
               <h1 class="font-weight-bold pt-3">The People’s Parliament!</h1>
               <h5
                 class="pt-3"
@@ -64,8 +57,8 @@
               </div>
             </div>
           </div>
-          <div class="col-md-7">
-            <Map />
+          <div class="col-md-7 d-flex align-items-md-center ">
+            <Map class="pt-5"/>
           </div>
         </div>
       </div>
@@ -207,7 +200,11 @@
                 height="380px"
                 class="img-fluid"
               />
-              <img src="~assets/icons/slanted-line.svg" alt class="position-absolute slanted-line img-fluid" />
+              <img
+                src="~assets/icons/slanted-line.svg"
+                alt
+                class="position-absolute slanted-line img-fluid"
+              />
             </figure>
           </div>
         </div>
@@ -345,7 +342,7 @@
 import Map from "~/components/Map";
 import Footer from "~/components/Shared/footer";
 export default {
-  layout: 'footerOnly',
+  layout: "footerOnly",
   components: {
     Map,
     Footer
@@ -363,38 +360,42 @@ export default {
   background-image: url("~assets/images/headerBG.svg");
   background-repeat: no-repeat;
   background-size: contain;
-  height: 719px;
+  min-height: 50vw;
   color: white;
+  font-weight: 100;
 }
 
-.navbar-light .nav-item a, .navbar-light .navbar-nav .active > .nav-link, .navbar-light .navbar-nav .nav-link:hover, .navbar-light .navbar-nav .nav-link:focus  {
+.navbar-light .nav-item a,
+.navbar-light .navbar-nav .active > .nav-link,
+.navbar-light .navbar-nav .nav-link:hover,
+.navbar-light .navbar-nav .nav-link:focus {
   color: white;
 }
 
 h1 {
-  font-size: 30px;
+  font-size: 34px;
 }
 h5 {
-  font-size: 16px;
+  font-size: 18px;
   line-height: 1.5em;
-  font-weight: 400;
+  font-weight: 100;
   display: inline-block;
 }
 
 h6 {
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 400;
   letter-spacing: 2px;
 }
 
 h3 {
-  font-size: 22px;
-  font-weight: 600;
+  font-size: 24px;
+  font-weight: 700;
   color: var(--black-text);
   line-height: 1.5em;
 }
 h4 {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 400;
   color: var(--black-text);
 }
@@ -406,26 +407,31 @@ p {
 .who-we-are {
   background-image: url("~assets/images/pattern-BG.svg");
   background-repeat: no-repeat;
-  background-position: 35px;
+  background-position: 111px center;
   /* height: 200px;
   width: 200px; */
 }
 
+
 section.values p {
-  font-size: 12px;
+  font-size: 14px;
 }
 
 section.why-equilibra {
   background: #fcf6ee;
 }
+section.why-equilibra h3 {
+  font-weight: 700;
+}
 section.why-equilibra h5 {
   background: #fcf6ee;
   color: var(--black-text);
+  font-weight: 400;
 }
 
 section.why-equilibra ul {
   list-style-type: none;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 section.why-equilibra li:before {
@@ -456,7 +462,7 @@ section.keep-in-touch .card-container button {
   border: solid 1px white;
   background: white;
   height: 50px;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .input-container > * {
@@ -468,7 +474,7 @@ section.keep-in-touch .card-container button:hover {
 }
 
 .card-container .card-content {
-  margin-top: -50px
+  margin-top: -50px;
 }
 
 .card-container .card-content h4 {
@@ -502,7 +508,7 @@ section.keep-in-touch .card-container button:hover {
 }
 
 .card p {
-  font-size: 14px;
+  font-size: 16px;
 }
 
 section.footer {
@@ -511,34 +517,34 @@ section.footer {
 }
 
 .slanted-line {
-    left: 90px;
-    height: 490px;
-    bottom: 70px;
-    background-blend-mode: darken;
-    opacity: 0.8;
-
+  left: 90px;
+  height: 490px;
+  bottom: 115px;
+  background-blend-mode: darken;
+  opacity: 0.8;
 }
 
 section.footer h2 {
   color: white;
-  font-size: 26px;
+  font-size: 28px;
   line-height: 2.5rem;
 }
 
 section.footer {
-   background-image: url("~assets/images/top-phone.svg"),url("~assets/images/right-phone.svg"), url("~assets/images/bottom-phone.svg") ;
-   background-repeat: no-repeat, no-repeat, no-repeat;
-   /* background-size: 24%, 18%, 24%; */
-   /* background-attachment: fixed; */
-   background-size: 319px, 229px, 319px;
-   background-position: 820px 30px, 1080px 100px, 990px bottom;
-   /* background-position: 83% 30px, right 100px, right bottom; */
-
+  background-image: url("~assets/images/top-phone.svg"),
+    url("~assets/images/right-phone.svg"),
+    url("~assets/images/bottom-phone.svg");
+  background-repeat: no-repeat, no-repeat, no-repeat;
+  /* background-size: 24%, 18%, 24%; */
+  /* background-attachment: fixed; */
+  background-size: 319px, 229px, 319px;
+  background-position: 820px 30px, 1080px 100px, 990px bottom;
+  /* background-position: 83% 30px, right 100px, right bottom; */
 }
 
 footer {
   background: white;
-  min-height: 325px
+  min-height: 325px;
 }
 
 footer li a,
@@ -547,18 +553,23 @@ footer h6 {
   text-decoration: none;
 }
 
-footer li{
-  font-size: 13px;
+footer li {
+  font-size: 15px;
+  color: var(--black-text);
+  line-height: 2.5rem;
+}
+
+footer p {
+  font-size: 15px;
   color: var(--black-text);
   line-height: 2rem;
 }
 
-footer p {
-  font-size: 13px;
-  color: var(--black-text);
-  line-height: 1.8rem
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1260px;
+  }
 }
-
 @media screen and (min-width: 1441px) {
   .header {
     background-size: cover;
@@ -566,34 +577,32 @@ footer p {
 }
 @media (min-width: 576px) {
   section.keep-in-touch .card-container {
-  background-size: cover;
-  background-position: center;
-  width: 85%;
-}
-footer p {
-  width: 80%
-}
+    background-size: cover;
+    background-position: center;
+    width: 85%;
+  }
+  footer p {
+    width: 80%;
+  }
 }
 @media (max-width: 991px) {
-    .header {
-  background-size: auto;
-}
-
+  .header {
+    background-size: cover;
+  }
 }
 @media (max-width: 576px) {
-    .slanted-line {
-     left: 80px;
+  .slanted-line {
+    left: 80px;
     height: 120%;
     bottom: 0;
     background-blend-mode: darken;
     opacity: 0.8;
-}
+  }
 }
 @media (max-width: 800px) {
-    .who-we-are {
-      background-size: cover;
+  .who-we-are {
+    background-size: cover;
     background-position: unset;
-}
-
+  }
 }
 </style>

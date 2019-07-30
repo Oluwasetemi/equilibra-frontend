@@ -1,5 +1,5 @@
 {
-  "name": "Equilibra",
+  "name": "equilibra",
   "version": "1.0.0",
   "description": "A web application forum for discussing politics",
   "author": "Iwuanyanwu Chiamaka",
@@ -11,9 +11,12 @@
     "generate": "nuxt generate"
   },
   "dependencies": {
-    "bootstrap-vue": "^2.0.0-rc.11",
+    "@nuxtjs/apollo": "^4.0.0-rc9",
+    "@nuxtjs/axios": "^5.5.4",
     "bootstrap": "^4.1.3",
-    "nuxt": "^2.0.0"
+    "bootstrap-vue": "^2.0.0-rc.11",
+    "nuxt": "^2.0.0",
+    "vuelidate": "^0.7.4"
   },
   "devDependencies": {
     "nodemon": "^1.18.9"

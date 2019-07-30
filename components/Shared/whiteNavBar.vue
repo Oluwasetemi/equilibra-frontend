@@ -1,5 +1,6 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-light d-flex justify-space-between mx-4 pt-3">
+    <div class="container">
     <nuxt-link to="/" class="navbar-brand">
       <img src="~/assets/icons/green-logo.svg" alt />
     </nuxt-link>
@@ -34,10 +35,11 @@
         <li class="nav-item">
           <a class="nav-link" href="#">Contact Us</a>
         </li>
-        <li class="nav-item ml-4">
+        <li class="nav-item ml-lg-4">
           <nuxt-link to="/sign-up" tag="button" class="btn">Join Us</nuxt-link>
         </li>
       </ul>
+    </div>
     </div>
   </nav>
 </template>
@@ -59,5 +61,9 @@
   color: #07834e;
   font-weight: 600;
 }
+@media (min-width: 1200px){
+.container{
+    max-width: 1400px !important;
+}}
 </style>
 

@@ -17,6 +17,7 @@
               <span>Use Facebook Account</span>
             </button>
           </div>
+          <!-- <div class="g-signin2" data-onsuccess="onSignIn"></div> -->
           <div class="separator text-center w-100">
             <div class="d-inline-block line"></div>
             <span
@@ -36,6 +37,7 @@
                 id="email"
                 placeholder="Email Address"
                 class="form-control"
+                v-model="payload.email"
               />
             </div>
             <div class="form-input my-2">
@@ -45,6 +47,7 @@
                 id="password"
                 placeholder="Password"
                 class="form-control"
+                v-model="payload.password"
               />
             </div>
             <div class="form-input my-2">
@@ -56,6 +59,7 @@
                 class="form-control"
               />
             </div>
+            <!-- <div class="g-signin2" data-onsuccess="onSignIn"></div> -->
             <div class="form-input">
               <div class="row">
                 <div class="col-12">
@@ -65,7 +69,7 @@
               <div class="row">
                 <div class="col-6">
                   <div class="form-input position-relative">
-                    <select name id class="form-control mt-0">
+                    <select name id class="form-control mt-0" v-model="month">
                       <option value>Month</option>
                       <option :value="month" v-for="(month, i) in months" :key="i">{{ month }}</option>
                     </select>
@@ -79,15 +83,15 @@
 
                 <div class="col-3 px-0">
                   <div class="form-input position-relative">
-                    <select name id class="form-control mt-0">
+                    <select name id class="form-control mt-0" v-model="year">
                       <option value>Year</option>
                       <option :year="year" v-for="(year, i) in years" :key="i">{{ year }}</option>
                     </select>
                     <img
-                        src="~/assets/icons/downward-arrow.svg"
-                        alt
-                        class="position-absolute down-arrow"
-                      />
+                      src="~/assets/icons/downward-arrow.svg"
+                      alt
+                      class="position-absolute down-arrow"
+                    />
                   </div>
                 </div>
               </div>
@@ -106,6 +110,9 @@
 </template>
 
 <script>
+var auth2;
+var googleUser; // The current user
+
 import ConfirmEmailCard from "~/components/Authentication/confirm-email";
 export default {
   layout: "authentication",
@@ -115,6 +122,12 @@ export default {
   data() {
     return {
       ConfirmEmailCard: false,
+      month: "",
+      year: "",
+      payload: {
+        email: "",
+        password: ""
+      },
       months: [
         "January",
         "February",
@@ -139,7 +152,34 @@ export default {
         years.push(i);
       }
       return years;
+    },
+    getDateString() {
+      return new Date(`${this.month}-${1}-${this.year}`).toISOString();
     }
+  },
+  methods: {
+    createAccount() {
+      this.payload.dob = this.getDateString();
+    }
+  },
+  mounted() {
+    console.log(this.$glogin);
+  },
+  head() {
+    return {
+      meta: [
+        {
+          name: "google-signin-client_id",
+          content:
+            "769165313432-rq98o9410ntrgg2obvkhl86k82bueoq0.apps.googleusercontent.com"
+        }
+      ],
+      script: [
+        {
+          src: "https://apis.google.com/js/platform.js"
+        },
+      ],
+    };
   }
 };
 </script>
@@ -153,7 +193,8 @@ h4 {
   color: #000000;
 }
 p {
-  font-size: 12px;
+  font-size: 14px;
+  font-weight: 100;
 }
 .facebook {
   background: #3b5998;
@@ -161,12 +202,14 @@ p {
   color: white;
   margin-bottom: 1rem;
   margin-top: 1rem;
+  font-weight: 100;
 }
 .google {
   color: #464646;
   background: #fefefe;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.04);
   border-radius: 4px;
+  font-weight: 100;
 }
 
 .card {
@@ -185,7 +228,7 @@ p {
   background: #168a59;
   border: none;
   letter-spacing: 0.8px;
-  font-size: 12px;
+  font-size: 14px;
   height: 40px;
   color: white;
 }
@@ -212,7 +255,7 @@ p {
 }
 
 .border-bottom {
-    border-color: #EAEAEA;
+  border-color: #eaeaea;
 }
 
 button.auth {
@@ -221,8 +264,12 @@ button.auth {
   height: 40px;
   color: white;
   font-weight: 600;
-  font-size: 11px;
+  font-size: 13px;
   letter-spacing: 0.8px;
+}
+
+::placeholder {
+  font-weight: 100;
 }
 
 @media screen and (max-width: 767px) {
