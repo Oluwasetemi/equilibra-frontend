@@ -1,3 +1,5 @@
-export default function(context) {
-console.log(context.store.getters.isAuthenticated)
+export default function({ route, store, redirect }) {
+    if (store.getters['auth/isAuthenticated']) {
+      redirect('/');
+  }
 }

@@ -1,6 +1,6 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-light d-flex justify-space-between px-4">
-    <signUpModal/>
+    <signUpModal />
     <div class="container">
       <nuxt-link to="/" class="navbar-brand ml-lg-2">
         <img src="~/assets/icons/logo.svg" alt />
@@ -37,7 +37,35 @@
             <a class="nav-link" href="#">Contact Us</a>
           </li>
           <li class="nav-item ml-lg-4">
-            <button class="btn" data-toggle="modal" data-target="#signUpModal">Join Us</button>
+            <div class="dropdown" style="background: white;" v-if="isAuthenticated">
+              <a
+                href="#"
+                class="dropdown-toggle d-flex align-items-center m-0"
+                id="dropdownMenuButton"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                <img src="~assets/images/avatar.png" alt height="38px" class="mr-1 avatar" />
+                <div
+                  class="inline-block px-2 user-name"
+                  style="color: black"
+                >{{ getUser.username || getUser.fullName}}</div>
+                <img
+                  src="~assets/icons/thin-downward-arrow.svg"
+                  alt
+                  class="position-relative"
+                  style="left: 8px;"
+                />
+              </a>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <nuxt-link class="dropdown-item" to="account-settings">Account Settings</nuxt-link>
+                <a class="dropdown-item" href="#">Feedback</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#" @click.stop="logoutUser()">Logout</a>
+              </div>
+            </div>
+            <button class="btn" data-toggle="modal" data-target="#signUpModal" v-else>Join Us</button>
             <!-- <nuxt-link to="/sign-up" tag="button" class="btn"></nuxt-link> -->
           </li>
         </ul>
@@ -48,12 +76,23 @@
 
 
 <script>
-import signUpModal from '~/components/authentication/sign-up'
+import { mapActions, mapGetters } from "vuex";
+import signUpModal from "~/components/authentication/sign-up";
 export default {
   components: {
     signUpModal
+  },
+  computed: {
+    ...mapGetters("auth", ["isAuthenticated"]),
+    ...mapGetters("user", ["getUser"])
+  },
+  methods: {
+    ...mapActions("auth", ["logout"]),
+    logoutUser() {
+      this.logout();
+    }
   }
-}
+};
 </script>
 
 

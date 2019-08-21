@@ -87,9 +87,15 @@
                 </p>
               </div>
               <div class="actions mr-2">
-                <a href="#" class="likes" data-toggle="tooltip" title="Like" @click="liked = !liked">
-                  <img src="~/assets/icons/like-icon-outline.svg" alt v-if="!liked"/>
-                  <img src="~/assets/icons/like-icon-red-filled.svg" alt v-if="liked"/>
+                <a
+                  href="#"
+                  class="likes"
+                  data-toggle="tooltip"
+                  title="Like"
+                  @click="liked = !liked"
+                >
+                  <img src="~/assets/icons/like-icon-outline.svg" alt v-if="!liked" />
+                  <img src="~/assets/icons/like-icon-red-filled.svg" alt v-if="liked" />
                   <span class="px-1">{{!liked ? 4 : 4+1}}</span>
                 </a>
                 <a href="#" class="replies ml-2" data-toggle="modal" data-target="#commentModal">
@@ -114,7 +120,6 @@ import ChangeTopicModal from "~/components/Rooms/change-topic";
 import imageUrl from "~/assets/images/judiciary_BG.svg";
 import Card from "~/components/Forums/forum-card";
 export default {
-  middleware: "auth",
   layout: "greenNavOnly",
   data() {
     return {
@@ -147,9 +152,6 @@ export default {
         }
       ]
     };
-  },
-  mounted() {
-    console.log(this.imageURL);
   },
   components: {
     Card,

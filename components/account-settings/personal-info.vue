@@ -46,9 +46,9 @@
         </div>
         <div class="row">
           <div class="col-md-10">
-            <form class="mt-3 px-3 mr-md-4">
+            <form class="mt-3 px-3 mr-md-4" @submit.prevent="updateUserProfile">
               <div class="row">
-                <div class="col-md-4 px-2">
+                <div class="col-lg-4 col-md-6 px-2">
                   <div class="form-input my-2">
                     <label for="email2">EMAIL ADDRESS</label>
                     <input
@@ -57,32 +57,104 @@
                       id="email2"
                       class="form-control mt-0"
                       disabled
+                      :class="{invalid: $v.userDetail.email.$error}"
+                      @blur="$v.userDetail.email.$touch()"
+                      v-model="userDetail.email"
+                    />
+                    <template v-if="$v.userDetail.email.$dirty">
+                      <p v-if="!$v.userDetail.email.required" class="invalid">This field is required</p>
+                      <p
+                        v-else-if="!$v.userDetail.email.email"
+                        class="invalid"
+                      >Please provide a valid email address</p>
+                    </template>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-lg-4 col-md-6 px-2">
+                  <div class="form-input my-2">
+                    <label for="name2">FULL NAME</label>
+                    <input
+                      type="text"
+                      name="name2"
+                      id="name2"
+                      class="form-control mt-0"
+                      v-model="userDetail.fullName"
+                    />
+                    <template v-if="$v.userDetail.fullName.$dirty">
+                      <p
+                        v-if="!$v.userDetail.fullName.required"
+                        class="invalid"
+                      >This field is required</p>
+                      <p
+                        v-else-if="!$v.userDetail.fullName.minLength"
+                        class="invalid"
+                      >Name should not be less than 2 characters</p>
+                    </template>
+                  </div>
+                </div>
+                <div class="col-lg-4 col-md-6 px-2">
+                  <div class="form-input my-2">
+                    <label for="username2">USER NAME</label>
+                    <input
+                      type="text"
+                      name="username2"
+                      id="username2"
+                      class="form-control mt-0"
+                      v-model="userDetail.username"
+                    />
+                    <template v-if="$v.userDetail.username.$dirty">
+                      <p
+                        v-if="!$v.userDetail.username.required"
+                        class="invalid"
+                      >This field is required</p>
+                      <p
+                        v-else-if="!$v.userDetail.username.minLength"
+                        class="invalid"
+                      >Username should not be less than 6 characters</p>
+                    </template>
+                  </div>
+                </div>
+                <div class="col-lg-4 col-md-6 px-2">
+                  <div class="form-input my-2">
+                    <label for="dob2">BIRTH DATE</label>
+                    <input
+                      type="date"
+                      name="dob2"
+                      id="dob2"
+                      class="form-control mt-0"
+                      disabled
+                      :value="userDetail.dob | formatDate"
+                      @input="value=>userDetail.dob=value"
                     />
                   </div>
                 </div>
               </div>
               <div class="row">
-                <div class="col-md-4 px-2">
-                  <div class="form-input my-2">
-                    <label for="name2">FULL NAME</label>
-                    <input type="text" name="name2" id="name2" class="form-control mt-0" />
-                  </div>
-                </div>
-                <div class="col-md-4 px-2">
-                  <div class="form-input my-2">
-                    <label for="username2">USER NAME</label>
-                    <input type="text" name="username2" id="username2" class="form-control mt-0" />
-                  </div>
-                </div>
-                <div class="col-md-4 px-2">
-                  <div class="form-input my-2">
-                    <label for="dob2">BIRTH DATE</label>
-                    <input type="date" name="dob2" id="dob2" class="form-control mt-0" />
-                  </div>
+                <div class="col-md-12 px-2">
+                  <button class="green-btn mt-2" type="submit" :disabled="loading.profile">
+                    <div class="spinner-grow text-success" role="status" v-if="loading.profile">
+                      <span class="sr-only">Loading...</span>
+                    </div>
+                    <span>Save Changes</span>
+                  </button>
                 </div>
               </div>
+            </form>
+          </div>
+        </div>
+        <hr class="mx-2 mt-4" />
+        <div class="row">
+          <div class="col-md-10">
+            <p
+              v-if="errorMessage"
+              class="invalid px-2"
+              style="font-size: 14px !important; font-weight: 400; "
+            >{{errorMessage}}</p>
+            <form class="px-3 mr-md-4" @submit.prevent="updateUserPassword">
               <div class="row">
-                <div class="col-md-4 my-2 px-2">
+                <div class="col-lg-4 col-md-6 my-2 px-2">
                   <div class="form-input">
                     <label for="password2">CURRENT PASSWORD</label>
                     <input
@@ -90,10 +162,24 @@
                       name="password2"
                       id="password2"
                       class="form-control mt-0"
+                      @focus="errorMessage = ''"
+                      :class="{invalid: $v.payload.currentPassword.$error || errorMessage}"
+                      @blur="$v.payload.currentPassword.$touch()"
+                      v-model="payload.currentPassword"
                     />
+                    <template v-if="$v.payload.currentPassword.$dirty">
+                      <p
+                        v-if="!$v.payload.currentPassword.required"
+                        class="invalid"
+                      >This field is required</p>
+                      <p
+                        v-else-if="!$v.payload.currentPassword.minLength"
+                        class="invalid"
+                      >Password should not be less than 6 characters</p>
+                    </template>
                   </div>
                 </div>
-                <div class="col-md-4 my-2 px-2">
+                <div class="col-lg-4 col-md-6 my-2 px-2">
                   <div class="form-input">
                     <label for="new-password2">NEW PASSWORD</label>
                     <input
@@ -101,10 +187,24 @@
                       name="new-password2"
                       id="new-password2"
                       class="form-control mt-0"
+                      @focus="errorMessage = ''"
+                      :class="{invalid: $v.payload.newPassword.$error || errorMessage}"
+                      @blur="$v.payload.newPassword.$touch()"
+                      v-model="payload.newPassword"
                     />
+                    <template v-if="$v.payload.newPassword.$dirty">
+                      <p
+                        v-if="!$v.payload.newPassword.required"
+                        class="invalid"
+                      >This field is required</p>
+                      <p
+                        v-else-if="!$v.payload.newPassword.minLength"
+                        class="invalid"
+                      >Password should not be less than 6 characters</p>
+                    </template>
                   </div>
                 </div>
-                <div class="col-md-4 my-2 px-2">
+                <div class="col-lg-4 col-md-6 my-2 px-2">
                   <div class="form-input">
                     <label for="confirm-password2">CONFIRM NEW PASSWORD</label>
                     <input
@@ -112,13 +212,36 @@
                       name="confirm-password2"
                       id="confirm-password2"
                       class="form-control mt-0"
+                      @focus="errorMessage = ''"
+                      :class="{invalid: $v.confirmPassword.$error || errorMessage}"
+                      @blur="$v.confirmPassword.$touch()"
+                      v-model="confirmPassword"
                     />
+                    <template v-if="$v.confirmPassword.$dirty">
+                      <p v-if="!$v.confirmPassword.required" class="invalid">This field is required</p>
+                      <p
+                        v-else-if="!$v.confirmPassword.minLength"
+                        class="invalid"
+                      >Password should not be less than 6 characters</p>
+                      <p
+                        v-else-if="$v.confirmPassword.$error"
+                        class="invalid"
+                      >Passwords do not match</p>
+                    </template>
                   </div>
                 </div>
               </div>
               <div class="row">
-                <div class="col-md-12">
-                  <button class="green-btn mt-2">Save Changes</button>
+                <div class="col-md-12 px-2">
+                  <button
+                    class="green-btn mt-2 d-flex justify-content-center align-items-center"
+                    :disabled="loading.password"
+                  >
+                    <div class="spinner-grow text-success" role="status" v-if="loading.password">
+                      <span class="sr-only">Loading...</span>
+                    </div>
+                    <span>Save Changes</span>
+                  </button>
                 </div>
               </div>
             </form>
@@ -131,17 +254,153 @@
 
 
 <script>
+import {
+  required,
+  minLength,
+  maxLength,
+  email,
+  sameAs
+} from "vuelidate/lib/validators";
+import { mapActions, mapGetters } from "vuex";
 export default {
+  data() {
+    return {
+      file: "",
+      errorMessage: "",
+      loading: {
+        password: false,
+        profile: false
+      },
+      confirmPassword: "",
+      payload: {
+        newPassword: "",
+        currentPassword: ""
+      }
+    };
+  },
+  validations: {
+    payload: {
+      newPassword: {
+        required,
+        minLength: minLength(6)
+      },
+      currentPassword: {
+        required,
+        minLength: minLength(6)
+      }
+    },
+    confirmPassword: {
+      required,
+      minLength: minLength(6),
+      sameAs: sameAs(vm => {
+        return vm.payload.newPassword;
+      })
+    },
+    userDetail: {
+      fullName: {
+        required,
+        minLength: minLength(2)
+      },
+      email: {
+        email,
+        required
+      },
+      username: {
+        required,
+        minLength: minLength(6)
+      }
+    }
+  },
+  computed: {
+    ...mapGetters("user", ["getUser"]),
+    userDetail() {
+      return JSON.parse(JSON.stringify(this.getUser));
+    }
+  },
+  filters: {
+    formatDate(val) {
+      const date = new Date(val);
+      let year = date.getFullYear();
+      let month = date.getMonth() + 1;
+      let dt = date.getDate();
+
+      if (dt < 10) {
+        dt = "0" + dt;
+      }
+      if (month < 10) {
+        month = "0" + month;
+      }
+      return year + "-" + month + "-" + dt;
+    }
+  },
   methods: {
+    ...mapActions("user", ["changePassword", "updateProfile"]),
     previewImage() {
-      const avatar = event.target.files[0];
-      // this.formData.append("photo", avatar);
+      this.file = event.target.files[0];
       const reader = new FileReader();
-      reader.readAsDataURL(avatar);
+      reader.readAsDataURL(this.file);
       reader.onload = e => {
         this.$refs.avatar.src = e.target.result;
       };
+    },
+    updateUserPassword() {
+      const self = this;
+      this.loading.password = true;
+      this.changePassword(this.payload)
+        .then(data => {
+          if (data.graphQLErrors) {
+            self.errorMessage = data.graphQLErrors[0].message;
+            self.$toast.error(data.graphQLErrors[0].message);
+            this.loading.password = false;
+            return;
+          }
+          this.loading.password = false;
+          self.$toast.success(data.successMessage);
+          this.resetPasswordForm();
+          return;
+        })
+        .catch(err => {
+          this.loading.password = false;
+        });
+    },
+    updateUserProfile() {
+      this.loading.profile = true;
+      const payload = {
+        fullName: this.userDetail.fullName,
+        username: this.userDetail.username
+      };
+      if (this.file) payload.file = this.file;
+      const self = this;
+      this.updateProfile(payload)
+        .then(data => {
+          debugger
+          if (data.graphQLErrors) {
+            self.errorMessage = data.graphQLErrors[0].message;
+            self.$toast.error(data.graphQLErrors[0].message);
+            this.loading.profile = false;
+            return;
+          }
+          this.loading.profile = false;
+          self.$toast.success('Your profile has been updated!');
+          this.resetProfileForm();
+          return;
+        })
+        .catch(err => {
+          this.loading.profile = false;
+        });
+    },
+    resetPasswordForm() {
+      this.confirmPassword = "";
+      this.payload = {
+        newPassword: "",
+        currentPassword: ""
+      };
+      this.$v.confirmPassword.$reset();
+      this.$v.payload.$reset();
     }
+  },
+  mounted() {
+    
   }
 };
 </script>
@@ -214,6 +473,8 @@ input.form-control:disabled {
   box-sizing: border-box;
   border-radius: 4px;
 }
-</style>
 
+hr {
+  background: rgba(7, 131, 78, 0.2);
+}
 </style>

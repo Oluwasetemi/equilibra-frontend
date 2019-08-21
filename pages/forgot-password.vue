@@ -8,7 +8,7 @@
         </div>
         <div class="p-4">
           <p class="instructions px-3">We’ll Email you a link to change your password</p>
-          <form class="px-3">
+          <form class="px-3" @submit.prevent="submitForm">
             <div class="form-input my-2">
               <input
                 type="email"
@@ -16,9 +16,25 @@
                 id="email"
                 placeholder="Email Address"
                 class="form-control"
+                :class="{invalid: $v.email.$error}"
+                @blur="$v.email.$touch()"
+                v-model="email"
               />
+              <template v-if="$v.email.$dirty">
+                <p v-if="!$v.email.required" class="invalid">This field is required</p>
+                <p v-else-if="!$v.email.email" class="invalid">Please provide a valid email address</p>
+              </template>
             </div>
-            <button class="sign-up w-100 mt-2 auth" @click="ResendPasswordEmail = true">REQUEST PASSWORD RESET</button>
+            <button
+              class="sign-up w-100 mt-2 auth d-flex align-items-center justify-content-center"
+              type="submit"
+              :disabled="loading"
+            >
+              <div class="spinner-grow text-success" role="status" v-if="loading">
+                <span class="sr-only">Loading...</span>
+              </div>
+              <span>REQUEST PASSWORD RESET</span>
+            </button>
           </form>
           <div class="text-center mt-2 pt-1" style="font-size: 11px; color: #091F0E;">
             <span>Remember your password?</span>
@@ -32,6 +48,8 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from "vuex";
+import { required, email } from "vuelidate/lib/validators";
 import ResendPasswordEmail from "~/components/Authentication/reset-password";
 export default {
   layout: "authentication2",
@@ -41,7 +59,35 @@ export default {
   data() {
     return {
       ResendPasswordEmail: false,
+      email: "",
+      loading: false
     };
+  },
+  validations: {
+    email: {
+      email,
+      required
+    }
+  },
+  computed: {},
+  methods: {
+    ...mapActions("auth", ["forgotPassword"]),
+    submitForm() {
+      this.loading = true;
+      this.forgotPassword(this.email)
+        .then(data => {
+          if (data.graphQLErrors) {
+            this.$toast.error(data.graphQLErrors[0].message);
+            this.loading = false;
+            return;
+          }
+          this.loading = false;
+          this.ResendPasswordEmail = true;
+        })
+        .catch(err => {
+          this.loading = false;
+        });
+    }
   }
 };
 </script>
@@ -114,7 +160,7 @@ p {
 }
 
 .border-bottom {
-    border-color: #EAEAEA;
+  border-color: #eaeaea;
 }
 
 button.auth {
