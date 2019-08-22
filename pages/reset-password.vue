@@ -108,6 +108,10 @@ export default {
   methods: {
     ...mapActions("auth", ["resetPassword"]),
     resetUserPassword() {
+      this.$v.$touch();
+      if (this.$v.$error === true) {
+        return;
+      }
       this.payload.token = this.$route.query.token;
       this.loading = true;
       this.resetPassword(this.payload)
