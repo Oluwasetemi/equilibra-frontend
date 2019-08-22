@@ -27,7 +27,6 @@
 <script>
 export default {
   mounted(){
-    // debugger
     this.$refs.link.select();
   }
 }

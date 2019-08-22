@@ -45,10 +45,18 @@ export default {
         type: 'text/javascript'
       },
       {
-        src: "https://apis.google.com/js/platform.js",
+        src: 'https://apis.google.com/js/platform.js',
         type: 'text/javascript'
       },
+      {
+        src: 'https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js',
+        type: 'text/javascript'
+      }
     ]
+  },
+  env: {
+    googleClientID: "769165313432-rq98o9410ntrgg2obvkhl86k82bueoq0.apps.googleusercontent.com",
+    facebookAppID: "2310649132486818"
   },
   /*
    ** Customize the progress-bar color
@@ -57,20 +65,17 @@ export default {
   /*
    ** Global CSS
    */
-  css: ['~/assets/styles/main.css'],
+  css: ['~/assets/styles/main.css', '~/assets/styles/transitions.css'],
   /*
    ** Plugins to load before mounting the App
    */
   plugins: [
     '~/plugins/',
-    {
-      src: '~/plugins/fb-sdk.js',
-      mode: 'client'
-    },
-    {
-      src: '~/plugins/g-login.js',
-      mode: 'client'
-    }
+    { src: '~/plugins/fb-sdk.js', mode: 'client' },
+    { src: '~/plugins/vuex-persist', mode: 'client' },
+    { src: '~/plugins/vuelidate', mode: 'client' },
+    { src: '~/plugins/lazyload', mode: 'client' },
+    { src: '~plugins/filters.js', mode: 'client' },
   ],
   /*
    ** Nuxt.js modules
@@ -78,7 +83,8 @@ export default {
   modules: [
     // Doc: https://bootstrap-vue.js.org/docs/
     'bootstrap-vue/nuxt',
-    '@nuxtjs/apollo'
+    '@nuxtjs/apollo',
+    '@nuxtjs/toast'
   ],
 
   axios: {
@@ -96,14 +102,41 @@ export default {
     /*
      ** You can extend webpack config here
      */
-    extend(config, ctx) {}
+    extend(config, ctx) {},
+    vendor: ['vuelidate']
   },
   apollo: {
     clientConfigs: {
-      default: {
-        httpEndpoint: 'http://api.equilibra.test.natterbase.com/'
-        //  wsEndpoint: 'ws://api.equilibra.test.natterbase.com/'
-      }
+      default: '~/plugins/apollo.config.js'
     }
+  },
+  toast: {
+    position: 'top-right',
+    className: 'toast',
+    duration: 5000,
+    register: [
+      // Register custom toasts
+      {
+        name: 'error',
+        message: 'Oops...Something went wrong',
+        options: {
+          type: 'error'
+        }
+      },
+      {
+        name: 'success',
+        message: 'Oops...Something went wrong',
+        options: {
+          type: 'success'
+        }
+      },
+      {
+        name: 'notification',
+        message: 'Oops...Something went wrong',
+        options: {
+          type: 'info'
+        }
+      }
+    ]
   }
 };

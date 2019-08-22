@@ -15,7 +15,7 @@
           <div class="col-md-10">
             <form class="mt-3 px-4 mr-md-4">
               <div class="row">
-                <div class="col-md-4 px-2">
+                <div class="col-lg-4 col-md-6 px-2">
                   <div class="form-input my-2">
                     <label for="current-country">CURRENT COUNTRY</label>
                     <input
@@ -27,7 +27,7 @@
                     />
                   </div>
                 </div>
-                <div class="col-md-4 px-2">
+                <div class="col-lg-4 col-md-6 px-2">
                   <div class="form-input my-2">
                     <label for="new-country">NEW COUNTRY OF RESIDENCE</label>
                     <div class="select-box position-relative">
@@ -59,7 +59,7 @@
             </div>
             <form class="mt-3 px-4 mr-md-4">
               <div class="row">
-                <div class="col-md-4 px-2">
+                <div class="col-lg-4 col-md-6 px-2">
                   <div class="form-input my-2">
                     <label for="current-country">CURRENT COUNTRY</label>
                     <div class="select-box position-relative">
@@ -74,7 +74,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-md-4 px-2">
+                <div class="col-lg-4 col-md-6 px-2">
                   <div class="form-input my-2">
                     <label for="new-residence">NEW COUNTRY OF RESIDENCE</label>
                     <div class="select-box position-relative">
@@ -91,7 +91,7 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-md-4 px-2">
+                <div class="col-lg-4 col-md-6 px-2">
                   <div class="form-input my-2">
                     <label for="new-state">NEW COUNTRY OF RESIDENCE</label>
                     <div class="select-box position-relative">
@@ -106,7 +106,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-md-4 px-2">
+                <div class="col-lg-4 col-md-6 px-2">
                   <div class="form-input my-2">
                     <label for="new-state">WHAT LGA DO YOU LIVE IN?</label>
                     <div class="select-box position-relative">
@@ -121,7 +121,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-md-4 px-2">
+                <div class="col-lg-4 col-md-6 px-2">
                   <div class="form-input my-2">
                     <label for="new-state">FEDERAL CONSTITUENCIES</label>
                     <div class="select-box position-relative">
@@ -138,7 +138,7 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-md-4 px-2">
+                <div class="col-lg-4 col-md-6 px-2">
                   <div class="form-input my-2">
                     <label for="new-state">SENATORIAL DISTRICT</label>
                     <div class="select-box position-relative">
@@ -153,7 +153,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-md-4 px-2">
+                <div class="col-lg-4 col-md-6 px-2">
                   <div class="form-input my-2">
                     <label for="new-state">STATE CONSTITUENCIES</label>
                     <div class="select-box position-relative">
@@ -181,6 +181,15 @@
     </div>
   </div>
 </template>
+
+<script>
+import {mapGetters, mapActions} from 'vuex'
+export default {
+  computed: {
+    ...mapGetters('user',['getUser'])
+  }
+}
+</script>
 
 <style scoped>
 .container-fluid {

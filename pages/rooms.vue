@@ -60,9 +60,6 @@ export default {
       ]
     };
   },
-  mounted() {
-    console.log(this.imageURL);
-  },
   components: {
     Card
   }

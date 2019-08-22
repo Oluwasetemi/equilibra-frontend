@@ -39,32 +39,43 @@
                   <a class="nav-link" href="#">Contact Us</a>
                 </li>
                 <li class="nav-item ml-4">
-                  <div class="dropdown" style="background: white;" v-if="userIsLoggedIn">
-                    <a
-                      href="#"
-                      class="dropdown-toggle d-flex align-items-center m-0"
-                      id="dropdownMenuButton"
-                      data-toggle="dropdown"
-                      aria-haspopup="true"
-                      aria-expanded="false"
-                    >
-                      <img src="~assets/images/avatar.png" alt height="38px" class="mr-1 avatar" />
-                      <div class="inline-block px-2" style="color: black">Lois Durello</div>
-                      <img
-                        src="~assets/icons/thin-downward-arrow.svg"
-                        alt
-                        class="position-relative"
-                        style="left: 8px;"
-                      />
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                      <nuxt-link class="dropdown-item" to="account-settings">Account Settings</nuxt-link>
-                      <a class="dropdown-item" href="#">Feedback</a>
-                      <div class="dropdown-divider"></div>
-                      <a class="dropdown-item" href="#">Logout</a>
+                  <transition
+                    enter-active-class="animated zoomIn"
+                    leave-active-class="animated fadeOut"
+                    appear
+                    mode="out-in"
+                  >
+                    <div class="dropdown" style="background: white;" v-if="isAuthenticated" :key="1">
+                      <a
+                        href="#"
+                        class="dropdown-toggle d-flex align-items-center m-0"
+                        id="dropdownMenuButton"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                      >
+                        <img src="~assets/images/avatar.png" alt height="38px" class="mr-1 avatar" />
+                        <div
+                          class="inline-block pl-2 user-name"
+                          style="color: black"
+                        >{{getUser.username || getUser.fullName}}</div>
+                        <img
+                          src="~assets/icons/thin-downward-arrow.svg"
+                          alt
+                          class="position-relative"
+                          style="left: 8px;"
+                        />
+                      </a>
+                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <nuxt-link class="dropdown-item" to="account-settings">Account Settings</nuxt-link>
+                        <a class="dropdown-item" href="#">Feedback</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#" @click.stop="logoutUser()">Logout</a>
+                      </div>
                     </div>
-                  </div>
-                  <nuxt-link to="/sign-up" tag="button" class="btn" v-if="!userIsLoggedIn">Join Us</nuxt-link>
+
+                    <nuxt-link to="/sign-up" tag="button" class="btn" v-else :key="2">Join Us</nuxt-link>
+                  </transition>
                 </li>
               </ul>
             </div>
@@ -88,7 +99,7 @@
       </div>
     </div>
     <div class="container pb-5 mt-4">
-      <div class="row" v-if="userIsLoggedIn">
+      <div class="row" v-if="isAuthenticated">
         <div class="col-md-12">
           <h4 class="pb-2">
             <span class="ml-3">Federal</span>
@@ -126,7 +137,7 @@
           </div>
         </div>
       </div>
-      <template v-if="userIsLoggedIn">
+      <template v-if="isAuthenticated">
         <div class="row">
           <div class="col-md-12">
             <h4 class="pb-2 pt-2">
@@ -167,7 +178,7 @@
         </div>
       </template>
 
-      <template v-if="userIsLoggedIn">
+      <template v-if="isAuthenticated">
         <div class="row">
           <div class="col-md-12">
             <h4 class="pb-2 pt-2">
@@ -231,6 +242,7 @@ import residenceExecutiveImage from "~/assets/images/residence-executive-BG.svg"
 import residenceLGAImage from "~/assets/images/residence-LGA-BG.svg";
 import Map from "~/components/Map";
 import Footer from "~/components/Shared/footer";
+import { mapActions, mapGetters } from "vuex";
 export default {
   layout: "footerOnly",
   components: {
@@ -239,7 +251,6 @@ export default {
   },
   data() {
     return {
-      userIsLoggedIn: true,
       cards: [
         {
           title: "Judiciary",
@@ -331,6 +342,16 @@ export default {
         }
       ]
     };
+  },
+  computed: {
+    ...mapGetters("auth", ["isAuthenticated"]),
+    ...mapGetters("user", ["getUser"])
+  },
+  methods: {
+    ...mapActions("auth", ["logout"]),
+    logoutUser() {
+      this.logout();
+    }
   }
 };
 </script>
@@ -447,27 +468,14 @@ p {
   box-shadow: 0 2px 0px #107742;
 }
 
-div.dropdown {
-  width: 170px;
-  background: #ffffff;
-  box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.16);
-  border-radius: 2px;
-}
-
-div.dropdown-menu {
-  border: none;
-  margin-top: 10px;
-}
-
-.navbar-light .nav-item a.dropdown-item {
+.user-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 95px;
   color: black;
-  font-size: 16px;
-  font-weight: 100;
 }
 
-.avatar {
-  border-radius: 2px 0 0 2px;
-}
 @media (min-width: 1200px) {
   .container {
     max-width: 1261px !important;

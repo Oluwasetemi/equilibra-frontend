@@ -7,7 +7,7 @@
           <p class="instructions px-3">laboris nisi ut aliquip ex ea commodo consequat</p>
         </div>
         <div class="px-4 pt-2 pb-4">
-          <form class="px-3">
+          <form class="px-3" @submit.prevent="resetUserPassword">
             <div class="form-input mb-2">
               <input
                 type="password"
@@ -15,7 +15,17 @@
                 id="password"
                 placeholder="Enter a new password"
                 class="form-control"
+                :class="{invalid: $v.payload.password.$error}"
+                @blur="$v.payload.password.$touch()"
+                v-model="payload.password"
               />
+              <template v-if="$v.payload.password.$dirty">
+                <p v-if="!$v.payload.password.required" class="invalid">This field is required</p>
+                <p
+                  v-else-if="!$v.payload.password.minLength"
+                  class="invalid"
+                >Password should not be less than 6 characters</p>
+              </template>
             </div>
             <div class="form-input my-2">
               <input
@@ -24,9 +34,25 @@
                 id="password"
                 placeholder="Confirm your new password"
                 class="form-control"
+                :class="{invalid: $v.confirmPassword.$error}"
+                @blur="$v.confirmPassword.$touch()"
+                v-model="confirmPassword"
               />
+              <template v-if="$v.confirmPassword.$dirty">
+                <p v-if="!$v.confirmPassword.required" class="invalid">This field is required</p>
+                <p
+                  v-else-if="!$v.confirmPassword.minLength"
+                  class="invalid"
+                >Password should not be less than 6 characters</p>
+                <p v-else-if="$v.confirmPassword.$error" class="invalid">Passwords do not match</p>
+              </template>
             </div>
-            <button class="sign-up w-100 mt-2 auth" @click="ResendPasswordEmail = true">REQUEST PASSWORD RESET</button>
+            <button class="sign-up w-100 mt-2 auth" type="submit" :disabled="loading">
+              <div class="spinner-grow text-success" role="status" v-if="loading">
+                <span class="sr-only">Loading...</span>
+              </div>
+              <span>REQUEST PASSWORD RESET</span>
+            </button>
           </form>
           <div class="text-center mt-2 pt-1" style="font-size: 11px; color: #091F0E;">
             <span>Remember your password?</span>
@@ -40,16 +66,66 @@
 </template>
 
 <script>
+import googleButton from "~/components/Shared/googleButton";
+import { mapActions, mapGetters } from "vuex";
+import { required, minLength, sameAs } from "vuelidate/lib/validators";
 import ResendPasswordEmail from "~/components/Authentication/confirm-email";
 export default {
   layout: "authentication2",
   components: {
     ResendPasswordEmail
   },
+  validate({ query, store }) {
+    if (query.token) {
+      return true;
+    }
+  },
   data() {
     return {
+      loading: false,
       ResendPasswordEmail: false,
+      confirmPassword: "",
+      payload: {
+        password: ""
+      }
     };
+  },
+  validations: {
+    payload: {
+      password: {
+        required,
+        minLength: minLength(6)
+      }
+    },
+    confirmPassword: {
+      required,
+      minLength: minLength(6),
+      sameAs: sameAs(vm => {
+        return vm.payload.password;
+      })
+    }
+  },
+  methods: {
+    ...mapActions("auth", ["resetPassword"]),
+    resetUserPassword() {
+      this.$v.$touch();
+      if (this.$v.$error === true) {
+        return;
+      }
+      this.payload.token = this.$route.query.token;
+      this.loading = true;
+      this.resetPassword(this.payload)
+        .then(data => {
+          if (data) {
+            this.$toast.success(data);
+            this.$router.push("/login");
+          }
+          this.loading = false;
+        })
+        .catch(err => {
+          this.loading = false;
+        });
+    }
   }
 };
 </script>
@@ -116,7 +192,7 @@ p {
 }
 
 .border-bottom {
-    border-color: #EAEAEA;
+  border-color: #eaeaea;
 }
 
 .down-arrow {

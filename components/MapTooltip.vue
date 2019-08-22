@@ -7,28 +7,53 @@
 
       <div class="details d-inline-block">
         <div class="d-flex flex-column justify-content-center">
-          <span class="name m-0" style="line-height: 1.3em;">Nasir El Rufai</span>
+          <span
+            class="name m-0"
+            style="line-height: 1.3em;"
+            v-if="government.leader"
+          >{{government.leader | capitalizeFirstLetter}}</span>
           <span class="post m-0" style="line-height: 1.3em;">Executive Governor</span>
         </div>
       </div>
     </div>
     <div class="state mb-2">
       <div class="d-inline-block state-initials mr-1" style>
-        <span>KD</span>
+        <span>{{government.slug ? government.slug.toUpperCase()|| '': ''}}</span>
       </div>
-      <span class="state">Kaduna</span>
+      <span class="state">{{government.name ? government.name.split(' ')[0] || '': ''}}</span>
     </div>
-    <p class="description mb-1">
-      Kaduna State was created on May 27, 1967 from the then northern
-      region by the then regim of General Yakubu Gowon. Jigawa State
-      was carved out of Kano State in the state creation exercise of 1991.
-    </p>
-    <nuxt-link to="/state/kaduna">Read More</nuxt-link>
+    <p
+      class="description mb-1"
+    >{{government.description ? `${government.description.substr(0, 207)}...` || '': ''}}</p>
+    <nuxt-link :to="governmentLink">Read More</nuxt-link>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  computed: {
+    government() {
+      return this.$store.getters["currentGovernment"];
+    },
+    governmentLink() {
+      return this.$store.getters["currentGovernment"].name
+        ? `/state/${
+            this.$store.getters["currentGovernment"].name.split(" ")[0]
+          }`
+        : "/state/abia";
+    }
+  },
+  filters: {
+    capitalizeFirstLetter(val) {
+      return val
+        .split(" ")
+        .map(word => {
+          return word.charAt(0).toUpperCase() + word.substring(1);
+        })
+        .join(" ");
+    }
+  }
+};
 </script>
 
 <style scoped>
@@ -70,7 +95,7 @@ p.description {
 a {
   color: var(--dark-green-color);
   font-size: 13px;
-   font-weight: 100;
+  font-weight: 100;
 }
 
 img {

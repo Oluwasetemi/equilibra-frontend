@@ -38,7 +38,35 @@
                 <a class="nav-link" href="#">Contact Us</a>
               </li>
               <li class="nav-item ml-lg-4">
-                <nuxt-link to="/sign-up" tag="button" class="btn">Join Us</nuxt-link>
+                <div class="dropdown" style="background: white;" v-if="isAuthenticated">
+                  <a
+                    href="#"
+                    class="dropdown-toggle d-flex align-items-center m-0"
+                    id="dropdownMenuButton"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                  >
+                    <img src="~assets/images/avatar.png" alt height="38px" class="mr-1 avatar" />
+                    <div
+                      class="inline-block px-2 user-name"
+                      style="color: black"
+                    >{{ getUser.username || getUser.fullName }}</div>
+                    <img
+                      src="~assets/icons/thin-downward-arrow.svg"
+                      alt
+                      class="position-relative"
+                      style="left: 8px;"
+                    />
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <nuxt-link class="dropdown-item" to="account-settings">Account Settings</nuxt-link>
+                    <a class="dropdown-item" href="#">Feedback</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#" @click.stop="logoutUser()">Logout</a>
+                  </div>
+                </div>
+                <nuxt-link to="/sign-up" tag="button" class="btn" v-else>Join Us</nuxt-link>
               </li>
             </ul>
           </div>
@@ -62,6 +90,23 @@
   </div>
 </template>
 
+
+<script>
+import { mapActions, mapGetters } from "vuex";
+export default {
+  computed: {
+    ...mapGetters("auth", ["isAuthenticated"]),
+    ...mapGetters("user", ["getUser"])
+  },
+  methods: {
+    ...mapActions("auth", ["logout"]),
+    logoutUser() {
+      this.logout();
+    }
+  }
+};
+</script>
+
 <style scoped>
 .navbar-light .nav-item a,
 .navbar-light .navbar-nav .active > .nav-link,
@@ -83,8 +128,8 @@
 }
 
 nav button.btn {
-    background: transparent;
-    color: white;
+  background: transparent;
+  color: white;
 }
 
 p {

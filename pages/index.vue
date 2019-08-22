@@ -7,7 +7,6 @@
             <nuxt-link to="/" class="navbar-brand">
               <img src="~/assets/icons/logo.svg" alt />
             </nuxt-link>
-
             <button
               class="navbar-toggler"
               type="button"
@@ -39,7 +38,35 @@
                   <a class="nav-link" href="#">Contact Us</a>
                 </li>
                 <li class="nav-item ml-lg-4">
-                  <nuxt-link to="/sign-up" tag="button" class="btn">Join Us</nuxt-link>
+                  <div class="dropdown" style="background: white;" v-if="isAuthenticated">
+                    <a
+                      href="#"
+                      class="dropdown-toggle d-flex align-items-center m-0"
+                      id="dropdownMenuButton"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                    >
+                      <img src="~assets/images/avatar.png" alt height="38px" class="mr-1 avatar" />
+                      <div
+                        class="inline-block px-2 user-name"
+                        style="color: black"
+                      >{{getUser.username || getUser.fullName}}</div>
+                      <img
+                        src="~assets/icons/thin-downward-arrow.svg"
+                        alt
+                        class="position-relative"
+                        style="left: 8px;"
+                      />
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                      <nuxt-link class="dropdown-item" to="account-settings">Account Settings</nuxt-link>
+                      <a class="dropdown-item" href="#">Feedback</a>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="#" @click.stop="logoutUser()">Logout</a>
+                    </div>
+                  </div>
+                  <nuxt-link to="/sign-up" tag="button" class="btn" v-else>Join Us</nuxt-link>
                 </li>
               </ul>
             </div>
@@ -53,12 +80,18 @@
                 class="pt-3"
               >Forum for the people to discuss issues of common interest in the community, constructively.</h5>
               <div class="pt-4">
-                <button class="white-btn" style="width: 190px">Lorem Ipsum</button>
+                <button class="white-btn lorem" style="width: 190px">Lorem Ipsum</button>
               </div>
             </div>
           </div>
-          <div class="col-md-7 d-flex align-items-md-center ">
-            <Map class="pt-5"/>
+          <div class="col-md-7 d-flex align-items-md-center">
+            <transition
+              enter-active-class="animated fadeIn"
+              leave-active-class="animated fadeOut"
+              appear
+            >
+              <Map class="pt-5" />
+            </transition>
           </div>
         </div>
       </div>
@@ -67,7 +100,18 @@
       <div class="row">
         <div class="col-md-7">
           <figure class="who-we-are text-right py-md-5 py-4">
-            <img src="~/assets/images/whoweareimage.svg" alt class="img-fluid" height="450px" />
+            <transition
+              enter-active-class="animated fadeIn"
+              leave-active-class="animated fadeOut"
+              appear
+            >
+              <img
+                src="~/assets/images/whoweareimage.svg"
+                alt
+                class="img-fluid lazy-load"
+                height="450px"
+              />
+            </transition>
           </figure>
         </div>
         <div class="col-md-4 d-flex align-items-center">
@@ -339,6 +383,7 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from "vuex";
 import Map from "~/components/Map";
 import Footer from "~/components/Shared/footer";
 export default {
@@ -346,6 +391,36 @@ export default {
   components: {
     Map,
     Footer
+  },
+  computed: {
+    ...mapGetters("auth", ["isAuthenticated"]),
+    ...mapGetters("user", ["getUser"])
+  },
+  methods: {
+    ...mapActions("auth", ["logout"]),
+    logoutUser() {
+      this.logout();
+    }
+  },
+  mounted() {
+    let elmts = document.querySelectorAll(".lazy-load");
+    if (window.img_observer && window.img_observer.observer) {
+      window.img_observer.observer.disconnect();
+      delete window.img_observer;
+      for (let i = 0, len = elmts.length; i < len; i++) {
+        // load image only when the image src is updated
+        const img = elmts[i].getAttribute("data-src") || false;
+        if (
+          img &&
+          elmts[i].getAttribute("data-loaded") === "true" &&
+          img !== elmts[i].getAttribute("src")
+        ) {
+          elmts[i].setAttribute("data-loaded", false);
+        }
+      }
+    }
+    window.img_observer = lozad(elmts);
+    window.img_observer.observe();
   }
 };
 </script>
@@ -411,7 +486,6 @@ p {
   /* height: 200px;
   width: 200px; */
 }
-
 
 section.values p {
   font-size: 14px;
@@ -605,4 +679,5 @@ footer p {
     background-position: unset;
   }
 }
+
 </style>
