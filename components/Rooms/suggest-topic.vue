@@ -38,7 +38,7 @@
               ></textarea>
             </div>
             <button class="d-flex green-btn justify-content-between align-items-center w-100 px-4 mt-4">
-              <span>Vote</span>
+              <span>Suggest Topic</span>
               <img src="~/assets/icons/vote-button-icon.svg" alt />
             </button>
           </form>

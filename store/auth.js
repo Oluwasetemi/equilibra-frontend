@@ -45,7 +45,6 @@ export default {
       state.isAuthenticated = false;
     },
     setTempUserDetails(state, { type, payload }) {
-      // debugger;
       state.tempUserDetails[type] = payload;
     }
   },
@@ -102,7 +101,6 @@ export default {
           variables: { userInput: payload }
         })
         .then(({ data }) => {
-          debugger
           commit('setToken', data.completeSignup);
           commit('user/setUser', data.completeSignup, { root: true });
           return data.completeSignup;

@@ -57,7 +57,6 @@ export default {
         });
     },
     updateResidence({ commit, rootState }, payload) {
-      debugger;
       return this.app.apolloProvider.defaultClient
         .mutate({
           mutation: gql.updateResidence,
@@ -69,7 +68,7 @@ export default {
           }
         })
         .then(({ data }) => {
-          commit('setUser', data.updateResidence.user)
+          commit('setUser', data.updateResidence.user);
           return data.updateResidence;
         })
         .catch(err => {

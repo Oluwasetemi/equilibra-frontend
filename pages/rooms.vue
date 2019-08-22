@@ -3,28 +3,36 @@
     <div class="px-md-3 px-0">
       <div class="row no-gutters flex-row flex-lg-nowrap justify-content-between">
         <div class="px-3 card-container d-lg-block d-none py-4 scrollable">
-          <Card :imageURL="imageUrl2.imageUrl" title="Judiciary" link="/rooms/judiciary" />
+          <Card :imageURL="imageUrl2.imageUrl" :title="$route.params.id" link />
           <aside class="pt-5">
             <div class="groups border border-bottom-0">
               <ul class="p-0">
                 <li class="header font-weight-bold p-3 border-bottom">Groups</li>
-                <a href="">
-                  <li class="p-3 border-bottom selected">Vent the Steam</li>
+                <a href="#" @click="currentRoom = null">
+                  <li class="p-3 border-bottom" :class="{selected: !currentRoom}">Vent the Steam</li>
                 </a>
-                <a href v-for="(group, i) in groups" :key="i">
-                  <li class="px-4 py-3 border-bottom">{{group.name}}</li>
+                <a
+                  href="#"
+                  v-for="(room, i) in federalRooms[roomType[$route.params.id]]"
+                  :key="i"
+                  :title="room.name"
+                  @click="currentRoom = room" 
+                >
+                  <li class="px-4 py-3 border-bottom" :class="{selected: currentRoom == room}">{{room.name}}</li>
                 </a>
               </ul>
             </div>
           </aside>
         </div>
-        <nuxt-child/>
+        <nuxt-child :currentRoom = "currentRoom"/>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex";
+import { roomType } from "~/static/js/constants";
 import imageUrl from "~/assets/images/judiciary_BG.svg";
 import Card from "~/components/Forums/forum-card";
 export default {
@@ -32,44 +40,44 @@ export default {
   data() {
     return {
       imageUrl2: { imageUrl },
-      groups: [
-        {
-          name: "High Court",
-          link: ""
-        },
-        {
-          name: "Customary Court of Appeal",
-          link: ""
-        },
-        {
-          name: "Magistrate Court",
-          link: ""
-        },
-        {
-          name: "Customary Court",
-          link: ""
-        },
-        {
-          name: "Customary Court of Appeal",
-          link: ""
-        },
-        {
-          name: "Magistrate Court",
-          link: ""
-        }
-      ]
+      roomType,
+      currentRoom: null
     };
   },
   components: {
     Card
+  },
+  computed: {
+    ...mapGetters("room", ["federalRooms"])
+  },
+  methods: {
+    ...mapActions("room", ["getFederalRooms"]),
+    getRooms() {
+      this.loading = true;
+      let self = this;
+      this.getFederalRooms(this.roomType[self.$route.params.id])
+        .then(data => {
+          this.loading = false;
+          if (data.graphQLErrors) {
+            this.$toast.error(data.graphQLErrors[0].message);
+            return;
+          }
+        })
+        .catch(err => {
+          this.loading = false;
+        });
+    }
+  },
+  mounted() {
+    this.getRooms();
   }
 };
 </script>
 
 <style scoped>
 .scrollable {
-      overflow-y: scroll;
-    max-height: calc(100vh - 80px);
+  overflow-y: scroll;
+  max-height: calc(100vh - 80px);
 }
 /* Groups */
 .groups {
@@ -79,7 +87,7 @@ export default {
 }
 
 .groups .border-bottom:not(.selected) {
-  border-color: #E7E7E7 !important;
+  border-color: #e7e7e7 !important;
 }
 .groups li.header {
   font-size: 16px;

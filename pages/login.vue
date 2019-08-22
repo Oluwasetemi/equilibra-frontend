@@ -135,9 +135,7 @@ export default {
   methods: {
     ...mapActions("auth", ["login", "loginWIthGoogle", "loginWIthFacebook"]),
     checkUser(user) {
-      debugger
       if (!user.isVerified) {
-        debugger
         this.ConfirmEmailCard = true;
         this.loading = false;
         return;

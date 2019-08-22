@@ -2,35 +2,38 @@
   <div class="px-md-3 pl-0 forum-container py-4 scrollable">
     <CommentModal />
     <SuggestTopicModal />
-    <ChangeTopicModal />
+    <ChangeTopicModal :currentRoom="currentRoom" />
 
     <div class="border">
       <div class="forum-header px-4 py-2 d-flex align-items-center">
-        <div class="header-content">
+        <div class="header-content w-100">
           <div class="d-flex justify-content-between">
-            <h4 class="d-inline-block mb-2">Vent the steam</h4>
-            <div class="d-inline-block" v-if="$route.path == '/rooms'">
+            <h4 class="d-inline-block mb-2">{{currentRoom ? currentRoom.name : 'Vent the steam'}}</h4>
+            <div class="d-inline-block">
               <img src="~/assets/icons/avatar2.svg" alt class="mr-1" />
               <span style="font-size: 14px; text-decoration: underline;">Hon. Danjuma Zaccheus</span>
             </div>
           </div>
 
-          <p class="description mb-2 mr-md-5 pr-md-5">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-            is sed do eiusmod tempor incididunt ut labore et dolore magna aliqua um dolor sit ame.
-          </p>
-          <div
-            class="d-flex justify-content-between align-items-end flex-wrap"
-            v-if="$route.path == '/rooms'"
-          >
-            <div class="timer d-flex align-items-center mt-2">
-              <img src="~/assets/icons/timer.svg" alt class="mr-2" />
-              <span>
-                <span style="font-size: 15px" class="pr-1">5</span>Day(s)
-                <span style="font-size: 14px" class="px-1">15</span> HOUR(s)
-                <span class="ml-2" style="font-size: 14px">56</span> Minute(s)
-              </span>
-            </div>
+          <p
+            class="description mb-2 mr-md-5 pr-md-5"
+            v-if="currentRoom"
+          >{{currentRoom ? currentRoom.currentTopic || 'This room has no topic' : 'This room has no topic'}}</p>
+          <div class="d-flex justify-content-between align-items-end flex-wrap">
+            <span>
+              <div
+                class="timer d-flex align-items-center mt-2"
+                v-if="currentRoom && currentRoom.currentTopic"
+              >
+                <img src="~/assets/icons/timer.svg" alt class="mr-2" />
+                <span>
+                  <span style="font-size: 15px" class="pr-1">5</span>Day(s)
+                  <span style="font-size: 14px" class="px-1">15</span> HOUR(s)
+                  <span class="ml-2" style="font-size: 14px">56</span> Minute(s)
+                </span>
+              </div>
+            </span>
+
             <div class="topic-actions mt-2">
               <button
                 class="suggest-topic mr-2"
@@ -121,6 +124,7 @@ import imageUrl from "~/assets/images/judiciary_BG.svg";
 import Card from "~/components/Forums/forum-card";
 export default {
   layout: "greenNavOnly",
+  props: ["currentRoom"],
   data() {
     return {
       liked: false,
@@ -215,6 +219,7 @@ button.change-topic {
 .groups .border-bottom:not(.selected) {
   border-color: #e7e7e7 !important;
 }
+
 .groups li.header {
   font-size: 16px;
 }

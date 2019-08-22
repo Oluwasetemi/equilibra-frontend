@@ -47,7 +47,7 @@
                     aria-haspopup="true"
                     aria-expanded="false"
                   >
-                    <img src="~assets/images/avatar.png" alt height="38px" class="mr-1 avatar" />
+                    <img :src="getUser.image || '~assets/images/avatar.png'"  alt height="38px" class="mr-1 avatar" />
                     <div
                       class="inline-block px-2 user-name"
                       style="color: black"

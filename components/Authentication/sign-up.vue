@@ -17,15 +17,13 @@
         </div>
         <div class="p-3">
           <div class="social-media-login px-2">
-            <button class="d-block w-100 google py-2 px-4 border-0">
-              <img src="~/assets/icons/google-icon.svg" alt class="float-left" />
-              <span>Use Google Account</span>
-            </button>
-            <button class="d-block w-100 facebook py-2 px-4 border-0">
-              <img src="~assets/icons/facebook-icon.svg" alt class="float-left" />
-              <span>Use Facebook Account</span>
-            </button>
-            <button class="email py-2 px-4 w-100 d-block">Sign up using email address</button>
+            <googleButton @loggedInWithGoogle="authenticateGoogleUser" :disabled="loading" />
+            <facebookButton @loggedInWithFacebook="authenticateFacebookUser" :disabled="loading" />
+            <button
+              @click="goToPath('/sign-up')"
+              class="email py-2 px-4 w-100 d-block"
+              :disabled="loading"
+            >Sign up using email address</button>
             <div class="separator text-center w-100">
               <div class="d-inline-block line"></div>
               <span
@@ -34,7 +32,10 @@
               >OR</span>
               <div class="d-inline-block line"></div>
             </div>
-            <button class="login py-2 px-4 w-100 d-block" @click="goToPath('/login')">Existing user? Click here to log in</button>
+            <button
+              class="login py-2 px-4 w-100 d-block"
+              @click="goToPath('/login')"
+            >Existing user? Click here to log in</button>
           </div>
         </div>
       </div>
@@ -43,14 +44,73 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from "vuex";
+import googleButton from "~/components/Shared/googleButton";
+import facebookButton from "~/components/Shared/facebookButton";
 export default {
+  data() {
+    return {
+      loading: false
+    };
+  },
+  components: {
+    googleButton,
+    facebookButton
+  },
   methods: {
+    ...mapActions("auth", ["login", "loginWIthGoogle", "loginWIthFacebook"]),
     goToPath(path) {
-      $('#signUpModal').modal('hide');
-      this.$router.push(path)
+      $("#signUpModal").modal("hide");
+      this.$router.push(path);
+    },
+    checkUser(user) {
+      if (!user.isVerified) {
+        this.ConfirmEmailCard = true;
+        this.loading = false;
+        return;
+      } else if (!user.signupStatus) {
+        this.goToPath("/continue-sign-up");
+        this.loading = false;
+        return;
+      }
+      this.$toast.success("You are now logged in!");
+      this.goToPath("/forums");
+      this.loading = false;
+    },
+    authenticateGoogleUser(token) {
+      this.loading = true;
+      const self = this;
+      this.loginWIthGoogle({ accessToken: token })
+        .then(user => {
+          if (user.graphQLErrors) {
+            this.errorMessage = user.graphQLErrors[0].message;
+            this.loading = false;
+            return;
+          }
+          self.checkUser(user);
+        })
+        .catch(err => {
+          self.loading = false;
+        });
+    },
+    authenticateFacebookUser(token) {
+      const self = this;
+      self.loading = true;
+      this.loginWIthFacebook({ accessToken: token })
+        .then(user => {
+          if (user.graphQLErrors) {
+            this.errorMessage = user.graphQLErrors[0].message;
+            this.loading = false;
+            return;
+          }
+          self.checkUser(user);
+        })
+        .catch(err => {
+          self.loading = false;
+        });
     }
   }
-}
+};
 </script>
 
 
