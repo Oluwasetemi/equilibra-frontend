@@ -20,7 +20,7 @@
 
       <div
         class="collapse navbar-collapse d-lg-flex justify-content-md-end"
-        id="navbarSupportedContent"
+      id="navbarSupportedContent"
       >
         <ul class="navbar-nav">
           <li class="nav-item">
@@ -46,7 +46,7 @@
                 aria-haspopup="true"
                 aria-expanded="false"
               >
-                <img src="~assets/images/avatar.png" alt height="38px" class="mr-1 avatar" />
+                <img :src="getUser.image || '~assets/images/avatar.png'" alt height="38px" class="mr-1 avatar" />
                 <div
                   class="inline-block px-2 user-name"
                   style="color: black"
@@ -77,7 +77,7 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import signUpModal from "~/components/authentication/sign-up";
+import signUpModal from "~/components/Authentication/sign-up";
 export default {
   components: {
     signUpModal

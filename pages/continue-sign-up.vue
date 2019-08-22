@@ -393,7 +393,7 @@ export default {
         this.renameObjectKey(name.obj, name.oldKey, name.newKey);
       });
       const payload = { ...origin, ...residence };
-      payload.token = this.getToken;
+      payload.token = this.$route.query.token || this.getToken;
       this.loading = true;
       debugger
       this.completeSignup(payload)

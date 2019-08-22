@@ -45,7 +45,12 @@
                     appear
                     mode="out-in"
                   >
-                    <div class="dropdown" style="background: white;" v-if="isAuthenticated" :key="1">
+                    <div
+                      class="dropdown"
+                      style="background: white;"
+                      v-if="isAuthenticated"
+                      :key="1"
+                    >
                       <a
                         href="#"
                         class="dropdown-toggle d-flex align-items-center m-0"
@@ -54,7 +59,12 @@
                         aria-haspopup="true"
                         aria-expanded="false"
                       >
-                        <img src="~assets/images/avatar.png" alt height="38px" class="mr-1 avatar" />
+                        <img
+                          :src="getUser.image || '~assets/images/avatar.png'"
+                          alt
+                          height="38px"
+                          class="mr-1 avatar"
+                        />
                         <div
                           class="inline-block pl-2 user-name"
                           style="color: black"
@@ -129,7 +139,7 @@
                 <nuxt-link
                   tag="button"
                   class="border-0 p-3 w-100"
-                  :to="item.link"
+                  :to="{path: item.link, params: {roomType: item.roomType}}"
                   style="background: #26B14F;"
                 >Join {{item.title}}</nuxt-link>
               </div>
@@ -141,7 +151,7 @@
         <div class="row">
           <div class="col-md-12">
             <h4 class="pb-2 pt-2">
-              <span class="ml-3">Niger - State of Origin</span>
+              <span class="ml-3">{{stateOfResidence | formatStateName}} - State of Residence</span>
             </h4>
           </div>
         </div>
@@ -182,7 +192,7 @@
         <div class="row">
           <div class="col-md-12">
             <h4 class="pb-2 pt-2">
-              <span class="ml-3">Taraba - State of Origin</span>
+              <span class="ml-3">{{stateOfOrigin | formatStateName}} - State of Origin</span>
             </h4>
           </div>
         </div>
@@ -209,7 +219,7 @@
                   <nuxt-link
                     tag="button"
                     class="border-0 p-3 w-100"
-                    :to="item.link"
+                    :to="{path: item.link}"
                     style="background: #26B14F;"
                   >Join {{item.title}}</nuxt-link>
                 </div>
@@ -257,28 +267,28 @@ export default {
           description:
             " We are positively minded Nigerians, committed to unity and to encouraging fairness, just and equitable life.",
           backgroundImage: judiciaryImage,
-          link: "/rooms"
+          link: "/rooms/judiciary",
         },
         {
           title: "Executive",
           description:
             " We are positively minded Nigerians, committed to unity and to encouraging fairness, just and equitable life.",
           backgroundImage: executiveImage,
-          link: "/rooms/judiciary"
+          link: "/rooms/executive"
         },
         {
           title: "Senate",
           description:
             " We are positively minded Nigerians, committed to unity and to encouraging fairness, just and equitable life.",
           backgroundImage: senateImage,
-          link: "/rooms/judiciary"
+          link: "/rooms/senate"
         },
         {
           title: "House of Reps",
           description:
             " We are positively minded Nigerians, committed to unity and to encouraging fairness, just and equitable life.",
           backgroundImage: repsImage,
-          link: "/rooms/house-of-representatives"
+          link: "/rooms/HOR"
         }
       ],
       originCards: [
@@ -345,7 +355,26 @@ export default {
   },
   computed: {
     ...mapGetters("auth", ["isAuthenticated"]),
-    ...mapGetters("user", ["getUser"])
+    ...mapGetters("user", ["getUser"]),
+    stateOfOrigin() {
+      const self = this;
+      return this.$store.getters["governments"].filter(
+        govt => self.getUser.stateOfOrigin == govt.id
+      )[0].name;
+    },
+    stateOfResidence() {
+      const self = this;
+      return this.$store.getters["governments"].filter(
+        govt => self.getUser.stateOfResidence == govt.id
+      )[0].name;
+    }
+  },
+  filters: {
+    formatStateName(str) {
+      str = str.split(" ");
+      str.pop();
+      return `${str[0].charAt(0).toUpperCase()}${str[0].slice(1)}`;
+    }
   },
   methods: {
     ...mapActions("auth", ["logout"]),

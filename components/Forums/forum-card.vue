@@ -1,6 +1,6 @@
 <template>
   <div class="position-relative card-with-shadow pb-4">
-    <info :info = information />
+    <info :info="information" />
     <div class="card border-0">
       <div
         class="background-img d-flex align-items-end"
@@ -11,7 +11,13 @@
       <div class="card-content py-4" style="padding-left: 20px; padding-right: 20px">
         <h3 class="pt-3 font-weight-bold">
           <span>{{ title }}</span>
-          <a href="#" class="ml-1 position-relative" style="top: -3px" data-toggle="modal" data-target="#roomInfoModal">
+          <a
+            href="#"
+            class="ml-1 position-relative"
+            style="top: -3px"
+            data-toggle="modal"
+            data-target="#roomInfoModal"
+          >
             <img src="~/assets/icons/info-icon.svg" data-toggle="tooltip" title="Quick info" />
           </a>
         </h3>
@@ -196,6 +202,9 @@ div.dropdown-menu {
 
 .avatar {
   border-radius: 2px 0 0 2px;
+  object-fit: cover;
+  width: 38px;
+  height: 38px;
 }
 @media screen and (min-width: 1441px) {
   .header {

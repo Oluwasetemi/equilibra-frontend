@@ -13,7 +13,7 @@
           <div class="change-photo d-md-flex">
             <label for="profile-pic" style="cursor: pointer">
               <img
-                src="~/assets/images/avatar.png"
+                :src="userDetail.image"
                 alt
                 class="rounded-circle"
                 height="100px"
@@ -133,7 +133,11 @@
               </div>
               <div class="row">
                 <div class="col-md-12 px-2">
-                  <button class="green-btn mt-2" type="submit" :disabled="loading.profile">
+                  <button
+                    class="green-btn mt-2 d-flex justify-content-center align-items-center"
+                    type="submit"
+                    :disabled="loading.profile"
+                  >
                     <div class="spinner-grow text-success" role="status" v-if="loading.profile">
                       <span class="sr-only">Loading...</span>
                     </div>
@@ -373,7 +377,7 @@ export default {
       const self = this;
       this.updateProfile(payload)
         .then(data => {
-          debugger
+          debugger;
           if (data.graphQLErrors) {
             self.errorMessage = data.graphQLErrors[0].message;
             self.$toast.error(data.graphQLErrors[0].message);
@@ -381,7 +385,7 @@ export default {
             return;
           }
           this.loading.profile = false;
-          self.$toast.success('Your profile has been updated!');
+          self.$toast.success("Your profile has been updated!");
           this.resetProfileForm();
           return;
         })
@@ -399,9 +403,7 @@ export default {
       this.$v.payload.$reset();
     }
   },
-  mounted() {
-    
-  }
+  mounted() {}
 };
 </script>
 

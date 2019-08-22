@@ -102,7 +102,6 @@ export default {
           variables: { userInput: payload }
         })
         .then(({ data }) => {
-          debugger
           commit('setToken', data.completeSignup);
           commit('user/setUser', data.completeSignup, { root: true });
           return data.completeSignup;
