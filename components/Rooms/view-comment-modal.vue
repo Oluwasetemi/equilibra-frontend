@@ -13,7 +13,7 @@
         </button>
         <div class="user-details d-flex px-3 py-2 border-bottom">
           <figure class="m-0 pr-1 d-inline-block">
-            <img src="~/assets/images/avatar.png" alt class="rounded-circle" height="40px" />
+            <img :src="getUser.image || '~assets/images/avatar.png'" alt class="rounded-circle" height="40px" />
           </figure>
           <div class="user text-left px-2">
             <div class="username">Joseph Makanaki</div>
@@ -47,7 +47,7 @@
         <div class="replies pb-4">
           <div class="d-flex comment px-3 py-1 position-relative" :class="{active: setClass}">
             <figure class="m-0 py-3 pr-1 d-inline-block">
-              <img src="~/assets/images/avatar.png" alt class="rounded-circle" height="40px" />
+              <img :src="getUser.image || '~assets/images/avatar.png'" alt class="rounded-circle" height="40px" />
             </figure>
 
             <div class="form-input position-relative d-inline-block px-2" style="flex-grow: 1">
@@ -169,6 +169,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import shareLinkCard from "~/components/Rooms/share-link";
 import reportCommentCard from "~/components/Rooms/report-comment";
 import deleteCommentCard from "~/components/Rooms/delete-comment";
@@ -186,6 +187,9 @@ export default {
     shareLinkCard,
     reportCommentCard,
     deleteCommentCard
+  },
+  computed: {
+    ...mapGetters("user", ["getUser"])
   },
   methods: {
     previewImage() {
