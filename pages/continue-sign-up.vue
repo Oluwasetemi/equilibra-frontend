@@ -395,10 +395,8 @@ export default {
       const payload = { ...origin, ...residence };
       payload.token = this.$route.query.token || this.getToken;
       this.loading = true;
-      debugger
       this.completeSignup(payload)
         .then(data => {
-          debugger
           if (data.graphQLErrors) {
             this.errorMessage = data.graphQLErrors[0].message;
             this.loading = false;

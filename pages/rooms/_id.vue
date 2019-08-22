@@ -2,7 +2,7 @@
   <div class="px-md-3 pl-0 forum-container py-4 scrollable">
     <CommentModal />
     <SuggestTopicModal />
-    <ChangeTopicModal :currentRoom="currentRoom"/>
+    <ChangeTopicModal :currentRoom="currentRoom" />
 
     <div class="border">
       <div class="forum-header px-4 py-2 d-flex align-items-center">
@@ -15,20 +15,25 @@
             </div>
           </div>
 
-          <p class="description mb-2 mr-md-5 pr-md-5" v-if="currentRoom">
-            {{currentRoom ? currentRoom.currentTopic || 'This room has no topic' : 'This room has no topic'}}
-          </p>
-          <div
-            class="d-flex justify-content-between align-items-end flex-wrap"
-          >
-            <div class="timer d-flex align-items-center mt-2">
-              <img src="~/assets/icons/timer.svg" alt class="mr-2" />
-              <span>
-                <span style="font-size: 15px" class="pr-1">5</span>Day(s)
-                <span style="font-size: 14px" class="px-1">15</span> HOUR(s)
-                <span class="ml-2" style="font-size: 14px">56</span> Minute(s)
-              </span>
-            </div>
+          <p
+            class="description mb-2 mr-md-5 pr-md-5"
+            v-if="currentRoom"
+          >{{currentRoom ? currentRoom.currentTopic || 'This room has no topic' : 'This room has no topic'}}</p>
+          <div class="d-flex justify-content-between align-items-end flex-wrap">
+            <span>
+              <div
+                class="timer d-flex align-items-center mt-2"
+                v-if="currentRoom && currentRoom.currentTopic"
+              >
+                <img src="~/assets/icons/timer.svg" alt class="mr-2" />
+                <span>
+                  <span style="font-size: 15px" class="pr-1">5</span>Day(s)
+                  <span style="font-size: 14px" class="px-1">15</span> HOUR(s)
+                  <span class="ml-2" style="font-size: 14px">56</span> Minute(s)
+                </span>
+              </div>
+            </span>
+
             <div class="topic-actions mt-2">
               <button
                 class="suggest-topic mr-2"
@@ -119,7 +124,7 @@ import imageUrl from "~/assets/images/judiciary_BG.svg";
 import Card from "~/components/Forums/forum-card";
 export default {
   layout: "greenNavOnly",
-  props: ['currentRoom'],
+  props: ["currentRoom"],
   data() {
     return {
       liked: false,

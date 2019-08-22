@@ -377,7 +377,6 @@ export default {
       const self = this;
       this.updateProfile(payload)
         .then(data => {
-          debugger;
           if (data.graphQLErrors) {
             self.errorMessage = data.graphQLErrors[0].message;
             self.$toast.error(data.graphQLErrors[0].message);

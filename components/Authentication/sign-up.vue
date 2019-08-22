@@ -65,7 +65,6 @@ export default {
     },
     checkUser(user) {
       if (!user.isVerified) {
-        debugger;
         this.ConfirmEmailCard = true;
         this.loading = false;
         return;

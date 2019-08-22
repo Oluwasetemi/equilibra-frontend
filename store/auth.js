@@ -45,7 +45,6 @@ export default {
       state.isAuthenticated = false;
     },
     setTempUserDetails(state, { type, payload }) {
-      // debugger;
       state.tempUserDetails[type] = payload;
     }
   },
