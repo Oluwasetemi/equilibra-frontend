@@ -54,12 +54,6 @@ export default {
       );
       commit('setCurrentGovernment', government[0]);
     },
-    governmentByFilter({ commit, getters }, { filterBy, payload }) {
-      const government = getters.governments.filter(
-        govt => govt[filterBy] == payload
-      );
-      commit('setCurrentGovernment', government[0]);
-    },
     localGovernments({ commit }, { stateGovernmentID }) {
       return this.app.apolloProvider.defaultClient
         .query({
