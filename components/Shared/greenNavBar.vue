@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-light d-flex justify-space-between px-4">
+  <nav class="navbar navbar-expand-lg navbar-light d-flex justify-space-between px-lg-4">
     <signUpModal />
     <div class="container">
       <nuxt-link to="/" class="navbar-brand ml-lg-2">
@@ -46,7 +46,7 @@
                 aria-haspopup="true"
                 aria-expanded="false"
               >
-                <img :src="getUser.image || '~assets/images/avatar.png'" alt height="38px" class="mr-1 avatar" />
+                <img :src="getUser.image || avatar" alt height="38px" class="mr-1 avatar" />
                 <div
                   class="inline-block px-2 user-name"
                   style="color: black"
@@ -59,7 +59,7 @@
                 />
               </a>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <nuxt-link class="dropdown-item" to="account-settings">Account Settings</nuxt-link>
+                <nuxt-link class="dropdown-item" to="/account-settings">Account Settings</nuxt-link>
                 <a class="dropdown-item" href="#">Feedback</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="#" @click.stop="logoutUser()">Logout</a>
@@ -76,9 +76,15 @@
 
 
 <script>
+import avatar from "~/assets/images/avatar.png";
 import { mapActions, mapGetters } from "vuex";
 import signUpModal from "~/components/Authentication/sign-up";
 export default {
+  data() {
+    return {
+      avatar
+    }
+  },
   components: {
     signUpModal
   },

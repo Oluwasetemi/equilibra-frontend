@@ -12,6 +12,7 @@
             style="line-height: 1.3em;"
             v-if="government.leader"
           >{{government.leader | capitalizeFirstLetter}}</span>
+          <span class="" v-else style="color: gainsboro; font-weight: 200">not available</span>
           <span class="post m-0" style="line-height: 1.3em;">Executive Governor</span>
         </div>
       </div>
@@ -20,7 +21,11 @@
       <div class="d-inline-block state-initials mr-1" style>
         <span>{{government.slug ? government.slug.toUpperCase()|| '': ''}}</span>
       </div>
-      <span class="state">{{government.name ? government.name.split(' ')[0] || '': ''}}</span>
+
+      <span
+        class="state"
+        v-if="government.name"
+      >{{government.name.split(' ')[0] | capitalizeFirstLetter }}</span>
     </div>
     <p
       class="description mb-1"

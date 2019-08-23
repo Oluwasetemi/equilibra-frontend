@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-light d-flex justify-space-between mx-4 pt-3">
+  <nav class="navbar navbar-expand-lg navbar-light d-flex justify-space-between mx-lg-4 pt-3">
     <div class="container">
       <nuxt-link to="/" class="navbar-brand">
         <img src="~/assets/icons/green-logo.svg" alt />
@@ -44,7 +44,7 @@
                 aria-haspopup="true"
                 aria-expanded="false"
               >
-                <img :src="getUser.image || '~assets/images/avatar.png'"  alt height="38px" class="mr-1 avatar" />
+                <img :src="getUser.image || avatar"  alt height="38px" class="mr-1 avatar" />
                 <div class="inline-block px-2 user-name" style="color: black">{{ getUser.username || getUser.fullName}}</div>
                 <img
                   src="~assets/icons/thin-downward-arrow.svg"
@@ -69,8 +69,14 @@
 </template>
 
 <script>
+import avatar from "~/assets/images/avatar.png";
 import { mapActions, mapGetters } from "vuex";
 export default {
+  data() {
+    return {
+      avatar
+    }
+  },
   computed: {
     ...mapGetters("auth", ["isAuthenticated"]),
     ...mapGetters("user", ["getUser"])

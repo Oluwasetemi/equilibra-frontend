@@ -60,7 +60,7 @@
                         aria-expanded="false"
                       >
                         <img
-                          :src="getUser.image || '~assets/images/avatar.png'"
+                          :src="getUser.image || avatar"
                           alt
                           height="38px"
                           class="mr-1 avatar"
@@ -117,7 +117,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-4" v-for="(item, i) in cards" :key="i">
+        <div class="col-lg-4 col-md-6" v-for="(item, i) in cards" :key="i">
           <div class="position-relative card-with-shadow pb-4">
             <div class="card border-0 my-4">
               <div
@@ -156,7 +156,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-md-4" v-for="(item, i) in originCards" :key="i">
+          <div class="col-lg-4 col-md-6" v-for="(item, i) in originCards" :key="i">
             <div class="position-relative card-with-shadow pb-4">
               <div class="card border-0 my-4">
                 <div
@@ -197,7 +197,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-md-4" v-for="(item, i) in residenceCards" :key="i">
+          <div class="col-lg-4 col-md-6" v-for="(item, i) in residenceCards" :key="i">
             <div class="position-relative card-with-shadow pb-4">
               <div class="card border-0 my-4">
                 <div
@@ -233,6 +233,7 @@
 </template>
 
 <script>
+import avatar from "~/assets/images/avatar.png";
 // Federal Image backgrounds
 import judiciaryImage from "~/assets/images/judiciary_BG.svg";
 import senateImage from "~/assets/images/senate-BG.svg";
@@ -261,6 +262,7 @@ export default {
   },
   data() {
     return {
+      avatar,
       cards: [
         {
           title: "Judiciary",
