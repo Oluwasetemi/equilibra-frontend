@@ -52,7 +52,7 @@
       <div class="input-comment border-bottom pb-3 pb-md-0">
         <div class="d-flex align-items-center px-2">
           <figure class="m-0 d-flex align-items-center pr-2 pl-3 px d-inline-block">
-            <img src="~/assets/images/avatar.png" alt class="rounded-circle" height="40px" />
+            <img :src="getUser.image || '~assets/images/avatar.png'" alt class="rounded-circle" height="40px" />
           </figure>
           <form autocomplete="off" class="d-flex align-items-center" style="flex-grow: 1">
             <div class="form-input position-relative d-inline-block px-3" style="flex-grow: 1">
@@ -69,7 +69,7 @@
       <div class="comments">
         <div class="d-flex px-2 comment">
           <figure class="m-0 py-3 pr-1 pl-4 px d-inline-block">
-            <img src="~/assets/images/avatar.png" alt class="rounded-circle" height="40px" />
+            <img :src="getUser.image || '~assets/images/avatar.png'" alt class="rounded-circle" height="40px" />
           </figure>
 
           <div class="form-input position-relative d-inline-block px-3" style="flex-grow: 1">
@@ -117,6 +117,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import CommentModal from "~/components/Rooms/view-comment-modal";
 import SuggestTopicModal from "~/components/Rooms/suggest-topic";
 import ChangeTopicModal from "~/components/Rooms/change-topic";
@@ -162,6 +163,9 @@ export default {
     CommentModal,
     SuggestTopicModal,
     ChangeTopicModal
+  },
+  computed: {
+    ...mapGetters("user", ["getUser"])
   }
 };
 </script>

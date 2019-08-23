@@ -6,7 +6,7 @@
           <Card :imageURL="imageUrl2.imageUrl" :title="$route.params.id" link />
           <aside class="pt-5">
             <div class="groups border border-bottom-0">
-              <ul class="p-0">
+              <ul class="p-0 m-o">
                 <li class="header font-weight-bold p-3 border-bottom">Groups</li>
                 <a href="#" @click="currentRoom = null">
                   <li class="p-3 border-bottom" :class="{selected: !currentRoom}">Vent the Steam</li>
@@ -16,15 +16,18 @@
                   v-for="(room, i) in federalRooms[roomType[$route.params.id]]"
                   :key="i"
                   :title="room.name"
-                  @click="currentRoom = room" 
+                  @click="currentRoom = room"
                 >
-                  <li class="px-4 py-3 border-bottom" :class="{selected: currentRoom == room}">{{room.name}}</li>
+                  <li
+                    class="px-4 py-3 border-bottom"
+                    :class="{selected: currentRoom == room}"
+                  >{{room.name}}</li>
                 </a>
               </ul>
             </div>
           </aside>
         </div>
-        <nuxt-child :currentRoom = "currentRoom"/>
+        <nuxt-child :currentRoom="currentRoom" />
       </div>
     </div>
   </div>
@@ -75,6 +78,10 @@ export default {
 </script>
 
 <style scoped>
+aside ul{
+  overflow-y: scroll;
+  max-height: calc(100vh - (80px + 3rem));
+}
 .scrollable {
   overflow-y: scroll;
   max-height: calc(100vh - 80px);

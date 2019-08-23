@@ -150,8 +150,8 @@
                       class="position-absolute down-arrow"
                     />
                   </div>
-                  <template v-if="$v.year.$dirty">
-                    <p v-if="!$v.year.required" class="invalid">This field is required</p>
+                  <template v-if="$v.month.$dirty">
+                    <p v-if="!$v.month.required" class="invalid">This field is required</p>
                   </template>
                 </div>
 
@@ -177,6 +177,12 @@
                     <p v-if="!$v.year.required" class="invalid">This field is required</p>
                   </template>
                 </div>
+                <div class="col-12">
+                  <p
+                    v-if="!$v.year.hasValidAge"
+                    class="invalid"
+                  >You must be older than 16 to use this platform</p>
+                </div>
               </div>
             </div>
             <button
@@ -197,7 +203,7 @@
         </div>
       </div>
     </div>
-      <ConfirmEmailCard v-if="ConfirmEmailCard" />
+    <ConfirmEmailCard v-if="ConfirmEmailCard" />
   </div>
 </template>
 
@@ -257,7 +263,13 @@ export default {
       required
     },
     year: {
-      required
+      required,
+      hasValidAge(value) {
+        if (new Date().getFullYear() - value >= 16) {
+          return true;
+        }
+        return false;
+      }
     },
     confirmPassword: {
       required,

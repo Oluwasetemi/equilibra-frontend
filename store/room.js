@@ -4,7 +4,6 @@ export default {
   state: () => ({
     federalRooms: {
         HOUSE_OF_REPRESENTATIVE: [],
-        HOUSE_OF_ASSEMBLY: [],
         SENATE: [],
         MINISTRY: [],
         COURT: []

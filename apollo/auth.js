@@ -138,9 +138,31 @@ export default {
   signUp: gql`
     mutation Signup($userInput: signupInput!) {
       Signup(userInput: $userInput) {
-        token
+        _id
+        fullName
         successMessage
         errorMessage
+        token
+        email
+        password
+        image
+        dob
+        createdAt
+        updatedAt
+        username
+        role
+        isVerified
+        isSuspended
+        stateOfOrigin
+        stateOfResidence
+        localGovtOrigin
+        stateConstituency
+        stateOfResidenceConstituency
+        stateFedConstituency
+        stateOfResidenceFedConstituency
+        senatorialDistrict
+        stateOfResidenceSenatorialDistrict
+        signupStatus
       }
     }
   `,

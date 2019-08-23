@@ -26,7 +26,7 @@ export default {
   getters: {
     getToken: state => state.token,
     isAuthenticated: state => state.isAuthenticated,
-    getTempUserDetails: state => state.tempUserDetails,
+    getTempUserDetails: state => state.tempUserDetails
   },
 
   mutations: {
@@ -72,6 +72,7 @@ export default {
           variables: { userInput: payload }
         })
         .then(({ data }) => {
+          commit('user/setUser', data.Signup, { root: true });
           return data.Signup;
         })
         .catch(err => {
