@@ -43,7 +43,7 @@
         </div>
       </div>
     </div>
-    <ResendPasswordEmail v-if="ResendPasswordEmail" />
+    <ResendPasswordEmail v-if="ResendPasswordEmail" :email="email" />
   </div>
 </template>
 

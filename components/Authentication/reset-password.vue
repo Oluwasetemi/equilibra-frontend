@@ -1,22 +1,41 @@
 <template>
-<div class="card-container pt-3">
+  <div class="card-container pt-3" :key="reRender">
     <div class="card border-0 mt-4 px-3 py-4">
       <div class="p-4 text-center">
-          <img src="~assets/icons/confirm-email-icon.svg" alt="" height="280px">
-          <p class="text-center pt-3">
-              A Password reset email has been sent to your email .Click the button below if you didn’t receive email.
-          </p>
-          <button class="w-100 mt-2 auth">RESEND PASSWORD RESET EMAIL</button>
+        <transition
+          enter-active-class="animated fadeIn"
+          leave-active-class="animated fadeOut"
+          appear
+        >
+          <img src="~assets/icons/confirm-email-icon.svg" alt height="280px" />
+        </transition>
+        <p
+          class="text-center pt-3"
+        >A Password reset email has been sent to your email .Click the button below if you didn’t receive email.</p>
+        <button
+          class="w-100 mt-2 auth d-flex justify-content-center align-items-center"
+          :disabled="loading"
+          @click="resendEmail()"
+        >
+          <div class="spinner-grow text-success" role="status" v-if="loading">
+            <span class="sr-only">Loading...</span>
+          </div>
+          <span>RESEND PASSWORD RESET EMAIL</span>
+        </button>
       </div>
     </div>
-</div>
+  </div>
 </template>
 
 <script>
+import { mapActions } from "vuex";
 export default {
   layout: "authentication",
+  props: ["email"],
   data() {
     return {
+      loading: false,
+      reRender: false,
       months: [
         "January",
         "February",
@@ -41,6 +60,26 @@ export default {
         years.push(i);
       }
       return years;
+    }
+  },
+  methods: {
+    ...mapActions("auth", ["forgotPassword"]),
+    resendEmail() {
+      this.loading = true;
+      this.forgotPassword(this.email)
+        .then(data => {
+          if (data.graphQLErrors) {
+            this.$toast.error(data.graphQLErrors[0].message);
+            this.loading = false;
+            return;
+          }
+          this.reRender = true;
+          this.$toast.success('A reset password email has been sent!')
+          this.loading = false;
+        })
+        .catch(err => {
+          this.loading = false;
+        });
     }
   }
 };
