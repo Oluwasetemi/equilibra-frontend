@@ -5,10 +5,14 @@
         <header class="px-4 pb-2">
           <div class="row" style="min-height: 517px;">
             <div class="col-lg-7 d-flex flex-column justify-content-end">
-              <h2 class="font-weight-bold">{{government.name.split(' ')[0] | capitalizeFirstLetter}}</h2>
+              <h2
+                class="font-weight-bold"
+                v-if="government.name"
+              >{{government.name.split(' ')[0] | capitalizeFirstLetter}}</h2>
               <p
                 class="subtitle"
                 style="font-size: 22px"
+                v-if="government.name"
               >{{government.name.split(' ')[0] | capitalizeFirstLetter}}</p>
             </div>
             <transition
@@ -350,13 +354,13 @@
 import { setTimeout } from "timers";
 export default {
   layout: "whiteNavWithFooter",
-  asyncData({ params, store }) {
-    store.dispatch("governmentByFilter", {
-      filterBy: "name",
-      payload: `${params.id.toLowerCase()} state`
-    });
-    return { government: store.getters["currentGovernment"] };
-  },
+  // asyncData({ params, store }) {
+  //   store.dispatch("governmentByFilter", {
+  //     filterBy: "name",
+  //     payload: `${params.id.toLowerCase()} state`
+  //   });
+  //   return { government: store.getters["currentGovernment"] };
+  // },
   data() {
     return {
       pageLoaded: false,
@@ -395,6 +399,11 @@ export default {
   validate(data) {
     return data.params.id;
   },
+  computed: {
+    government() {
+      return this.$store.getters["currentGovernment"];
+    }
+  },
   filters: {
     capitalizeFirstLetter(val) {
       return val
@@ -409,6 +418,10 @@ export default {
     setTimeout(() => {
       this.pageLoaded = true;
     }, 1000);
+    this.$store.dispatch("governmentByFilter", {
+      filterBy: "name",
+      payload: `${this.$route.params.id.toLowerCase()} state`
+    });
   }
 };
 </script>
