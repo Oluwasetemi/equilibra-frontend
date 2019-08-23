@@ -9,8 +9,8 @@ import Vue from 'vue';
   
 // };
 
-Vue.filter('capitalizeFirstLetter', function(val){
-    return val.split(' ').map(word => {
-        return word.charAt(0).toUpperCase() + word.substring(1);
-      }).join(' ');
-});
+// Vue.filter('capitalizeFirstLetter', function(val){
+//     return val.split(' ').map(word => {
+//         return word.charAt(0).toUpperCase() + word.substring(1);
+//       }).join(' ');
+// });

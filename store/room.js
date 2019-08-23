@@ -22,7 +22,7 @@ export default {
       state.user = {};
     }
   },
-
+  
   actions: {
     getFederalRooms({ commit, rootState }, payload) {
       return this.app.apolloProvider.defaultClient

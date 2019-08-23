@@ -47,7 +47,7 @@
                       aria-haspopup="true"
                       aria-expanded="false"
                     >
-                      <img :src="getUser.image || '~assets/images/avatar.png'"  alt height="38px" class="mr-1 avatar" />
+                      <img :src="getUser.image || avatar" alt height="38px" class="mr-1 avatar" />
                       <div
                         class="inline-block px-2 user-name"
                         style="color: black"
@@ -383,11 +383,17 @@
 </template>
 
 <script>
+import avatar from "~/assets/images/avatar.png";
 import { mapActions, mapGetters } from "vuex";
 import Map from "~/components/Map";
 import Footer from "~/components/Shared/footer";
 export default {
   layout: "footerOnly",
+  data() {
+    return {
+      avatar
+    };
+  },
   components: {
     Map,
     Footer
@@ -679,5 +685,4 @@ footer p {
     background-position: unset;
   }
 }
-
 </style>

@@ -47,7 +47,7 @@
                     aria-haspopup="true"
                     aria-expanded="false"
                   >
-                    <img :src="getUser.image || '~assets/images/avatar.png'"  alt height="38px" class="mr-1 avatar" />
+                    <img :src="getUser.image || avatar"  alt height="38px" class="mr-1 avatar" />
                     <div
                       class="inline-block px-2 user-name"
                       style="color: black"
@@ -92,8 +92,14 @@
 
 
 <script>
+import avatar from "~/assets/images/avatar.png";
 import { mapActions, mapGetters } from "vuex";
 export default {
+  data() {
+    return {
+      avatar
+    }
+  },
   computed: {
     ...mapGetters("auth", ["isAuthenticated"]),
     ...mapGetters("user", ["getUser"])

@@ -19,6 +19,10 @@
             class="description mb-2 mr-md-5 pr-md-5"
             v-if="currentRoom"
           >{{currentRoom ? currentRoom.currentTopic || 'This room has no topic' : 'This room has no topic'}}</p>
+          <p
+            class="description mb-2 mr-md-5 pr-md-5"
+            v-else
+          >This room has no topic</p>
           <div class="d-flex justify-content-between align-items-end flex-wrap">
             <span>
               <div
@@ -37,13 +41,11 @@
             <div class="topic-actions mt-2">
               <button
                 class="suggest-topic mr-2"
-                data-toggle="modal"
-                data-target="#suggestTopic"
+                 @click="showModal('#suggestTopic')"
               >Suggest Topic</button>
               <button
                 class="change-topic ml-2"
-                data-toggle="modal"
-                data-target="#changeTopic"
+                @click="showModal('#changeTopic')"
               >Change Current Topic</button>
             </div>
           </div>
@@ -52,7 +54,12 @@
       <div class="input-comment border-bottom pb-3 pb-md-0">
         <div class="d-flex align-items-center px-2">
           <figure class="m-0 d-flex align-items-center pr-2 pl-3 px d-inline-block">
-            <img :src="getUser.image || '~assets/images/avatar.png'" alt class="rounded-circle" height="40px" />
+            <img
+              :src="getUser.image || avatar"
+              alt
+              class="rounded-circle"
+              height="40px"
+            />
           </figure>
           <form autocomplete="off" class="d-flex align-items-center" style="flex-grow: 1">
             <div class="form-input position-relative d-inline-block px-3" style="flex-grow: 1">
@@ -69,7 +76,12 @@
       <div class="comments">
         <div class="d-flex px-2 comment">
           <figure class="m-0 py-3 pr-1 pl-4 px d-inline-block">
-            <img :src="getUser.image || '~assets/images/avatar.png'" alt class="rounded-circle" height="40px" />
+            <img
+              :src="getUser.image || avatar"
+              alt
+              class="rounded-circle"
+              height="40px"
+            />
           </figure>
 
           <div class="form-input position-relative d-inline-block px-3" style="flex-grow: 1">
@@ -118,6 +130,7 @@
 
 <script>
 import { mapGetters } from "vuex";
+import avatar from '~/assets/images/avatar.png'
 import CommentModal from "~/components/Rooms/view-comment-modal";
 import SuggestTopicModal from "~/components/Rooms/suggest-topic";
 import ChangeTopicModal from "~/components/Rooms/change-topic";
@@ -129,6 +142,7 @@ export default {
   data() {
     return {
       liked: false,
+      avatar,
       imageUrl2: { imageUrl },
       groups: [
         {
@@ -165,7 +179,17 @@ export default {
     ChangeTopicModal
   },
   computed: {
-    ...mapGetters("user", ["getUser"])
+    ...mapGetters("user", ["getUser"]),
+    ...mapGetters("auth", ["isAuthenticated"])
+  },
+  methods: {
+    showModal(val) {
+      if (!this.isAuthenticated) {
+        this.$router.push("/login");
+        return;
+      }
+      $(val).modal("show");
+    }
   }
 };
 </script>

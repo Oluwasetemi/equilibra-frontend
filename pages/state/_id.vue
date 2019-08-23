@@ -12,10 +12,9 @@
               >{{government.name.split(' ')[0] | capitalizeFirstLetter}}</p>
             </div>
             <transition
-              enter-active-class="animated fadeIn"
-              leave-active-class="animated slideInLeft"
+              enter-active-class="animated fadeInDown"
+              leave-active-class="animated fadeOut"
               appear
-              mode="in-out"
             >
               <div class="col-lg-5 d-none d-lg-block" v-if="pageLoaded">
                 <div class="card-container position-lg-absolute">
@@ -44,7 +43,10 @@
                       </figure>
                       <div class="details d-inline-block">
                         <div class="d-flex flex-column justify-content-center">
-                          <span class="figures m-0" style="line-height: 1.3em;">8.3 Million</span>
+                          <span
+                            class="figures m-0"
+                            style="line-height: 1.3em;"
+                          >{{ government.population.toLocaleString()}}</span>
                           <span class="heading m-0">Population</span>
                         </div>
                       </div>
@@ -155,7 +157,7 @@
                       </figure>
                       <div class="details d-inline-block">
                         <div class="d-flex flex-column justify-content-center">
-                          <span class="figures m-0" style="line-height: 1.3em;">30.3%</span>
+                          <span class="figures m-0" style="line-height: 1.3em;">Not available</span>
                           <span class="heading m-0">Girls married before age 15</span>
                         </div>
                       </div>
@@ -176,27 +178,37 @@
         <div class="col-lg-7">
           <div class="row">
             <div class="col-lg-12">
-              <div class="description pt-4 mt-2">
-                {{government.description}}
-                <!-- <p>Kaduna was created on 27th May, 1967 out of the former Northern region by the then regime of General Murtala Mohammed. Katsina State was created out of it in the state creation exercise of 1987. It’s capital is Kaduna.</p>
-                <p>Kaduna state is located at the centre of Northern Nigeria. It has a political significance as the former administrative headquarters of the North during the colonial era. The state shares boundaries with Niger State to the west, Zamfara, Katsina and Kano states to the north, Bauchi and Plateau States to the east and FCT Abuja and Nassarawa state to the south. Kaduna State occupies 46,053 square kilometres.</p>
-                <p>Zaria is one of the major towns in Kaduna state and is very rich in history. Queen Amina ruled Zaria and was known as a great warrior, her territories stretching as far to Bauchi in the east and extending as far south as the River Niger. She build a walled town wherever she conquered.</p> -->
-              </div>
+              <div class="description pt-4 mt-2">{{government.description}}</div>
             </div>
           </div>
 
-          <div class="row">
+          <div class="row mt-3">
             <div class="col-lg-4 col-md-6 py-2" v-for="(detail, i) in aboutState" :key="i">
               <div class="features mr-lg-3">
                 <span class="title mb-2 d-block">{{detail.title}}</span>
-                <span class="value d-block">{{detail.value}}</span>
+                <span
+                  class="value d-block"
+                  v-if="!(government[detail.key] && government[detail.key].constructor === Array)"
+                >{{government[detail.key] || ' Not available'}}</span>
+                <span
+                  class="value d-block"
+                  v-else-if="government[detail.key] && government[detail.key].constructor === Array"
+                >
+                  <span v-if="government[detail.key].length > 0">
+                    <span
+                      v-for="(item, i) in government[detail.key]"
+                      :key="i"
+                    >{{item}}{{i != government[detail.key].length ? ',' : ''}}</span>
+                  </span>
+                  <span v-else>Not available</span>
+                </span>
               </div>
             </div>
           </div>
         </div>
         <div class="col-lg-5 d-lg-none">
           <div class="card-container position-lg-absolute mt-4">
-            <div class="card px-4 pt-4 ml-auto">
+            <div class="card px-4 pt-4 ml-lg-auto">
               <div class="mb-3 d-flex align-items-center">
                 <figure
                   class="d-inline-block mb-0 mr-2 rounded-circle border p-1"
@@ -351,7 +363,7 @@ export default {
       aboutState: [
         {
           title: "Motivation",
-          value: "Center of Learning"
+          key: "slogan"
         },
         {
           title: "Created",
@@ -359,32 +371,39 @@ export default {
         },
         {
           title: "Political Party",
-          value: "APC "
+          key: "rulingParty"
         },
         {
           title: "Museums & Parks",
-          value: "Kaduna museum and Zaria cultural studies museum"
+          key: "museumAndParks"
         },
         {
           title: "Agriculture",
-          value:
-            "Cotton, Garlic, Ginger, Pepper, Tomatoes, Sorghum, Hides & Skin, Groundnut, Maize, Soybean"
+          key: "agriculture"
         },
         {
           title: "Mineral Resources",
-          value:
-            "utile, Talc, Feldspar, Gold, Clay, Columbite, Kyanite, Bismuth, Wolframite and Gemstones."
+          key: "mineralResources"
         },
         {
           title: "Other tourist attractions",
-          value:
-            "Jakaranda pottery, Kagoro hills, Kajuru hills, Matsirga falls, Nok Terra cotta village, Palace of the Emir of Zazzau, Steel foot bridge, Zaria city wall, Kufena hills."
+          key: "touristAttraction"
         }
       ]
     };
   },
   validate(data) {
     return data.params.id;
+  },
+  filters: {
+    capitalizeFirstLetter(val) {
+      return val
+        .split(" ")
+        .map(val => {
+          return val.charAt(0).toUpperCase() + val.substring(1);
+        })
+        .join(" ");
+    }
   },
   mounted() {
     setTimeout(() => {
@@ -397,11 +416,14 @@ export default {
 <style scoped>
 .container {
   background: #fdfdfd;
+  min-height: 1400px;
 }
 
 .card {
   border-radius: 0;
   background: #ffffff;
+  width: 100%;
+  max-width: 350px;
   min-width: 350px;
   border: 1px solid rgba(222, 225, 229, 0.17);
 }

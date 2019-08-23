@@ -13,7 +13,7 @@
           <div class="change-photo d-md-flex">
             <label for="profile-pic" style="cursor: pointer">
               <img
-                :src="userDetail.image"
+                :src="userDetail.image || avatar"
                 alt
                 class="rounded-circle"
                 height="100px"
@@ -258,6 +258,7 @@
 
 
 <script>
+import avatar from "~/assets/images/avatar.png";
 import {
   required,
   minLength,
@@ -269,6 +270,7 @@ import { mapActions, mapGetters } from "vuex";
 export default {
   data() {
     return {
+      avatar,
       file: "",
       errorMessage: "",
       loading: {

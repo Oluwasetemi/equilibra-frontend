@@ -399,7 +399,9 @@ export default {
         .then(data => {
           if (data.graphQLErrors) {
             this.errorMessage = data.graphQLErrors[0].message;
+            this.$toast.error(this.errorMessage),
             this.loading = false;
+            this.$router.push('/login')
             return;
           }
           this.loading = false;
