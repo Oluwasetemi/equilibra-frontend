@@ -3,7 +3,6 @@
     <div class="mx-md-3 mt-5">
       <div class="card px-3 pt-3 pb-4 mx-md-4">
         <div class="px-3">
-          {{getUser.stateOfResidence}}
           <div class="heading pb-2">
             <img src="~/assets/icons/placeholder-icon.svg" alt class="mr-2" />
             <h6 class="subheading d-inline-block">CHANGE STATE OF RESIDENCE</h6>
