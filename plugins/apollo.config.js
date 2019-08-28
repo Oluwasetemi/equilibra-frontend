@@ -19,7 +19,7 @@ export default function(context) {
   );
   return {
     onError: errorLink,
-    httpEndpoint: 'http://api.equilibra.test.natterbase.com/',
+    httpEndpoint: 'https://api.equilibra.test.natterbase.com/',
     persisting: false,
     httpLinkOptions: {
       credentials: 'same-origin'
