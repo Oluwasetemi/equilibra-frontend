@@ -38,12 +38,12 @@
 export default {
   computed: {
     government() {
-      return this.$store.getters["currentGovernment"];
+      return this.$store.getters["home/currentGovernment"];
     },
     governmentLink() {
-      return this.$store.getters["currentGovernment"].name
+      return this.$store.getters["home/currentGovernment"].name
         ? `/state/${
-            this.$store.getters["currentGovernment"].name.split(" ")[0]
+            this.$store.getters["home/currentGovernment"].name.split(" ")[0]
           }`
         : "/state/abia";
     }

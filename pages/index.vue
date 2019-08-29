@@ -404,11 +404,13 @@ export default {
   },
   methods: {
     ...mapActions("auth", ["logout"]),
+    ...mapActions('home', ['nuxtServerInit']),
     logoutUser() {
       this.logout();
     }
   },
   mounted() {
+    this.nuxtServerInit();
     let elmts = document.querySelectorAll(".lazy-load");
     if (window.img_observer && window.img_observer.observer) {
       window.img_observer.observer.disconnect();

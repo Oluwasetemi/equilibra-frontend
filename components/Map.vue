@@ -504,7 +504,7 @@ export default {
     // ...mapActions("governmentBySlug"),
     getStateGovernment(payload) {
       this.$store
-        .dispatch("governmentByFilter", { filterBy: "slug", payload })
+        .dispatch("home/governmentByFilter", { filterBy: "slug", payload })
         .then(data => {
           if (data.graphQLErrors) {
             this.$toast.error(data.graphQLErrors[0].message);
@@ -515,7 +515,7 @@ export default {
         .catch(err => {});
     },
     setActiveState(e) {
-      this.$store.dispatch("resetCurrentGovernment");
+      this.$store.dispatch("home/resetCurrentGovernment");
       const slug = e.path[1].dataset.code;
       if (this.activeState == slug) {
         this.activeState = null;
