@@ -360,13 +360,13 @@ export default {
     ...mapGetters("user", ["getUser"]),
     stateOfOrigin() {
       const self = this;
-      return this.$store.getters["governments"].filter(
+      return this.$store.getters["home/governments"].filter(
         govt => self.getUser.stateOfOrigin == govt.id
       )[0].name;
     },
     stateOfResidence() {
       const self = this;
-      return this.$store.getters["governments"].filter(
+      return this.$store.getters["home/governments"].filter(
         govt => self.getUser.stateOfResidence == govt.id
       )[0].name;
     }

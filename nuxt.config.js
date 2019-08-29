@@ -21,7 +21,7 @@ export default {
         href:
           'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css'
       },
-      { rel: 'stylesheet', href: '/styles/style.css' },
+      // { rel: 'stylesheet', href: '/styles/style.css' },
       { rel: 'stylesheet', href: '/fonts/feather/style.css' },
       {
         rel: 'stylesheet',
@@ -72,7 +72,9 @@ export default {
   plugins: [
     '~/plugins/',
     { src: '~/plugins/fb-sdk.js', mode: 'client' },
-    { src: '~/plugins/vuex-persist', mode: 'client' },
+    { src: '~/plugins/vuex-persist', ssr: true },
+    {src: '~/plugins/apollo.config.js', mode: 'client'},
+    {src: '~/plugins/apollo-overrides.js', mode: 'client'},
     { src: '~/plugins/vuelidate', mode: 'client' },
     { src: '~/plugins/lazyload', mode: 'client' },
     { src: '~plugins/filters.js', mode: 'client' },
@@ -88,7 +90,7 @@ export default {
   ],
 
   axios: {
-    baseURL: 'http://api.equilibra.test.natterbase.com'
+    baseURL: 'https://api.equilibra.test.natterbase.com'
   },
 
   bootstrapVue: {
