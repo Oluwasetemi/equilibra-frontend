@@ -17,121 +17,132 @@
               <figure>
                 <img src="~/assets/images/total-insurance-icon.svg" alt />
               </figure>
-              <div class="value">{{adminStatistics.usersCount}}</div>
+              <div class="value">{{rooms.pageInfo.totalCount}}</div>
               <div class="title mt-2">Total Created Topics</div>
             </div>
           </div>
         </div>
-        
       </div>
       <div class="row">
         <div class="col-md-8 row" style="padding-right: 0px !important;">
           <div class="col-12 col-md-12" style="padding-right: 0px !important;">
-			<div class="position-relative card-with-shadow pb-4">
-				<div class="card text-left p-3 card4">
-					<figure class="d-flex justify-content-between position-relative">
-						<div class="d-flex position-relative">
-                            <img src="~/assets/images/total-insurance-icon.svg" alt />
-                            <div class="title ml-3 pt-4">Created Topics</div>
-                        </div>
-                        <button class="add-btn" @click="openNewTopic()">
-                            <i class="ft-plus"></i>
-                        </button>
-					</figure>
-					<ul style="padding-inline-start: 0;" class="px-3">
-						<li class="list-style-none py-3 border-bottom flex justify-content-between position-relative"
-						v-for="(comment, i) in transactions" :key="i">
-							{{comment.type}}
-						</li>
-					</ul>
-				
-				</div>
-			</div>
-		  </div>
+            <div class="position-relative card-with-shadow pb-4">
+              <div class="card text-left p-3 card4">
+                <figure class="d-flex justify-content-between position-relative">
+                  <div class="d-flex position-relative">
+                    <img src="~/assets/images/total-insurance-icon.svg" alt />
+                    <div class="title ml-3 pt-4">Created Topics</div>
+                  </div>
+                  <button class="add-btn" @click="openNewTopic()">
+                    <i class="ft-plus"></i>
+                  </button>
+                </figure>
+                <ul style="padding-inline-start: 0;" class="px-3">
+                  <li
+                    class="list-style-none py-3 border-bottom flex justify-content-between position-relative"
+                    v-for="(comment, i) in topics"
+                    :key="i"
+                  >{{comment.type}}</li>
+
+                  <li v-if="topics.length===0" class="list-style-none py-3 border-bottom flex justify-content-between position-relative">
+                    No Topics created yet.              
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
         </div>
 
-		<!-- d-flex justify-content-between position-relative -->
-		<div class="col-md-4 row ml-lg-3" style="padding-right: 0px !important;" v-if="isNewActive">
-		  <div class="col-12 col-md-12" style="padding-right: 0px !important;">
-			<div class="position-relative card-with-shadow pb-4">
-				<div class="card text-left p-3 card4">
-					<figure class="d-flex justify-content-between position-relative">
-						<div class="d-flex position-relative">
-                            <img src="~/assets/images/total-insurance-icon.svg" alt />
-                            <div class="title ml-3 pt-4">Create New Topic</div>
-                        </div>
-                        <button class="add-btn" @click="closeNewTopic()">
-                            <i class="ft-x"></i>
-                        </button>
-					</figure>
+        <!-- d-flex justify-content-between position-relative -->
+        <div class="col-md-4 row ml-lg-3" style="padding-right: 0px !important;" v-if="isNewActive">
+          <div class="col-12 col-md-12" style="padding-right: 0px !important;">
+            <div class="position-relative card-with-shadow pb-4">
+              <div class="card text-left p-3 card4">
+                <figure class="d-flex justify-content-between position-relative">
+                  <div class="d-flex position-relative">
+                    <img src="~/assets/images/total-insurance-icon.svg" alt />
+                    <div class="title ml-3 pt-4">Create New Topic</div>
+                  </div>
+                  <button class="add-btn" @click="closeNewTopic()">
+                    <i class="ft-x"></i>
+                  </button>
+                </figure>
 
+                <form>
+                  <div class="form-group pt-3">
+                    <label for="title">Topic Title (Required)</label>
+                    <input
+                      type="text"
+                      @focus="errorMessage=''"
+                      id="title"
+                      :class="{invalid: $v.topicPayload.title.$error || errorMessage}"
+                      @blur="$v.topicPayload.title.$touch()"
+                      class="form-control"
+                      v-model="topicPayload.title"
+                      placeholder="Topic Title"
+                    />
+                    <template v-if="$v.topicPayload.title.$dirty">
+                      <p
+                        v-if="!$v.topicPayload.title.required"
+                        class="invalid"
+                      >This field is required</p>
+                      <p
+                        v-else-if="!$v.topicPayload.title.minLength"
+                        class="invalid"
+                      >Username should not be less than 2 characters</p>
+                    </template>
+                    <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                  </div>
 
-                    <form>
-                        <div class="form-group pt-3">
-                            <label for="title">Topic Title (Required)</label>
-                            <input type="text" @focus="errorMessage=''" id="title"
-                                :class="{invalid: $v.topicPayload.title.$error || errorMessage}"
-                                @blur="$v.topicPayload.title.$touch()"
-                                class="form-control" 
-                                v-model="topicPayload.title" 
-                                placeholder="Topic Title" />
-                            <template v-if="$v.topicPayload.title.$dirty">
-                                <p v-if="!$v.topicPayload.title.required" class="invalid">This field is required</p>
-                                <p
-                                v-else-if="!$v.topicPayload.title.minLength"
-                                class="invalid"
-                                >Username should not be less than 2 characters</p>
-                            </template>
-                            <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
-                        </div>
-
-                        <div class="form-group pt-3">
-                            <label for="rooms">Select Rooms (Required)</label>
-                            <el-select class="w-100" @focus="errorMessage=''" id="rooms"
-                                :class="{invalid: $v.topicPayload.rooms.$error || errorMessage}"
-                                @blur="$v.topicPayload.rooms.$touch()" v-model="topicPayload.rooms" multiple placeholder="Select">
-                                <el-option
-                                v-for="item in options"
-                                :key="item.code"
-                                :label="item.name"
-                                :value="item.name">
-                                </el-option>
-                            </el-select>
-                            <!-- <template v-if="$v.topicPayload.rooms.$dirty">
+                  <div class="form-group pt-3">
+                    <label for="rooms">Select Rooms (Required)</label>
+                    <el-select
+                      class="w-100"
+                      @focus="errorMessage=''"
+                      id="rooms"
+                      :class="{invalid: $v.topicPayload.rooms.$error || errorMessage}"
+                      @blur="$v.topicPayload.rooms.$touch()"
+                      v-model="topicPayload.rooms"
+                      multiple filterable
+                      placeholder="Select"
+                    >
+                      <el-option
+                        v-for="(item, i) in rooms.edges"
+                        :key="i"
+                        :label="item.name"
+                        :value="item._id"
+                      ></el-option>
+                    </el-select>
+                    <!-- <template v-if="$v.topicPayload.rooms.$dirty">
                                 <p v-if="!$v.topicPayload.rooms.required" class="invalid">This field is required</p>
                                 <p
                                 v-else-if="!$v.topicPayload.rooms.minLength"
                                 class="invalid"
                                 >Rooms should not be less than 1 items</p>
-                            </template> -->
-                            <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
-                        </div>
+                    </template>-->
+                    <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                  </div>
 
-                        <div class="form-group pt-3">
-                            <label for="startDate">Start Date</label>
-                            <el-date-picker class="w-100"
-                                v-model="dateRangeValue"
-                                :picker-options="pickerOptions"
-                                type="daterange"
-                                range-separator="-"
-                                start-placeholder="Start date"
-                                end-placeholder="End date">
-                            </el-date-picker>
-                        </div>
+                  <div class="form-group pt-3">
+                    <label for="startDate">Start Date</label>
+                    <el-date-picker
+                      class="w-100"
+                      v-model="dateRangeValue"
+                      :picker-options="pickerOptions"
+                      type="daterange"
+                      range-separator="-"
+                      start-placeholder="Start date"
+                      end-placeholder="End date"
+                    ></el-date-picker>
+                  </div>
 
-
-                        <div class="form-group pt-3">
-                            <button>Save</button>
-                        </div>
-
-
-
-                    </form>
-					
-				
-				</div>
-			</div>
-		  </div>
+                  <div class="form-group pt-3">
+                    <button>Save</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -145,23 +156,23 @@ export default {
   layout: "controlPanelLayout",
   data() {
     return {
-        pickerOptions: {
-            disabledDate(time) {
-                return (time.getTime() < Date.now());
-            },
-        },
-        topicPayload: {
-            rooms: [],
-            title: '',
-            startDate: '',
-            closeDate: ''
-        },
-        dateRangeValue: '',
-        errorMessage: '',
-        options: [
-        { name: 'Vue.js', code: 'vu' },
-        { name: 'Javascript', code: 'js' },
-        { name: 'Open Source', code: 'os' }
+      pickerOptions: {
+        disabledDate: (time)=>{
+          return time<Date.now()
+        }
+      },
+      topicPayload: {
+        rooms: [],
+        title: "",
+        startDate: "",
+        closeDate: ""
+      },
+      dateRangeValue: "",
+      errorMessage: "",
+      options: [
+        { name: "Vue.js", code: "vu" },
+        { name: "Javascript", code: "js" },
+        { name: "Open Source", code: "os" }
       ],
       transactions: [
         {
@@ -189,7 +200,7 @@ export default {
           complete: false
         }
       ]
-	}
+    };
   },
   validations: {
     topicPayload: {
@@ -204,35 +215,43 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('admin', ['adminStatistics']),
-    isNewActive(){
-        return this.$route.query.new;
+    ...mapGetters("admin", ["topics", "rooms"]),
+    isNewActive() {
+      return this.$route.query.new;
     }
   },
   methods: {
-    ...mapActions('admin', ['getAdminStatistics']),
-    openNewTopic(){
-        this.$router.push({query: {new: true}});
+    ...mapActions("admin", ["getAllTopics", "getRooms"]),
+    openNewTopic() {
+      this.$router.push({ query: { new: true } });
     },
-    disabledDate(date){
-        console.log(date)
-        return date.getTime() > Date.now();
+    disabledDate(date) {
+      console.log(date);
+      return date.getTime() > Date.now();
     },
-    addTag (newTag) {
-        const tag = {
-            name: newTag,
-            code: newTag.substring(0, 2) + Math.floor((Math.random() * 10000000))
-        }
-        this.options.push(tag)
-        this.value.push(tag)
+    closeNewTopic() {
+      this.$router.push({ query: {} });
     },
-      closeNewTopic(){
-          this.$router.push({query: {}});
-      },
-	  getTopics() {
+    getAllRooms() {
       this.loading = true;
       let self = this;
-      this.getAdminStatistics()
+      this.getRooms({})
+        .then(data => {
+          this.loading = false;
+          if (data.graphQLErrors) {
+            this.$toast.error(data.graphQLErrors[0].message);
+            return;
+          }
+        })
+        .catch(err => {
+          this.loading = false;
+        });
+    },
+    submitTopic() {},
+    getTopics() {
+      this.loading = true;
+      let self = this;
+      this.getAllTopics({})
         .then(data => {
           this.loading = false;
           if (data.graphQLErrors) {
@@ -245,8 +264,9 @@ export default {
         });
     }
   },
-  created(){
-	  this.getTopics();
+  created() {
+    this.getTopics();
+    this.getAllRooms();
   }
 };
 </script>
@@ -317,7 +337,6 @@ h5 {
   font-weight: 600;
   padding-top: 18px;
   padding-bottom: 18px;
-
 }
 
 th {
@@ -361,15 +380,16 @@ button:focus {
   box-shadow: none;
 }
 button.add-btn {
-    background: #fff;
-    color: #f58634;
-    width: 60px;
-    height: 60px;
-    font-size: 18px;
-    border: solid 1px #f58634;
+  background: #fff;
+  color: #f58634;
+  width: 60px;
+  height: 60px;
+  font-size: 18px;
+  border: solid 1px #f58634;
 }
-button.add-btn:hover,button.add-btn:focus {
-    box-shadow: unset;
+button.add-btn:hover,
+button.add-btn:focus {
+  box-shadow: unset;
 }
 
 button:hover,
