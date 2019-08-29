@@ -8,9 +8,12 @@ const state = () => ({
         users: [],
         admins: [],
         govts: [],
+        reports: [],
         adminStatistics: {},
         token: '',
         user: {},
+        rooms: [],
+        topics: [],
         isAuthenticated: false,
       }
   })
@@ -21,7 +24,10 @@ const state = () => ({
     govts: state => state.sub.govts,
     adminStatistics: state=>state.sub.adminStatistics,
     token: state => state.sub.token,
+    reports: state => state.sub.reports,
     user: state => state.sub.user,
+    topics: state => state.sub.topics,
+    rooms: state => state.sub.rooms,
     isAuthenticated: state => state.sub.isAuthenticated,
   }
   
@@ -49,7 +55,6 @@ const state = () => ({
 
     // fetch admin dashboard statistics
     getAdminStatistics({ commit, getters, state }, payload){
-      console.log(state)
       return this.app.apolloProvider.defaultClient
         .query({
           query: gql.Admin.statistics,
@@ -74,8 +79,8 @@ const state = () => ({
     getRooms({ commit, state }, payload){
       return this.app.apolloProvider.defaultClient
         .query({
-          query: gql.Admin.statistics,
-          variables: { loginInput: payload },
+          query: gql.Admin.allRooms,
+          variables: { cursor: payload.cursor, skip: payload.skip, limit: payload.limit },
           context: {
             headers: {
               Authorization: `Bearer ${state.sub.token}`
@@ -83,8 +88,8 @@ const state = () => ({
           }
         })
         .then(({ data }) => {
-          commit('setAdminStatistics', data.adminDashboard);
-          return data.adminDashboard;
+          commit('setRooms', data.fetchRooms);
+          return data.fetchRooms;
         })
         .catch(err => {
           return err;
@@ -96,7 +101,7 @@ const state = () => ({
       return this.app.apolloProvider.defaultClient
       .query({
         query: gql.Admin.allAdmins,
-        variables: { type: payload },
+        variables: { type: payload.type, limit: payload.limit, skip: payload.skip },
         context: {
           headers: {
             Authorization: `Bearer ${state.sub.token}`
@@ -104,11 +109,10 @@ const state = () => ({
         }
       })
       .then(({ data }) => {
-        console.log(data.fetchUsers)
-          if(payload === 'ADMIN'){
-            commit('setAdmins', data.fetchUsers);
+          if(payload.type === 'ADMIN'){
+            commit('setAdmins', data.fetchUsers.edges);
           }
-          if(payload === 'USER'){
+          if(payload.type === 'USER'){
             commit('setUsers', data.fetchUsers);
           }
           return data.fetchUsers;
@@ -118,9 +122,50 @@ const state = () => ({
         });
     },
 
+    // fetch all reports by admin
+    getReports({ commit, state }, payload){
+      return this.app.apolloProvider.defaultClient
+      .query({
+        query: gql.Admin.allReports,
+        variables: {},
+        context: {
+          headers: {
+            Authorization: `Bearer ${state.sub.token}`
+          }
+        }
+      })
+      .then(({ data }) => {          
+          commit('setReports', data.fetchReportedComments);
+          return data.fetchReportedComments;
+        })
+        .catch(err => {
+          return err;
+        });
+    },
+
+    // fetch all reports by admin
+    getAllTopics({ commit, state }, payload){
+      return this.app.apolloProvider.defaultClient
+      .query({
+        query: gql.Admin.allTopics,
+        variables: {},
+        context: {
+          headers: {
+            Authorization: `Bearer ${state.sub.token}`
+          }
+        }
+      })
+      .then(({ data }) => {          
+          commit('setTopics', data.getTopics);
+          return data.getTopics;
+        })
+        .catch(err => {
+          return err;
+        });
+    },
+
     // suspend/reactivate a user of type ADMIN
     suspendAdmin({ commit, state }, payload){
-      console.log(this.app.apolloProvider)
       return this.app.apolloProvider.defaultClient
         .mutate({
           mutation: payload.suspended ? gql.Admin.reactivate : gql.Admin.suspend,
@@ -161,11 +206,34 @@ const state = () => ({
         });
     },
 
-     // create a user of type ADMIN
-     createAdmin({ commit, state }, payload){
+    // create a user of type ADMIN
+    createAdmin({ commit, state }, payload){
       return this.app.apolloProvider.defaultClient
         .mutate({
           mutation: gql.Admin.create,
+          variables: { adminInput: payload },
+          context: {
+            headers: {
+              Authorization: `Bearer ${state.sub.token}`
+            }
+          }
+        })
+        .then(({ data }) => {
+          let collection = JSON.parse(JSON.stringify(state.sub.admins));
+          collection.push(data.createAdmin);
+          commit('setAdmins', collection);
+          return  data.createAdmin;
+        })
+        .catch(err => {
+          return err;
+        });
+    },
+
+    // create a topic
+    createTopic({ commit, state }, payload){
+      return this.app.apolloProvider.defaultClient
+        .mutate({
+          mutation: gql.Admin.createTopic,
           variables: { adminInput: payload },
           context: {
             headers: {
@@ -202,6 +270,15 @@ const state = () => ({
     setUser(state, payload) {
       state.sub.user = payload;
     },
+    setTopics(state, payload){
+      state.sub.topics = payload;
+    },
+    setRooms(state, payload){
+      state.sub.rooms = payload;
+    },
+    setReports(state, payload){
+      state.sub.reports = payload;
+    },
     setUsers(state, users) {
       state.sub.users = users
     },
@@ -225,6 +302,7 @@ const state = () => ({
           adminStatistics: {},
           token: '',
           user: [],
+          reports: [],
           isAuthenticated: false,
         }
       };

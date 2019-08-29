@@ -39,13 +39,22 @@
             </a>
             <div class="underline"></div>
           </nuxt-link>
-          <nuxt-link tag="li" to="/control-panel/data" class="nav-item d-flex flex-column align-items-lg-center justify-content-lg-center mx-2 py-lg-0 py-2">
-            <a class="nav-link py-0" href="#">
-                Data
-                <span class="sr-only">(current)</span>
+          <li class="nav-item dropdown d-flex flex-column align-items-lg-center mx-2 py-lg-2 py-2">
+            <a class="nav-link py-0 dropdown-toggle d-flex align-items-center justify-content-center" 
+            href="#" id="navbarDropdown" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown">
+              <div class="inline-block d-flex align-items-center mr-2 justify-content-center">
+                <span>Other Data</span>
+              </div>
+              <span></span>
             </a>
-            <div class="underline"></div>
-          </nuxt-link>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <nuxt-link :to="'/control-panel/governments'" class="dropdown-item" href="#">Government Data</nuxt-link>
+              <nuxt-link :to="'/control-panel/hoas'" class="dropdown-item" href="#">House of Assembly</nuxt-link>
+              <nuxt-link :to="'/control-panel/hors'" class="dropdown-item" href="#">House of Representatives</nuxt-link>
+              <nuxt-link :to="'/control-panel/ministries'" class="dropdown-item" href="#">Ministries Data</nuxt-link>
+              <nuxt-link :to="'/control-panel/courts'" class="dropdown-item" href="#">Courts Data</nuxt-link>
+            </div>
+          </li>
           <li class="nav-item dropdown d-flex flex-column align-items-lg-center mx-2 py-lg-0 py-2"
           v-if="isAuthenticated">
             <a class="nav-link py-0 dropdown-toggle d-flex align-items-center justify-content-center" 
