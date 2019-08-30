@@ -264,7 +264,7 @@ export default {
     fetchFedConstituencies() {
       const self = this;
       this.$store
-        .dispatch("fetchConstituency", {
+        .dispatch("home/fetchConstituency", {
           stateGovernmentID: self.userDetails.state,
           roomType: "HOUSE_OF_REPRESENTATIVE"
         })
@@ -281,7 +281,7 @@ export default {
       // this.loadingLGA = true;
       const self = this;
       this.$store
-        .dispatch("fetchConstituency", {
+        .dispatch("home/fetchConstituency", {
           stateGovernmentID: self.userDetails.state,
           roomType: "SENATE"
         })
@@ -301,7 +301,7 @@ export default {
       // this.loadingLGA = true;
       const self = this;
       this.$store
-        .dispatch("fetchConstituency", {
+        .dispatch("home/fetchConstituency", {
           stateGovernmentID: self.userDetails.state,
           roomType: "HOUSE_OF_ASSEMBLY"
         })
@@ -322,7 +322,7 @@ export default {
       this.loadingLGA = true;
       const self = this;
       this.$store
-        .dispatch("localGovernments", {
+        .dispatch("home/localGovernments", {
           stateGovernmentID: self.userDetails.state
         })
         .then(data => {
