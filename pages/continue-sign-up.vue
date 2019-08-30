@@ -232,6 +232,7 @@ export default {
     }
   },
   mounted() {
+  this.nuxtServerInit();
     if (this.userDetails.state) {
       this.fetchLGAs();
       this.fetchFedConstituencies();
@@ -259,6 +260,7 @@ export default {
   },
   methods: {
     ...mapActions("auth", ["setTempUserDetails", "completeSignup"]),
+    ...mapActions('home', ['nuxtServerInit']),
     fetchFedConstituencies() {
       const self = this;
       this.$store
