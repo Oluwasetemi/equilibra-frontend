@@ -222,7 +222,7 @@ export default {
   computed: {
     ...mapGetters("auth", ["getTempUserDetails", "getToken"]),
     governments() {
-      return this.$store.getters["governments"];
+      return this.$store.getters["home/governments"];
     },
     userDetails() {
       if (!this.origin) {
