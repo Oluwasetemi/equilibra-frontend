@@ -222,7 +222,7 @@ export default {
   computed: {
     ...mapGetters("auth", ["getTempUserDetails", "getToken"]),
     governments() {
-      return this.$store.getters["governments"];
+      return this.$store.getters["home/governments"];
     },
     userDetails() {
       if (!this.origin) {
@@ -232,6 +232,7 @@ export default {
     }
   },
   mounted() {
+  this.nuxtServerInit();
     if (this.userDetails.state) {
       this.fetchLGAs();
       this.fetchFedConstituencies();
@@ -259,10 +260,11 @@ export default {
   },
   methods: {
     ...mapActions("auth", ["setTempUserDetails", "completeSignup"]),
+    ...mapActions('home', ['nuxtServerInit']),
     fetchFedConstituencies() {
       const self = this;
       this.$store
-        .dispatch("fetchConstituency", {
+        .dispatch("home/fetchConstituency", {
           stateGovernmentID: self.userDetails.state,
           roomType: "HOUSE_OF_REPRESENTATIVE"
         })
@@ -279,7 +281,7 @@ export default {
       // this.loadingLGA = true;
       const self = this;
       this.$store
-        .dispatch("fetchConstituency", {
+        .dispatch("home/fetchConstituency", {
           stateGovernmentID: self.userDetails.state,
           roomType: "SENATE"
         })
@@ -299,7 +301,7 @@ export default {
       // this.loadingLGA = true;
       const self = this;
       this.$store
-        .dispatch("fetchConstituency", {
+        .dispatch("home/fetchConstituency", {
           stateGovernmentID: self.userDetails.state,
           roomType: "HOUSE_OF_ASSEMBLY"
         })
@@ -320,7 +322,7 @@ export default {
       this.loadingLGA = true;
       const self = this;
       this.$store
-        .dispatch("localGovernments", {
+        .dispatch("home/localGovernments", {
           stateGovernmentID: self.userDetails.state
         })
         .then(data => {
