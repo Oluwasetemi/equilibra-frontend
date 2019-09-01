@@ -196,6 +196,7 @@ export default {
   layout: "controlPanelLayout",
   data() {
     return {
+      mounted: false,
       skip: 0,
       limit: 5,
       total: 0,
@@ -233,6 +234,12 @@ export default {
   },
   computed: {
     ...mapGetters("admin", ["admins"]),
+    refresh(){
+      if(this.mounted) {
+        this.getStats();
+        this.mounted = false;
+      }
+    },
     isNewActive() {
       return this.$route.query.new;
     },
@@ -346,7 +353,7 @@ export default {
     }
   },
   created() {
-    this.getAdmins();
+    this.mounted = true;
   }
 };
 </script>

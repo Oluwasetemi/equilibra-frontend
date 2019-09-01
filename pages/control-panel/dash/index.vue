@@ -90,7 +90,7 @@
 						<img src="~/assets/images/total-insurance-icon.svg" alt />
 						<div class="title ml-3 pt-4">Latest Comments</div>
 					</figure>
-					<ul style="padding-inline-start: 0;" class="px-3">
+					<ul style="padding-inline-start: 0;" class="px-3" v-if="adminStatistics.latestComments">
 						<li class="list-style-none py-3 border-bottom flex justify-content-between position-relative"
 						v-for="(comment, i) in adminStatistics.latestComments" :key="i">
 							<!-- {{comment}} -->
@@ -115,6 +115,7 @@ export default {
   layout: "controlPanelLayout",
   data() {
     return {
+      mounted: false,
       transactions: [
         {
           type: "Third Party Motor Insurance",
@@ -144,7 +145,13 @@ export default {
 	}
   },
   computed: {
-	...mapGetters('admin', ['adminStatistics','token']),
+  	...mapGetters('admin', ['adminStatistics']),
+    refresh(){
+      if(this.mounted) {
+        this.getStats();
+        this.mounted = false;
+      }
+    }
   },
   methods: {
 	  ...mapActions('admin', ['getAdminStatistics']),
@@ -164,8 +171,8 @@ export default {
         });
     }
   },
-  mounted(){
-	  this.getStats();
+  created(){
+	  this.mounted = true;
   }
 };
 </script>
