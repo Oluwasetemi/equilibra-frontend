@@ -44,16 +44,21 @@ export default {
     }
   }`,
 
-  allTopics: gql `query getTopics($query: topicFilter){
-    getTopics(query: $query){
-      _id
-      title
-      closeDate
-      startDate
-      isClosed
-      createdBy {
-        fullName
-        image
+  allTopics: gql `query fetchTopics($limit: Int, $skip: Int){
+    fetchTopics(limit: $limit, skip: $skip){
+      edges {
+        _id
+        title
+        closeDate
+        startDate
+        isClosed
+        createdBy {
+          fullName
+          image
+        }
+      }
+      pageInfo {
+        totalCount
       }
     }
   }`,
@@ -63,13 +68,25 @@ export default {
       edges {
         _id
         name
-        currentTopic
         government
         roomType
       }
       pageInfo {
         totalCount
         hasNextPage
+      }
+    }
+  }`,
+
+  createTopic: gql `mutation createTopic($topic: topicInputType!) {
+    createTopic(topic: $topic) {
+      _id
+      title
+      closeDate
+      startDate
+      isClosed
+      createdBy {
+        _id
       }
     }
   }`,

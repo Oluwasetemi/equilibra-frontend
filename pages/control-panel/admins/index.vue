@@ -278,6 +278,7 @@ export default {
           return;
         }
         this.$toast.error(data.successMessage);
+        location.href = location.href;
       });
     },
     suspend_admin(id, suspended) {
@@ -323,6 +324,7 @@ export default {
             return;
           }
           this.$toast.error(data.successMessage);
+          location.href = location.href;
         });
       });
     },

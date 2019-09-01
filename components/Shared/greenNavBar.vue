@@ -89,7 +89,7 @@ export default {
     signUpModal
   },
   computed: {
-    ...mapGetters("auth", ["isAuthenticated"]),
+    ...mapGetters("auth", ["isAuthenticated","user"]),
     ...mapGetters("user", ["getUser"])
   },
   methods: {
