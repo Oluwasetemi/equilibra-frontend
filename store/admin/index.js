@@ -148,15 +148,16 @@ const state = () => ({
       return this.app.apolloProvider.defaultClient
       .query({
         query: gql.Admin.allTopics,
-        variables: {},
+        variables: {limit: payload.limit, skip: payload.skip},
         context: {
           headers: {
             Authorization: `Bearer ${state.sub.token}`
           }
         }
       })
-      .then(({ data }) => {          
-          commit('setTopics', data.getTopics);
+      .then(({ data }) => {   
+          console.log(data)       
+          commit('setTopics', data.fetchTopics);
           return data.getTopics;
         })
         .catch(err => {
@@ -230,11 +231,11 @@ const state = () => ({
     },
 
     // create a topic
-    createTopic({ commit, state }, payload){
+    saveTopic({ commit, state }, payload){
       return this.app.apolloProvider.defaultClient
         .mutate({
           mutation: gql.Admin.createTopic,
-          variables: { adminInput: payload },
+          variables: { topic: payload.topic },
           context: {
             headers: {
               Authorization: `Bearer ${state.sub.token}`
@@ -242,10 +243,10 @@ const state = () => ({
           }
         })
         .then(({ data }) => {
-          let collection = JSON.parse(JSON.stringify(state.sub.admins));
-          collection.push(data.createAdmin);
-          commit('setAdmins', collection);
-          return  data.createAdmin;
+          let collection = JSON.parse(JSON.stringify(state.sub.topics));
+          collection.edges.push(data.createTopic);
+          commit('setTopics', collection);
+          return  data.createTopic;
         })
         .catch(err => {
           return err;

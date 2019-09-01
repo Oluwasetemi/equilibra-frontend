@@ -204,12 +204,12 @@ export default {
     ...mapGetters("user", ["getUser"]),
     stateOfResidence() {
       const self = this;
-      return this.$store.getters["governments"].filter(
+      return this.$store.getters["home/governments"].filter(
         govt => self.getUser.stateOfResidence == govt.id
       )[0];
     },
     governments() {
-      return this.$store.getters["governments"];
+      return this.$store.getters["home/governments"];
     }
   },
   filters: {
@@ -232,8 +232,10 @@ export default {
       }
     }
   },
+  mounted(){this.nuxtServerInit();},
   methods: {
     ...mapActions("user", ["updateResidence"]),
+    ...mapActions('home', ['nuxtServerInit']),
     updateUserResidence() {
       this.loading = true;
       const self = this;
@@ -257,7 +259,7 @@ export default {
     fetchFedConstituencies() {
       const self = this;
       this.$store
-        .dispatch("fetchConstituency", {
+        .dispatch("home/fetchConstituency", {
           stateGovernmentID: self.payload.stateOfResidence,
           roomType: "HOUSE_OF_REPRESENTATIVE"
         })
@@ -273,7 +275,7 @@ export default {
     fetchSenatorialDistricts() {
       const self = this;
       this.$store
-        .dispatch("fetchConstituency", {
+        .dispatch("home/fetchConstituency", {
           stateGovernmentID: self.payload.stateOfResidence,
           roomType: "SENATE"
         })
@@ -293,7 +295,7 @@ export default {
       // this.loadingLGA = true;
       const self = this;
       this.$store
-        .dispatch("fetchConstituency", {
+        .dispatch("home/fetchConstituency", {
           stateGovernmentID: self.payload.stateOfResidence,
           roomType: "HOUSE_OF_ASSEMBLY"
         })
@@ -314,7 +316,7 @@ export default {
       // this.loadingLGA = true;
       const self = this;
       this.$store
-        .dispatch("localGovernments", {
+        .dispatch("home/localGovernments", {
           stateGovernmentID: self.payload.stateOfResidence
         })
         .then(data => {

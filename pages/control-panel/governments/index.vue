@@ -17,111 +17,122 @@
               <figure>
                 <img src="~/assets/images/total-insurance-icon.svg" alt />
               </figure>
-              <!-- <div class="value">{{adminStatistics.usersCount}}</div> -->
+              <div class="value">{{total}}</div>
               <div class="title mt-2">Total Created Governments</div>
             </div>
           </div>
         </div>
-        
       </div>
       <div class="row">
-        <div class="col-md-5 row" :class="isNewActive ? 'hidden':''" style="padding-right: 0px !important;">
+        <div
+          class="col-md-5 row"
+          :class="isNewActive ? 'hidden':''"
+          style="padding-right: 0px !important;"
+        >
           <div class="col-12 col-md-12" style="padding-right: 0px !important;">
-			<div class="position-relative card-with-shadow pb-4">
-				<div class="card text-left p-3 card4">
-					<figure class="d-flex justify-content-between position-relative">
-						<div class="d-flex position-relative">
-                            <img src="~/assets/images/total-insurance-icon.svg" alt />
-                            <div class="title ml-3 pt-4 font-weight-bold">Created Governments</div>
-                        </div>
-                        <button class="add-btn" @click="openNewTopic()">
-                            <i class="ft-plus"></i>
-                        </button>
-					</figure>
+            <div class="position-relative card-with-shadow pb-4">
+              <div class="card text-left p-3 card4">
+                <figure class="d-flex justify-content-between position-relative">
+                  <div class="d-flex position-relative">
+                    <img src="~/assets/images/total-insurance-icon.svg" alt />
+                    <div class="title ml-3 pt-4 font-weight-bold">Created Governments</div>
+                  </div>
+                  <button class="add-btn" @click="openNewTopic()">
+                    <i class="ft-plus"></i>
+                  </button>
+                </figure>
 
-                    <figure class="d-flex justify-content-between position-relative" v-for="(admin, i) in admins" :key="i">
-						<div class="d-flex position-relative">
-                            <img src="~/assets/images/total-insurance-icon.svg" alt />
-                            <div>
-                                <div class="title ml-3 pt-4">{{admin.fullName}}</div>
-                                <small class=" ml-3">{{admin.email}}</small>
-                            </div>
-                        </div>
-                        <div>
-                            <button class="add-btn" @click="delete_admin(admin._id)" :disabled="loading">
-                                <i class="ft-trash-2" v-if="!loading"></i>
-                                <span v-else class="spinner-grow"></span>
-                            </button>
-                            <button class="add-btn" :class="admin.isSuspended?'suspended':'active'" 
-                            @click="suspend_admin(admin._id, admin.isSuspended)" :disabled="loading">
-                                <i :class="!admin.isSuspended?'ft-user-x':'ft-user-check'" v-if="!loading"></i>
-                                <span v-else class="spinner-grow"></span>
-                            </button>
-                        </div>
-					</figure>
-					<!-- <ul style="padding-inline-start: 0;" class="px-3">
-						<li class=" py-3 border-bottom flex justify-content-between position-relative"
-						v-for="(admin, i) in admins" :key="i">
-                        <span>foijeewe</span>
-                        <button>fjdfksd</button>
-						</li>
-					</ul> -->
-				
-				</div>
-			</div>
-		  </div>
+                <figure
+                  class="d-flex justify-content-between position-relative"
+                  v-for="(govt, i) in governments"
+                  :key="i"
+                >
+                  <div class="d-flex position-relative">
+                    <img src="~/assets/images/total-insurance-icon.svg" alt />
+                    <div>
+                      <div class="title ml-3 pt-4">{{govt.name}}</div>
+                      <small class="ml-3">{{govt.description}}</small>
+                    </div>
+                  </div>
+                  <div>
+                    <button class="add-btn" @click="delete_admin(govt.id)" :disabled="loading">
+                      <i class="ft-trash-2" v-if="!loading"></i>
+                      <span v-else class="spinner-grow"></span>
+                    </button>
+                    <!-- <button
+                      class="add-btn"
+                      :class="admin.isSuspended?'suspended':'active'"
+                      @click="suspend_admin(admin._id, admin.isSuspended)"
+                      :disabled="loading"
+                    >
+                      <i :class="!admin.isSuspended?'ft-user-x':'ft-user-check'" v-if="!loading"></i>
+                      <span v-else class="spinner-grow"></span>
+                    </button> -->
+                  </div>
+                </figure>
+                <div class="text-center">
+                  <button class="add-btn" @click="previousPage" :disabled="loading||!hasPrevious">
+                    <i class="ft-arrow-left" v-if="!loading"></i>
+                    <span v-else class="spinner-grow"></span>
+                  </button>
+                  <button class="add-btn active" @click="nextPage" :disabled="loading||!hasNext">
+                    <i class="ft-arrow-right" v-if="!loading"></i>
+                    <span v-else class="spinner-grow"></span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
-		<!-- d-flex justify-content-between position-relative -->
-		<div class="col-md-7 row ml-lg-3" style="padding-right: 0px !important;" v-if="isNewActive">
-		  <div class="col-12 col-md-12" style="padding-right: 0px !important;">
-			<div class="position-relative card-with-shadow pb-4">
-				<div class="card text-left p-3 card4">
-					<figure class="d-flex justify-content-between position-relative">
-						<div class="d-flex position-relative">
-                            <img src="~/assets/images/total-insurance-icon.svg" alt />
-                            <div class="title ml-3 pt-4">Create New Government</div>
-                        </div>
-                        <button class="add-btn" @click="closeNewTopic()">
-                            <i class="ft-x"></i>
-                        </button>
-					</figure>
+        <!-- d-flex justify-content-between position-relative -->
+        <div class="col-md-7 row ml-lg-3" style="padding-right: 0px !important;" v-if="isNewActive">
+          <div class="col-12 col-md-12" style="padding-right: 0px !important;">
+            <div class="position-relative card-with-shadow pb-4">
+              <div class="card text-left p-3 card4">
+                <figure class="d-flex justify-content-between position-relative">
+                  <div class="d-flex position-relative">
+                    <img src="~/assets/images/total-insurance-icon.svg" alt />
+                    <div class="title ml-3 pt-4">Create New Government</div>
+                  </div>
+                  <button class="add-btn" @click="closeNewTopic()">
+                    <i class="ft-x"></i>
+                  </button>
+                </figure>
 
+                <form @submit.prevent="submitNewAdmin">
+                  <div class="form-group pt-3">
+                    <label for="title">Government Category</label>
+                    <input
+                      type="text"
+                      @focus="errorMessage=''"
+                      id="title"
+                      :class="{invalid: $v.govtPayload.categoryID.$error || errorMessage}"
+                      @blur="$v.govtPayload.categoryID.$touch()"
+                      class="form-control"
+                      v-model="govtPayload.categoryID"
+                      placeholder="Admin First Name"
+                    />
+                    <template v-if="$v.govtPayload.categoryID.$dirty">
+                      <p
+                        v-if="!$v.govtPayload.categoryID.required"
+                        class="invalid"
+                      >This field is required</p>
+                      <p
+                        v-else-if="!$v.govtPayload.categoryID.minLength"
+                        class="invalid"
+                      >Full Name should not be less than 5 characters</p>
+                    </template>
+                    <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                  </div>
 
-                    <form @submit.prevent="submitNewAdmin">
-                        <div class="form-group pt-3">
-                            <label for="title">Government Category</label>
-                            <input type="text" @focus="errorMessage=''" id="title"
-                                :class="{invalid: $v.govtPayload.categoryID.$error || errorMessage}"
-                                @blur="$v.govtPayload.categoryID.$touch()"
-                                class="form-control" 
-                                v-model="govtPayload.categoryID" 
-                                placeholder="Admin First Name" />
-                            <template v-if="$v.govtPayload.categoryID.$dirty">
-                                <p v-if="!$v.govtPayload.categoryID.required" class="invalid">This field is required</p>
-                                <p
-                                v-else-if="!$v.govtPayload.categoryID.minLength"
-                                class="invalid"
-                                >Full Name should not be less than 5 characters</p>
-                            </template>
-                            <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
-                        </div>
-
-                        
-
-
-                        <div class="form-group pt-3">
-                            <button type="submit">Save</button>
-                        </div>
-
-
-
-                    </form>
-					
-				
-				</div>
-			</div>
-		  </div>
+                  <div class="form-group pt-3">
+                    <button type="submit">Save</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -135,36 +146,40 @@ export default {
   layout: "controlPanelLayout",
   data() {
     return {
-        pickerOptions: {
-            disabledDate(time) {
-                return (time.getTime() < Date.now());
-            },
-        },
-        govtPayload: {
-            categoryID: '',
-            name: '',
-            slogan: '',
-            description: '',
-            leader: '',
-            cjn: '',
-            senatePresident: '',
-            speaker: '',
-            totalLg: '',
-            population: '',
-            totalConstituency: '',
-            infantMortalityRate: '',
-            literacyRate: '',
-            unemploymentRate: ''
-        },
-        dateRangeValue: '',
-        errorMessage: '',
-        options: [
-        { name: 'Vue.js', code: 'vu' },
-        { name: 'Javascript', code: 'js' },
-        { name: 'Open Source', code: 'os' }
+      skip: 0,
+      limit: 5,
+      total: 1000,
+      pickerOptions: {
+        disabledDate(time) {
+          return time.getTime() < Date.now();
+        }
+      },
+      govtPayload: {
+        categoryID: "",
+        name: "",
+        slogan: "",
+        description: "",
+        leader: "",
+        cjn: "",
+        senatePresident: "",
+        speaker: "",
+        totalLg: "",
+        population: "",
+        totalConstituency: "",
+        infantMortalityRate: "",
+        literacyRate: "",
+        unemploymentRate: ""
+      },
+      
+      dateRangeValue: "",
+      errorMessage: "",
+      options: [
+        { name: "Vue.js", code: "vu" },
+        { name: "Javascript", code: "js" },
+        { name: "Open Source", code: "os" }
       ],
-      loading: false,
-	}
+      loading: false
+    };
   },
   validations: {
     govtPayload: {
@@ -204,93 +219,101 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('admin', ['admins']),
-    isNewActive(){
-        return this.$route.query.new;
+    ...mapGetters("admin/data", ["governments"]),
+    isNewActive() {
+      return this.$route.query.new;
+    },
+    hasNext() {
+      return this.skip < this.total - this.limit;
+    },
+    hasPrevious() {
+      return this.skip >= this.limit;
     }
   },
   methods: {
-    ...mapActions('admin', ['getAdminUsers', 'suspendAdmin', 'deleteAdmin', 'createAdmin']),
-    openNewTopic(){
-        this.$router.push({query: {new: true}});
+    ...mapActions("admin/data", [
+      "getAllGovts"
+    ]),
+    nextPage() {
+      this.skip += this.limit;
+      this.getGovts();
     },
-    disabledDate(date){
-        console.log(date)
-        return date.getTime() > Date.now();
+    previousPage() {
+      this.skip -= this.limit;
+      this.getGovts();
     },
-    addTag (newTag) {
-        const tag = {
-            name: newTag,
-            code: newTag.substring(0, 2) + Math.floor((Math.random() * 10000000))
-        }
-        this.options.push(tag)
-        this.value.push(tag)
+    openNewTopic() {
+      this.$router.push({ query: { new: true } });
     },
-    closeNewTopic(){
-        this.$router.push({query: {}});
+    disabledDate(date) {
+      console.log(date);
+      return date.getTime() > Date.now();
     },
-    submitNewAdmin(){
-        var ds = this;
-         ds.loading = true;
-        ds.createAdmin(ds.adminPayload)
-        .then((data)=>{
-            this.loading = false;
-            if (data.graphQLErrors) {
-                this.$toast.error(data.graphQLErrors[0].message);
-                return;
-            }
-            this.$toast.error(data.successMessage);
-        })
+    closeNewTopic() {
+      this.$router.push({ query: {} });
     },
-    suspend_admin(id, suspended){
-        var message = !suspended ? 'This will permanently suspend this admin. Continue?' : 'This will reactivate this admin. Continue?';
+    submitNewAdmin() {
       var ds = this;
-      this.$confirm(message, 'Warning', {
-        confirmButtonText: 'OK',
-        cancelButtonText: 'Cancel',
-        type: 'warning'
+      ds.loading = true;
+      ds.createAdmin(ds.adminPayload).then(data => {
+        this.loading = false;
+        if (data.graphQLErrors) {
+          this.$toast.error(data.graphQLErrors[0].message);
+          return;
+        }
+        this.$toast.error(data.successMessage);
+      });
+    },
+    suspend_admin(id, suspended) {
+      var message = !suspended
+        ? "This will permanently suspend this admin. Continue?"
+        : "This will reactivate this admin. Continue?";
+      var ds = this;
+      this.$confirm(message, "Warning", {
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+        type: "warning"
       }).then(() => {
         ds.loading = true;
-          return this.suspendAdmin({suspended, adminId: id})
-            .then(data => {
-                this.loading = false;
-                if (data.graphQLErrors) {
-                    this.$toast.error(data.graphQLErrors[0].message);
-                    return;
-                }
-                this.$toast.error(data.successMessage);
-                this.getAdmins();
-            })
-            .catch(err => {
-                return this.loading = false;
-            });
-      })
-    },
-
-    delete_admin(id){
-      var message = 'This will permanently delete this admin. Continue?';
-      var ds = this;
-      this.$confirm(message, 'Warning', {
-        confirmButtonText: 'OK',
-        cancelButtonText: 'Cancel',
-        type: 'warning'
-      }).then(async () => {
-          ds.loading = true;
-        ds.deleteAdmin({adminId: id})
-        .then((data)=>{
+        return this.suspendAdmin({ suspended, adminId: id })
+          .then(data => {
             this.loading = false;
             if (data.graphQLErrors) {
-                this.$toast.error(data.graphQLErrors[0].message);
-                return;
+              this.$toast.error(data.graphQLErrors[0].message);
+              return;
             }
             this.$toast.error(data.successMessage);
-        })
-      })
+            this.getAdmins();
+          })
+          .catch(err => {
+            return (this.loading = false);
+          });
+      });
     },
-    getAdmins() {
+
+    delete_admin(id) {
+      var message = "This will permanently delete this admin. Continue?";
+      var ds = this;
+      this.$confirm(message, "Warning", {
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+        type: "warning"
+      }).then(async () => {
+        ds.loading = true;
+        ds.deleteAdmin({ adminId: id }).then(data => {
+          this.loading = false;
+          if (data.graphQLErrors) {
+            this.$toast.error(data.graphQLErrors[0].message);
+            return;
+          }
+          this.$toast.error(data.successMessage);
+        });
+      });
+    },
+    getGovts() {
       this.loading = true;
       let self = this;
-      this.getAdminUsers('ADMIN')
+      this.getAllGovts({skip: self.skip, limit: self.limit})
         .then(data => {
           this.loading = false;
           if (data.graphQLErrors) {
@@ -303,8 +326,8 @@ export default {
         });
     }
   },
-  created(){
-	  this.getAdmins();
+  created() {
+    this.getGovts();
   }
 };
 </script>
@@ -375,7 +398,6 @@ h5 {
   font-weight: 600;
   padding-top: 18px;
   padding-bottom: 18px;
-
 }
 
 th {
@@ -410,8 +432,8 @@ button {
 
 button.view {
   background: transparent;
-  border: solid 1px #f58634 ;
-  color: #f58634 ;
+  border: solid 1px #f58634;
+  color: #f58634;
 }
 
 button.suspended {
@@ -429,15 +451,16 @@ button:focus {
   box-shadow: none;
 }
 button.add-btn {
-    background: #fff;
-    color: #f58634;
-    width: 60px;
-    height: 60px;
-    font-size: 18px;
-    border: solid 1px #f58634;
+  background: #fff;
+  color: #f58634;
+  width: 60px;
+  height: 60px;
+  font-size: 18px;
+  border: solid 1px #f58634;
 }
-button.add-btn:hover,button.add-btn:focus {
-    box-shadow: unset;
+button.add-btn:hover,
+button.add-btn:focus {
+  box-shadow: unset;
 }
 
 button:hover,

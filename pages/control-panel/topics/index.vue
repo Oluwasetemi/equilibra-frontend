@@ -17,7 +17,8 @@
               <figure>
                 <img src="~/assets/images/total-insurance-icon.svg" alt />
               </figure>
-              <div class="value">{{rooms.pageInfo.totalCount}}</div>
+              <div class="value" v-if="topics.pageInfo && topics.pageInfo.totalCount">{{topics.pageInfo.totalCount}}</div>
+              <div class="value" v-else>0</div>
               <div class="title mt-2">Total Created Topics</div>
             </div>
           </div>
@@ -37,17 +38,56 @@
                     <i class="ft-plus"></i>
                   </button>
                 </figure>
-                <ul style="padding-inline-start: 0;" class="px-3">
-                  <li
-                    class="list-style-none py-3 border-bottom flex justify-content-between position-relative"
-                    v-for="(comment, i) in topics"
-                    :key="i"
-                  >{{comment.type}}</li>
+                <figure v-if="topics.edges"
+                  class="d-flex justify-content-between position-relative"
+                  v-for="(topic, i) in topics.edges"
+                  :key="i"
+                >
+                  <div class="d-flex position-relative">
+                    <img src="~/assets/images/total-insurance-icon.svg" alt />
+                    <div>
+                      <!-- <div class="title ml-3 pt-4">{{admin.fullName}}</div>
+                      <small class="ml-3">{{admin.email}}</small> -->
+                    </div>
+                  </div>
+                  <div>
+                    <button class="add-btn" @click="delete_admin(topic._id)" :disabled="loading">
+                      <i class="ft-trash-2" v-if="!loading"></i>
+                      <span v-else class="spinner-grow"></span>
+                    </button>
+                    <!-- <button
+                      class="add-btn"
+                      :class="admin.isSuspended?'suspended':'active'"
+                      @click="suspend_admin(topic._id)"
+                      :disabled="loading"
+                    >
+                      <i :class="!admin.isSuspended?'ft-user-x':'ft-user-check'" v-if="!loading"></i>
+                      <span v-else class="spinner-grow"></span>
+                    </button> -->
+                  </div>
+                </figure>
+                <figure
+                  class="d-flex justify-content-between position-relative"
+                  v-if=" topics.edges && topics.edges.length===0"
+                >
+                  <div class="d-flex position-relative">
+                    <img src="~/assets/images/total-insurance-icon.svg" alt />
+                    <div>
+                      <div class="title ml-3 pt-4">No Topics Found</div>
+                    </div>
+                  </div>
+                </figure>
 
-                  <li v-if="topics.length===0" class="list-style-none py-3 border-bottom flex justify-content-between position-relative">
-                    No Topics created yet.              
-                  </li>
-                </ul>
+                <div class="text-center" v-if="topics.pageInfo &&topics.pageInfo.totalCount > limit">
+                  <button class="add-btn" @click="previousPage" :disabled="loading||!hasPrevious">
+                    <i class="ft-arrow-left" v-if="!loading"></i>
+                    <span v-else class="spinner-grow"></span>
+                  </button>
+                  <button class="add-btn active" @click="nextPage" :disabled="loading||!hasNext">
+                    <i class="ft-arrow-right" v-if="!loading"></i>
+                    <span v-else class="spinner-grow"></span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -68,7 +108,7 @@
                   </button>
                 </figure>
 
-                <form>
+                <form @submit.prevent="submitTopic">
                   <div class="form-group pt-3">
                     <label for="title">Topic Title (Required)</label>
                     <input
@@ -100,10 +140,10 @@
                       class="w-100"
                       @focus="errorMessage=''"
                       id="rooms"
-                      :class="{invalid: $v.topicPayload.rooms.$error || errorMessage}"
-                      @blur="$v.topicPayload.rooms.$touch()"
-                      v-model="topicPayload.rooms"
-                      multiple filterable
+                      :class="{invalid: $v.topicPayload.roomId.$error || errorMessage}"
+                      @blur="$v.topicPayload.roomId.$touch()"
+                      v-model="topicPayload.roomId"
+                      filterable
                       placeholder="Select"
                     >
                       <el-option
@@ -113,13 +153,13 @@
                         :value="item._id"
                       ></el-option>
                     </el-select>
-                    <!-- <template v-if="$v.topicPayload.rooms.$dirty">
-                                <p v-if="!$v.topicPayload.rooms.required" class="invalid">This field is required</p>
+                    <template v-if="$v.topicPayload.roomId.$dirty">
+                                <p v-if="!$v.topicPayload.roomId.required" class="invalid">This field is required</p>
                                 <p
-                                v-else-if="!$v.topicPayload.rooms.minLength"
+                                v-else-if="!$v.topicPayload.roomId.minLength"
                                 class="invalid"
                                 >Rooms should not be less than 1 items</p>
-                    </template>-->
+                    </template>
                     <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
                   </div>
 
@@ -156,18 +196,21 @@ export default {
   layout: "controlPanelLayout",
   data() {
     return {
+      skip: 0,
+      limit: 5,
+      total: 0,
       pickerOptions: {
         disabledDate: (time)=>{
           return time<Date.now()
         }
       },
       topicPayload: {
-        rooms: [],
+        roomId: '',
         title: "",
         startDate: "",
         closeDate: ""
       },
-      dateRangeValue: "",
+      dateRangeValue: [Date.now(), ''],
       errorMessage: "",
       options: [
         { name: "Vue.js", code: "vu" },
@@ -208,7 +251,7 @@ export default {
         required,
         minLength: minLength(6)
       },
-      rooms: {
+      roomId: {
         required,
         minLength: minLength(1)
       }
@@ -218,16 +261,30 @@ export default {
     ...mapGetters("admin", ["topics", "rooms"]),
     isNewActive() {
       return this.$route.query.new;
+    },
+    hasNext() {
+      return this.skip < this.total - this.limit;
+    },
+    hasPrevious() {
+      return this.skip >= this.limit;
     }
   },
   methods: {
-    ...mapActions("admin", ["getAllTopics", "getRooms"]),
+    ...mapActions("admin", ["getAllTopics", "getRooms", "saveTopic"]),
     openNewTopic() {
       this.$router.push({ query: { new: true } });
     },
     disabledDate(date) {
       console.log(date);
       return date.getTime() > Date.now();
+    },
+    nextPage() {
+      this.skip += this.limit;
+      this.getAdmins();
+    },
+    previousPage() {
+      this.skip -= this.limit;
+      this.getAdmins();
     },
     closeNewTopic() {
       this.$router.push({ query: {} });
@@ -247,11 +304,34 @@ export default {
           this.loading = false;
         });
     },
-    submitTopic() {},
+    submitTopic() {
+      this.$v.$touch();
+      let isInvalid = this.$v.$invalid;
+      if(isInvalid) return;
+      // this.topicPayload.startDate = this.dateRangeValue[0];
+      // this.topicPayload.closeDate = this.dateRangeValue[1];
+      this.loading = true;
+      let self = this;
+      this.saveTopic({topic: self.topicPayload})
+        .then(data => {
+          self.loading = false;
+          if (data.graphQLErrors) {
+            self.$toast.error(data.graphQLErrors[0].message);
+            return;
+          }
+          this.$toast.error("Topic Created");
+            // location.href = location.href;
+          // setTimeout(() => {
+          // }, 1000);
+        })
+        .catch(err => {
+          self.loading = false;
+        });
+    },
     getTopics() {
       this.loading = true;
       let self = this;
-      this.getAllTopics({})
+      this.getAllTopics({limit: self.limit, skip: self.skip})
         .then(data => {
           this.loading = false;
           if (data.graphQLErrors) {
