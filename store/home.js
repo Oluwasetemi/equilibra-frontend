@@ -41,6 +41,7 @@ export default {
               variables: { slug: 'SG' }
             })
             .then(({ data }) => {
+              
               commit('setGovernments', data.allGovernmentBasedOnCategory);
             })
             .catch(err => {

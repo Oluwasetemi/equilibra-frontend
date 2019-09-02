@@ -1,0 +1,31 @@
+const mailjet = require ('node-mailjet')
+.connect('0964fd2147d600504f94d1738547602a', '1578a9df623240cda1d74d3a80eb2ef3')
+const request = mailjet
+.post("send", {'version': 'v3.1'})
+.request({
+  "Messages":[
+    {
+      "From": {
+        "Email": "capitalplan.info@gmail.com",
+        "Name": "Chibuike"
+      },
+      "To": [
+        {
+          "Email": "capitalplan.info@gmail.com",
+          "Name": "Chibuike"
+        }
+      ],
+      "Subject": "Greetings from Mailjet.",
+      "TextPart": "My first Mailjet email",
+      "HTMLPart": "<h3>Dear passenger 1, welcome to <a href='https://www.mailjet.com/'>Mailjet</a>!</h3><br />May the delivery force be with you!",
+      "CustomID": "AppGettingStartedTest"
+    }
+  ]
+})
+request
+  .then((result) => {
+    console.log(result.body)
+  })
+  .catch((err) => {
+    console.log(err.statusCode)
+  })
