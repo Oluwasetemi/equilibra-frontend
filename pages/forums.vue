@@ -360,14 +360,14 @@ export default {
     ...mapGetters("user", ["getUser"]),
     stateOfOrigin() {
       const self = this;
-      let govtw = this.$store.getters["home/governments"].find(
+      let govtw = this.$store.getters["governments"].find(
         govt => self.getUser.stateOfOrigin == govt.id
       );
       return govtw?govtw.name:'';
     },
     stateOfResidence() {
       const self = this;
-      let govtw = this.$store.getters["home/governments"].find(
+      let govtw = this.$store.getters["governments"].find(
         govt => self.getUser.stateOfResidence == govt.id
       );
       return govtw?govtw.name:'';

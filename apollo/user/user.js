@@ -17,31 +17,31 @@ export default {
       $username: String!
     ) {
       updateProfile(file: $file, fullName: $fullName, username: $username) {
-          _id
-          fullName
-          successMessage
-          errorMessage
-          token
-          email
-          password
-          image
-          dob
-          createdAt
-          updatedAt
-          username
-          role
-          isVerified
-          isSuspended
-          stateOfOrigin
-          stateOfResidence
-          localGovtOrigin
-          stateConstituency
-          stateOfResidenceConstituency
-          stateFedConstituency
-          stateOfResidenceFedConstituency
-          senatorialDistrict
-          stateOfResidenceSenatorialDistrict
-          signupStatus
+        _id
+        fullName
+        successMessage
+        errorMessage
+        token
+        email
+        password
+        image
+        dob
+        createdAt
+        updatedAt
+        username
+        role
+        isVerified
+        isSuspended
+        stateOfOrigin
+        stateOfResidence
+        localGovtOrigin
+        stateConstituency
+        stateOfResidenceConstituency
+        stateFedConstituency
+        stateOfResidenceFedConstituency
+        senatorialDistrict
+        stateOfResidenceSenatorialDistrict
+        signupStatus
       }
     }
   `,
@@ -51,14 +51,12 @@ export default {
       $residenceStateConstituency: ID!
       $residenceFederalConstituency: ID!
       $stateOfResidence: ID!
-      $stateOfResidenceSenatorialDistrict: ID!
     ) {
       updateResidence(
         localGovtResidence: $localGovtResidence
         residenceStateConstituency: $residenceStateConstituency
         residenceFederalConstituency: $residenceFederalConstituency
         stateOfResidence: $stateOfResidence
-        stateOfResidenceSenatorialDistrict: $stateOfResidenceSenatorialDistrict
       ) {
         _id
         fullName

@@ -20,7 +20,7 @@
 
       <div
         class="collapse navbar-collapse d-lg-flex justify-content-md-end"
-      id="navbarSupportedContent"
+        id="navbarSupportedContent"
       >
         <ul class="navbar-nav">
           <li class="nav-item">
@@ -83,13 +83,13 @@ export default {
   data() {
     return {
       avatar
-    }
+    };
   },
   components: {
     signUpModal
   },
   computed: {
-    ...mapGetters("auth", ["isAuthenticated","user"]),
+    ...mapGetters("auth", ["isAuthenticated", "user"]),
     ...mapGetters("user", ["getUser"])
   },
   methods: {

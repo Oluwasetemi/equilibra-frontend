@@ -403,8 +403,7 @@ export default {
       this.$v.confirmPassword.$reset();
       this.$v.payload.$reset();
     }
-  },
-  mounted() {}
+  }
 };
 </script>
 

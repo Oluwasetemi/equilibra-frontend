@@ -68,7 +68,7 @@ export default {
           }
         })
         .then(({ data }) => {
-          commit('setUser', data.updateResidence.user);
+          commit('setUser', data.updateResidence);
           return data.updateResidence;
         })
         .catch(err => {
