@@ -61,7 +61,7 @@ const state = () => ({
           variables: {  },
           context: {
             headers: {
-              Authorization: `Bearer ${state.sub.token}`
+              Authorization: `Bearer ${Cookie.get('EQUI_AUTH_ADMIN')}`
             }
           }
         })
@@ -83,7 +83,7 @@ const state = () => ({
           variables: { cursor: payload.cursor, skip: payload.skip, limit: payload.limit },
           context: {
             headers: {
-              Authorization: `Bearer ${state.sub.token}`
+              Authorization: `Bearer ${Cookie.get('EQUI_AUTH_ADMIN')}`
             }
           }
         })
@@ -104,7 +104,7 @@ const state = () => ({
         variables: { type: payload.type, limit: payload.limit, skip: payload.skip },
         context: {
           headers: {
-            Authorization: `Bearer ${state.sub.token}`
+            Authorization: `Bearer ${Cookie.get('EQUI_AUTH_ADMIN')}`
           }
         }
       })
@@ -130,7 +130,7 @@ const state = () => ({
         variables: {},
         context: {
           headers: {
-            Authorization: `Bearer ${state.sub.token}`
+            Authorization: `Bearer ${Cookie.get('EQUI_AUTH_ADMIN')}`
           }
         }
       })
@@ -151,7 +151,7 @@ const state = () => ({
         variables: {limit: payload.limit, skip: payload.skip},
         context: {
           headers: {
-            Authorization: `Bearer ${state.sub.token}`
+            Authorization: `Bearer ${Cookie.get('EQUI_AUTH_ADMIN')}`
           }
         }
       })
@@ -174,7 +174,7 @@ const state = () => ({
 
           context: {
             headers: {
-              Authorization: `Bearer ${state.sub.token}`
+              Authorization: `Bearer ${Cookie.get('EQUI_AUTH_ADMIN')}`
             }
           }
         })
@@ -194,7 +194,7 @@ const state = () => ({
           variables: { adminId: payload.adminId },
           context: {
             headers: {
-              Authorization: `Bearer ${state.sub.token}`
+              Authorization: `Bearer ${Cookie.get('EQUI_AUTH_ADMIN')}`
             }
           }
         })
@@ -215,7 +215,7 @@ const state = () => ({
           variables: { adminInput: payload },
           context: {
             headers: {
-              Authorization: `Bearer ${state.sub.token}`
+              Authorization: `Bearer ${Cookie.get('EQUI_AUTH_ADMIN')}`
             }
           }
         })
@@ -238,7 +238,7 @@ const state = () => ({
           variables: { topic: payload.topic },
           context: {
             headers: {
-              Authorization: `Bearer ${state.sub.token}`
+              Authorization: `Bearer ${Cookie.get('EQUI_AUTH_ADMIN')}`
             }
           }
         })
@@ -258,9 +258,7 @@ const state = () => ({
     setToken(state, data) {
       state.sub.token = data.token;
       state.sub.isAuthenticated = true;
-      if (data.signupStatus || data.authCookie) {
-        // Cookie.set('EQUI_AUTH_ADMIN', data.token);
-      }
+      Cookie.set('EQUI_AUTH_ADMIN', data.token);
     },
     logout(state) {
       state.sub.token = '';

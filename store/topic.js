@@ -21,7 +21,7 @@ export default {
           variables: { topic: payload },
           context: {
             headers: {
-              Authorization: `Bearer ${rootState.auth.token}`
+              Authorization: `Bearer ${Cookie.get('EQUI_AUTH')}`
             }
           }
         })

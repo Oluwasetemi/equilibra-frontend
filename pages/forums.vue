@@ -360,15 +360,18 @@ export default {
     ...mapGetters("user", ["getUser"]),
     stateOfOrigin() {
       const self = this;
-      return this.$store.getters["home/governments"].filter(
+      let govtw = this.$store.getters["home/governments"].find(
         govt => self.getUser.stateOfOrigin == govt.id
-      )[0].name;
+      );
+      return govtw?govtw.name:'';
     },
     stateOfResidence() {
       const self = this;
-      return this.$store.getters["home/governments"].filter(
+      let govtw = this.$store.getters["home/governments"].find(
         govt => self.getUser.stateOfResidence == govt.id
-      )[0].name;
+      );
+      return govtw?govtw.name:'';
+
     }
   },
   filters: {

@@ -145,20 +145,14 @@ export default {
 	}
   },
   computed: {
-  	...mapGetters('admin', ['adminStatistics']),
-    refresh(){
-      if(this.mounted) {
-        this.getStats();
-        this.mounted = false;
-      }
-    }
+  	...mapGetters('admin', ['adminStatistics', 'user']),
   },
   methods: {
 	  ...mapActions('admin', ['getAdminStatistics']),
 	  getStats() {
       this.loading = true;
       let self = this;
-      this.getAdminStatistics({token: self.token})
+      this.getAdminStatistics(this.user)
         .then(data => {
           this.loading = false;
           if (data.graphQLErrors) {
@@ -172,7 +166,7 @@ export default {
     }
   },
   created(){
-	  this.mounted = true;
+	  this.getStats();
   }
 };
 </script>

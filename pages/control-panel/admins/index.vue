@@ -234,12 +234,6 @@ export default {
   },
   computed: {
     ...mapGetters("admin", ["admins"]),
-    refresh(){
-      if(this.mounted) {
-        this.getStats();
-        this.mounted = false;
-      }
-    },
     isNewActive() {
       return this.$route.query.new;
     },
@@ -353,7 +347,7 @@ export default {
     }
   },
   created() {
-    this.mounted = true;
+    this.getAdmins();
   }
 };
 </script>
