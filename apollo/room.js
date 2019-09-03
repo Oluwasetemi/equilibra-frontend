@@ -14,7 +14,7 @@ export default {
   `,
   getRoomById: gql`
     query getRoomById($roomId: darangiGraphId!) {
-        getRoomById(roomId: $roomId) {
+      getRoomById(roomId: $roomId) {
         _id
         name
         currentTopic
@@ -23,4 +23,28 @@ export default {
       }
     }
   `,
+  joinRoom: gql`
+    mutation joinRoom($roomId: darangiGraphId!) {
+      joinRoom(roomId: $roomId) {
+        _id
+        name
+        currentTopic
+        slug
+        government
+        roomType
+      }
+    }
+  `,
+  leaveRoom: gql`
+    mutation leaveRoom($roomId: darangiGraphId!) {
+      leaveRoom(roomId: $roomId) {
+        _id
+        name
+        currentTopic
+        slug
+        government
+        roomType
+      }
+    }
+  `
 };

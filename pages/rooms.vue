@@ -8,10 +8,13 @@
             <div class="groups border border-bottom-0">
               <ul class="p-0 m-o">
                 <li class="header font-weight-bold p-3 border-bottom">Groups</li>
-                <a href="#" @click="currentRoom = null">
-                  <li class="p-3 border-bottom" :class="{selected: !currentRoom}">Vent the Steam</li>
-                </a>
+                <div class="text-center loader" v-if="loading">
+                  <div class="spinner-border text-light" role="status">
+                    <span class="sr-only">Loading...</span>
+                  </div>
+                </div>
                 <a
+                  v-else
                   href="#"
                   v-for="(room, i) in federalRooms[roomType[$route.params.id]]"
                   :key="i"
@@ -19,9 +22,18 @@
                   @click="currentRoom = room"
                 >
                   <li
-                    class="px-4 py-3 border-bottom"
-                    :class="{selected: currentRoom == room}"
-                  >{{room.name}}</li>
+                    class="px-4 border-bottom d-flex align-items-center justify-content-between"
+                    :class="{selected: currentRoom.slug == room.slug}"
+                  >
+                    <span>{{room.name}}</span>
+                    <div
+                      class="join-status d-inline-flex align-items-center justify-content-between"
+                      @click="isRoomMember(room) ? leaveRoomForum(room) : joinRoomForum(room) "
+                    >
+                      <span>{{isRoomMember(room) ? 'Leave' : 'Join'}}</span>
+                      <span class="chat-icon"></span>
+                    </div>
+                  </li>
                 </a>
               </ul>
             </div>
@@ -44,19 +56,19 @@ export default {
     return {
       imageUrl2: { imageUrl },
       roomType,
-      currentRoom: null
+      loading: true,
+      currentRoom: { slug: "Vent-The-Steam" }
     };
   },
   components: {
     Card
   },
   computed: {
-    ...mapGetters("room", ["federalRooms"])
+    ...mapGetters("room", ["federalRooms", "getJoinedRooms"])
   },
   methods: {
-    ...mapActions("room", ["getFederalRooms"]),
+    ...mapActions("room", ["getFederalRooms", "joinRoom", "leaveRoom"]),
     getRooms() {
-      this.loading = true;
       let self = this;
       this.getFederalRooms(this.roomType[self.$route.params.id])
         .then(data => {
@@ -69,6 +81,33 @@ export default {
         .catch(err => {
           this.loading = false;
         });
+    },
+    joinRoomForum(room) {
+      this.currentRoom = room;
+      this.joinRoom(this.currentRoom._id)
+        .then(data => {
+          if (data.graphQLErrors) {
+            this.$toast.error(data.graphQLErrors[0].message);
+            return;
+          }
+          this.$toast.success("You have successfully joined the conversation!");
+        })
+        .catch(err => {});
+    },
+    leaveRoomForum(room) {
+      this.currentRoom = room;
+      this.leaveRoom(this.currentRoom._id)
+        .then(data => {
+          if (data.graphQLErrors) {
+            this.$toast.error(data.graphQLErrors[0].message);
+            return;
+          }
+          this.$toast.success("You have now left the conversation!");
+        })
+        .catch(err => {});
+    },
+    isRoomMember(room) {
+      return this.getJoinedRooms.some(roomId => roomId == room._id);
     }
   },
   mounted() {
@@ -78,9 +117,54 @@ export default {
 </script>
 
 <style scoped>
-aside ul{
+.loader {
+  padding: 10px;
+  border-radius: 4px;
+  border-bottom: solid 1px #dee2e6;
+}
+
+.join-status {
+  background: white;
+  color: #07834e;
+  padding: 5px 13px;
+  opacity: 0;
+  border: solid 1px #07834e;
+  width: 80px;
+  border-radius: 2px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+li.selected .join-status {
+  border: solid 1px white;
+  opacity: 1;
+}
+
+li.selected:hover > .join-status {
+  opacity: 1;
+}
+
+li:hover > .join-status {
+  opacity: 1;
+}
+
+li .join-status:hover {
+  color: white;
+  background: #07834e;
+  border: solid 1px #07834e !important;
+}
+
+li .join-status:hover .chat-icon {
+  background-color: white;
+}
+
+aside ul {
   overflow-y: scroll;
   max-height: calc(100vh - (80px + 3rem));
+}
+
+a li {
+  height: 55px;
 }
 .scrollable {
   overflow-y: scroll;
@@ -105,7 +189,18 @@ aside ul{
 }
 .selected {
   background: #dceee6;
-  border-left: solid 3px #07834e;
+  /* border-left: solid 3px #07834e; */
+  position: relative;
+}
+
+.selected:before {
+  content: "";
+  width: 3px;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: #07834e;
 }
 
 /* Groups end */
@@ -181,6 +276,16 @@ a {
   color: inherit;
   text-decoration: none;
 }
+
+.chat-icon {
+  mask: url("~assets/icons/chat-icon.svg");
+  mask-size: cover;
+  display: inline-block;
+  background-color: #07834e;
+  width: 12.57px;
+  height: 12px;
+}
+
 @media (min-width: 768px) {
   .forum-container {
     flex: 0 0 70%;
