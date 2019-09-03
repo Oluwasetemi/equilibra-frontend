@@ -1,4 +1,4 @@
-import gql from '~/apollo/topic';
+import gql from '~/apollo/user/topic';
 
 export default {
   state: () => ({}),
@@ -21,7 +21,7 @@ export default {
           variables: { topic: payload },
           context: {
             headers: {
-              Authorization: `Bearer ${Cookie.get('EQUI_AUTH')}`
+              Authorization: `Bearer ${rootState.auth.token}`
             }
           }
         })
@@ -31,6 +31,24 @@ export default {
         .catch(err => {
           return err;
         });
-    }
+    },
+    requestChangeTopic({ commit, rootState }, payload) {
+      return this.app.apolloProvider.defaultClient
+        .mutate({
+          mutation: gql.requestChangeTopic,
+          variables: { topic: payload },
+          context: {
+            headers: {
+              Authorization: `Bearer ${rootState.auth.token}`
+            }
+          }
+        })
+        .then(({ data }) => {
+          return data.requestChangeTopic;
+        })
+        .catch(err => {
+          return err;
+        });
+    },
   }
 };

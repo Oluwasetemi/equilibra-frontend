@@ -1,4 +1,4 @@
-import gql from '~/apollo/auth';
+import gql from '~/apollo/user/auth';
 import Cookie from 'js-cookie';
 
 export default {
@@ -197,6 +197,13 @@ export default {
 
     setTempUserDetails({ commit }, payload) {
       commit('setTempUserDetails', payload);
+    },
+
+    checkAuthStatus({ state }) {
+      if (!state.isAuthenticated) {
+        this.$router.push('/login');
+        return;
+      }
     },
 
     logout({ commit }) {

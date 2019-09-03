@@ -17,11 +17,6 @@ export default {
       $username: String!
     ) {
       updateProfile(file: $file, fullName: $fullName, username: $username) {
-        path
-        filename
-        mimetype
-        encoding
-        user {
           _id
           fullName
           successMessage
@@ -47,7 +42,6 @@ export default {
           senatorialDistrict
           stateOfResidenceSenatorialDistrict
           signupStatus
-        }
       }
     }
   `,
@@ -57,12 +51,14 @@ export default {
       $residenceStateConstituency: ID!
       $residenceFederalConstituency: ID!
       $stateOfResidence: ID!
+      $stateOfResidenceSenatorialDistrict: ID!
     ) {
       updateResidence(
         localGovtResidence: $localGovtResidence
         residenceStateConstituency: $residenceStateConstituency
         residenceFederalConstituency: $residenceFederalConstituency
         stateOfResidence: $stateOfResidence
+        stateOfResidenceSenatorialDistrict: $stateOfResidenceSenatorialDistrict
       ) {
         _id
         fullName

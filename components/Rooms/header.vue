@@ -1,25 +1,71 @@
 <template>
-  <div class="px-md-3 pl-0 forum-container py-4 scrollable">
-    <div class="border">
-      <RoomHeader :currentRoom="currentRoom" />
-      <PostComment />
-      <Comments />
+  <div>
+    <SuggestTopicModal />
+    <ChangeTopicModal :currentRoom="currentRoom" />
+    <div class="forum-header px-4 py-2 d-flex align-items-center">
+      <div class="header-content w-100">
+        <div class="d-flex justify-content-between">
+          <h4 class="d-inline-block mb-2">{{currentRoom ? currentRoom.name : '--'}}</h4>
+          <div class="d-inline-block">
+            <img src="~/assets/icons/avatar2.svg" alt class="mr-1" />
+            <span style="font-size: 14px; text-decoration: underline;">Hon. Danjuma Zaccheus</span>
+          </div>
+        </div>
+        <p
+          class="description mb-2 mr-md-5 pr-md-5"
+          v-if="currentRoom"
+        >{{currentRoom ? currentRoom.currentTopic || 'This room has no topic' : 'This room has no topic'}}</p>
+        <p class="description mb-2 mr-md-5 pr-md-5" v-else>This room has no topic</p>
+        <div class="d-flex justify-content-between align-items-end flex-wrap">
+          <span>
+            <div
+              class="timer d-flex align-items-center mt-2"
+              v-if="currentRoom && currentRoom.currentTopic"
+            >
+              <img src="~/assets/icons/timer.svg" alt class="mr-2" />
+              <span>
+                <span style="font-size: 15px" class="pr-1">5</span>Day(s)
+                <span style="font-size: 14px" class="px-1">15</span> HOUR(s)
+                <span class="ml-2" style="font-size: 14px">56</span> Minute(s)
+              </span>
+            </div>
+          </span>
+
+          <div class="topic-actions mt-2">
+            <button class="suggest-topic mr-2" @click="showModal('#suggestTopic')">Suggest Topic</button>
+            <button
+              class="change-topic ml-2"
+              @click="showModal('#changeTopic')"
+            >Change Current Topic</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
-import RoomHeader from "~/components/Rooms/header";
-import Comments from "~/components/Rooms/comments";
-import PostComment from "~/components/Rooms/post-comment";
+import { mapGetters } from "vuex";
+import SuggestTopicModal from "~/components/Rooms/suggest-topic";
+import ChangeTopicModal from "~/components/Rooms/change-topic";
 export default {
   layout: "greenNavOnly",
   props: ["currentRoom"],
   components: {
-    RoomHeader,
-    PostComment,
-    Comments
+    SuggestTopicModal,
+    ChangeTopicModal
+  },
+  computed: {
+    ...mapGetters("auth", ["isAuthenticated"])
+  },
+  methods: {
+    showModal(val) {
+      if (!this.isAuthenticated) {
+        this.$router.push("/login");
+        return;
+      }
+      $(val).modal("show");
+    }
   }
 };
 </script>
