@@ -34,9 +34,8 @@ export default {
     ...mapGetters("auth", ["isAuthenticated"])
   },
   methods: {
-    ...mapActions("auth", ["checkAuthStatus"]),
     showModal(val) {
-      if (!this.sAuthenticated) {
+      if (!this.isAuthenticated) {
         this.$router.push("/login");
         return;
       }
