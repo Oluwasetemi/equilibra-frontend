@@ -1,4 +1,4 @@
-import gql from '~/apollo/room';
+import gql from '~/apollo/user/room';
 
 export default {
   state: () => ({

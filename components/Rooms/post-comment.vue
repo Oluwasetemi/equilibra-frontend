@@ -4,13 +4,18 @@
       <figure class="m-0 d-flex align-items-center pr-2 pl-3 px d-inline-block">
         <img :src="getUser.image || avatar" alt class="rounded-circle" height="40px" />
       </figure>
-      <form autocomplete="off" class="d-flex align-items-center" style="flex-grow: 1">
+      <form
+        autocomplete="off"
+        class="d-flex align-items-center"
+        style="flex-grow: 1"
+        @submit.prevent="postComment()"
+      >
         <div class="form-input position-relative d-inline-block px-3" style="flex-grow: 1">
-          <input type="text" name="comment" id="comment" class="w-100 form-control" />
+          <input type="text" name="comment" id="comment" class="w-100 form-control" v-model="payload.comment"/>
           <img src alt class="position-absolute" />
         </div>
         <div class="px-2" style="flex: 0 0 140px">
-          <button class="post">Post</button>
+          <button class="post" type="submit" :disabled="!payload.comment">Post</button>
         </div>
       </form>
     </div>
@@ -26,7 +31,10 @@ export default {
   data() {
     return {
       avatar,
-      imageUrl2: { imageUrl }
+      imageUrl2: { imageUrl },
+      payload: {
+          comment: ''
+      }
     };
   },
   computed: {

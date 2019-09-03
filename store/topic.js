@@ -1,4 +1,4 @@
-import gql from '~/apollo/topic';
+import gql from '~/apollo/user/topic';
 
 export default {
   state: () => ({}),

@@ -1,4 +1,4 @@
-import gql from '~/apollo/govt';
+import gql from '~/apollo/user/govt';
 export default {
     state: () => ({
         governments: [],
