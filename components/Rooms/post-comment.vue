@@ -1,25 +1,47 @@
 <template>
-  <div class="px-md-3 pl-0 forum-container py-4 scrollable">
-    <div class="border">
-      <RoomHeader :currentRoom="currentRoom" />
-      <PostComment />
-      <Comments />
+  <div class="input-comment border-bottom pb-3 pb-md-0">
+    <div class="d-flex align-items-center px-2">
+      <figure class="m-0 d-flex align-items-center pr-2 pl-3 px d-inline-block">
+        <img :src="getUser.image || avatar" alt class="rounded-circle" height="40px" />
+      </figure>
+      <form autocomplete="off" class="d-flex align-items-center" style="flex-grow: 1">
+        <div class="form-input position-relative d-inline-block px-3" style="flex-grow: 1">
+          <input type="text" name="comment" id="comment" class="w-100 form-control" />
+          <img src alt class="position-absolute" />
+        </div>
+        <div class="px-2" style="flex: 0 0 140px">
+          <button class="post">Post</button>
+        </div>
+      </form>
     </div>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import RoomHeader from "~/components/Rooms/header";
-import Comments from "~/components/Rooms/comments";
-import PostComment from "~/components/Rooms/post-comment";
+import avatar from "~/assets/images/avatar.png";
+import imageUrl from "~/assets/images/judiciary_BG.svg";
 export default {
-  layout: "greenNavOnly",
   props: ["currentRoom"],
-  components: {
-    RoomHeader,
-    PostComment,
-    Comments
+  data() {
+    return {
+      avatar,
+      imageUrl2: { imageUrl }
+    };
+  },
+  computed: {
+    ...mapGetters("user", ["getUser"]),
+    ...mapGetters("auth", ["isAuthenticated"])
+  },
+  methods: {
+    ...mapActions("auth", ["checkAuthStatus"]),
+    showModal(val) {
+      if (!this.sAuthenticated) {
+        this.$router.push("/login");
+        return;
+      }
+      $(val).modal("show");
+    }
   }
 };
 </script>

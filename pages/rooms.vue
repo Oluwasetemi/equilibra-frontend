@@ -8,33 +8,35 @@
             <div class="groups border border-bottom-0">
               <ul class="p-0 m-o">
                 <li class="header font-weight-bold p-3 border-bottom">Groups</li>
-                <div class="text-center loader" v-if="loading">
-                  <div class="spinner-border text-light" role="status">
-                    <span class="sr-only">Loading...</span>
-                  </div>
-                </div>
-                <a
-                  v-else
-                  href="#"
-                  v-for="(room, i) in federalRooms[roomType[$route.params.id]]"
-                  :key="i"
-                  :title="room.name"
-                  @click="currentRoom = room"
-                >
-                  <li
-                    class="px-4 border-bottom d-flex align-items-center justify-content-between"
-                    :class="{selected: currentRoom.slug == room.slug}"
-                  >
-                    <span>{{room.name}}</span>
-                    <div
-                      class="join-status d-inline-flex align-items-center justify-content-between"
-                      @click="isRoomMember(room) ? leaveRoomForum(room) : joinRoomForum(room) "
-                    >
-                      <span>{{isRoomMember(room) ? 'Leave' : 'Join'}}</span>
-                      <span class="chat-icon"></span>
+                <div class="group-list">
+                  <div class="text-center loader" v-if="loading">
+                    <div class="spinner-border text-light" role="status">
+                      <span class="sr-only">Loading...</span>
                     </div>
-                  </li>
-                </a>
+                  </div>
+                  <a
+                    v-else
+                    href="#"
+                    v-for="(room, i) in federalRooms[roomType[$route.params.id]]"
+                    :key="i"
+                    :title="room.name"
+                    @click="currentRoom = room"
+                  >
+                    <li
+                      class="px-4 border-bottom d-flex align-items-center justify-content-between"
+                      :class="{selected: currentRoom.slug == room.slug}"
+                    >
+                      <span>{{room.name}}</span>
+                      <div
+                        class="join-status d-inline-flex align-items-center justify-content-between"
+                        @click="isRoomMember(room) ? leaveRoomForum(room) : joinRoomForum(room) "
+                      >
+                        <span>{{isRoomMember(room) ? 'Leave' : 'Join'}}</span>
+                        <span class="chat-icon"></span>
+                      </div>
+                    </li>
+                  </a>
+                </div>
               </ul>
             </div>
           </aside>
@@ -68,6 +70,7 @@ export default {
   },
   methods: {
     ...mapActions("room", ["getFederalRooms", "joinRoom", "leaveRoom"]),
+    ...mapActions("auth", ["checkAuthStatus"]),
     getRooms() {
       let self = this;
       this.getFederalRooms(this.roomType[self.$route.params.id])
@@ -77,12 +80,21 @@ export default {
             this.$toast.error(data.graphQLErrors[0].message);
             return;
           }
+          this.currentRoom = this.federalRooms[
+            this.roomType[this.$route.params.id][0]
+          ];
+          console.log(
+            (this.currentRoom = this.federalRooms[
+              this.roomType[this.$route.params.id]
+            ][0])
+          );
         })
         .catch(err => {
           this.loading = false;
         });
     },
     joinRoomForum(room) {
+      this.checkAuthStatus();
       this.currentRoom = room;
       this.joinRoom(this.currentRoom._id)
         .then(data => {
@@ -163,6 +175,10 @@ aside ul {
   max-height: calc(100vh - (80px + 3rem));
 }
 
+div.group-list {
+  max-height: 550px;
+  overflow-y: scroll;
+}
 a li {
   height: 55px;
 }

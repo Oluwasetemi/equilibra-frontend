@@ -25,15 +25,11 @@ export default {
     },
     removeRoom(state, id) {
       let rooms = state.joinedRooms;
-      debugger;
-      rooms.length;
       rooms.find((roomId, index) => {
         if (roomId == id) {
           rooms.splice(index, 1);
         }
       });
-      debugger;
-      rooms.length;
     }
   },
 
