@@ -25,7 +25,7 @@ export default function(context) {
       credentials: 'same-origin'
       // getAuth: () => `Bearer ${context.store.getters['auth/getToken']}`
       // headers: {
-      //   authorization: `Bearer ${context.store.getters['auth/getToken']}`
+      //   Authorization: `Bearer ${context.store.getters['auth/getToken']}`
       // }
     }
   };

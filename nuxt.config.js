@@ -56,7 +56,7 @@ export default {
   },
   env: {
     googleClientID:
-      '769165313432-rq98o9410ntrgg2obvkhl86k82bueoq0.apps.googleusercontent.com',
+      '832023611491-25tvnsvouh2a5rsghbmsuo39f09r7pae.apps.googleusercontent.com',
     facebookAppID: '2310649132486818'
   },
   /*

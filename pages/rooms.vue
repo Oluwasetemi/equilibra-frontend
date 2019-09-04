@@ -33,7 +33,7 @@
                         @click="checkRoomStatus(room)"
                       >
                         <!-- this.myRooms.some(myRoom => myRoom._id == room._id) -->
-                        <span>{{myRooms.some(myRoom => myRoom._id == room._id) ? 'Leave' : 'Join'}}</span>
+                        <span>{{getMyRooms && getMyRooms.some(myRoom => myRoom._id == room._id) ? 'Leave' : 'Join'}}</span>
                         <span class="chat-icon"></span>
                       </div>
                     </li>
@@ -52,6 +52,7 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import { roomType } from "~/static/js/constants";
+import gql from "~/apollo/user/room";
 import imageUrl from "~/assets/images/judiciary_BG.svg";
 import Card from "~/components/Forums/forum-card";
 import loginModal from "~/components/Authentication/sign-up";
@@ -62,6 +63,7 @@ export default {
       imageUrl2: { imageUrl },
       roomType,
       loading: true,
+      getMyRooms: [],
       currentRoom: { slug: "Vent-The-Steam", currentTopic: null }
     };
   },
@@ -70,16 +72,11 @@ export default {
     loginModal
   },
   computed: {
-    ...mapGetters("room", ["federalRooms", "myRooms"]),
-    ...mapGetters("auth", ["isAuthenticated"])
+    ...mapGetters("room", ["federalRooms"]),
+    ...mapGetters("auth", ["isAuthenticated", "getToken"])
   },
   methods: {
-    ...mapActions("room", [
-      "getFederalRooms",
-      "joinRoom",
-      "leaveRoom",
-      "getMyRooms"
-    ]),
+    ...mapActions("room", ["getFederalRooms", "joinRoom", "leaveRoom"]),
     checkRoomStatus(room) {
       this.isMyRoom(room)
         ? this.leaveRoomForum(room)
@@ -88,6 +85,17 @@ export default {
     setRoom(room) {
       this.currentRoom = room;
       this.$router.push({ query: { group: room.slug } });
+    },
+    getAllMyRooms() {
+      this.$apollo.addSmartQuery("getMyRooms", {
+        query: gql.getMyRooms,
+        variables: { roomType: this.roomType[this.$route.params.id] },
+        context: {
+          headers: {
+            Authorization: `Bearer ${this.getToken}`
+          }
+        }
+      });
     },
     getFedRooms() {
       let self = this;
@@ -121,7 +129,6 @@ export default {
             this.$toast.error(data.graphQLErrors[0].message);
             return;
           }
-          this.getAllMyRooms();
           this.$toast.success("You have successfully joined the conversation!");
         })
         .catch(err => {});
@@ -134,23 +141,15 @@ export default {
             this.$toast.error(data.graphQLErrors[0].message);
             return;
           }
-          this.getAllMyRooms();
           this.$toast.success("You have now left the conversation!");
         })
         .catch(err => {});
     },
-    getAllMyRooms() {
-      this.getMyRooms()
-        .then(data => {
-          if (data.graphQLErrors) {
-            this.$toast.error(data.graphQLErrors[0].message);
-            return;
-          }
-        })
-        .catch(err => {});
-    },
     isMyRoom(room) {
-      return this.myRooms.some(myRoom => myRoom._id == room._id);
+      if (!this.getMyRooms) {
+        return;
+      }
+      return this.getMyRooms.some(myRoom => myRoom._id == room._id);
     }
   },
   mounted() {

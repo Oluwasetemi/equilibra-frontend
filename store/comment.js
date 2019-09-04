@@ -12,33 +12,10 @@ export default {
     comments: state => state.comments
   },
 
-  mutations: {
-    setComments(state, payload) {
-      state.comments = payload;
-    }
-  },
+  mutations: {},
 
   actions: {
-    fetchComments({ commit, rootState }, payload) {
-      return this.app.apolloProvider.defaultClient
-        .query({
-          query: gql.fetchComments,
-          variables: payload,
-          context: {
-            headers: {
-              Authorization: `Bearer ${rootState.auth.token}`
-            }
-          }
-        })
-        .then(({ data }) => {
-          commit('setComments', data.fetchComments);
-          return data.fetchComments;
-        })
-        .catch(err => {
-          return err;
-        });
-    },
-    createComment({ commit, rootState }, payload) {
+    createComment({ commit, dispatch, rootState }, payload) {
       return this.app.apolloProvider.defaultClient
         .mutate({
           mutation: gql.createComment,
@@ -48,17 +25,7 @@ export default {
               Authorization: `Bearer ${rootState.auth.token}`
             }
           },
-          refetchQueries: [
-            {
-              query: gql.fetchComments,
-              variables: { topicId: payload.topic, limit: 10 },
-              context: {
-                headers: {
-                  Authorization: `Bearer ${rootState.auth.token}`
-                }
-              }
-            }
-          ]
+          refetchQueries: ['fetchComments']
         })
         .then(({ data }) => {
           return data.createComment;
@@ -76,7 +43,8 @@ export default {
             headers: {
               Authorization: `Bearer ${rootState.auth.token}`
             }
-          }
+          },
+          refetchQueries: ['fetchComments']
         })
         .then(({ data }) => {
           return data.editComment;
@@ -94,7 +62,8 @@ export default {
             headers: {
               Authorization: `Bearer ${rootState.auth.token}`
             }
-          }
+          },
+          refetchQueries: ['fetchComments'],
         })
         .then(({ data }) => {
           return data.deleteComment;
@@ -112,7 +81,8 @@ export default {
             headers: {
               Authorization: `Bearer ${rootState.auth.token}`
             }
-          }
+          },
+          refetchQueries: ['fetchComments'],
         })
         .then(({ data }) => {
           return data.replyComment;
@@ -130,7 +100,8 @@ export default {
             headers: {
               Authorization: `Bearer ${rootState.auth.token}`
             }
-          }
+          },
+          refetchQueries: ['fetchComments'],
         })
         .then(({ data }) => {
           return data.likeComment;
@@ -148,7 +119,8 @@ export default {
             headers: {
               Authorization: `Bearer ${rootState.auth.token}`
             }
-          }
+          },
+          refetchQueries: ['fetchComments'],
         })
         .then(({ data }) => {
           return data.unLikeComment;

@@ -1,8 +1,8 @@
 <template>
   <div>
     <CommentModal :comment="activeComment" />
-    <div class="comments" v-if="comments.edges.length > 0">
-      <div class="d-flex px-2 comment" v-for="(comment, i) in comments.edges" :key="i">
+    <div class="comments" v-if="fetchComments.edges.length > 0">
+      <div class="d-flex px-2 comment" v-for="(comment, i) in fetchComments.edges" :key="i">
         <figure class="m-0 py-3 pr-1 pl-4 px d-inline-block">
           <img
             :src="comment.author.image || avatar"
@@ -62,6 +62,7 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
+import gql from "~/apollo/user/comment";
 import avatar from "~/assets/images/avatar.png";
 import CommentModal from "~/components/Rooms/view-comment-modal";
 import imageUrl from "~/assets/images/judiciary_BG.svg";
@@ -73,6 +74,10 @@ export default {
       loadingComments: true,
       liked: false,
       avatar,
+      fetchComments: {
+        edges: [],
+        pageInfo: []
+      },
       activeComment: null,
       imageUrl2: { imageUrl }
     };
@@ -82,13 +87,12 @@ export default {
   },
   computed: {
     ...mapGetters("user", ["getUser"]),
-    ...mapGetters("comment", ["comments"]),
-    ...mapGetters("auth", ["isAuthenticated"])
+    ...mapGetters("auth", ["isAuthenticated", "getToken"])
   },
   filters: {
     formatDate(val, moment) {
-      //   val = new Date(val).toISOString();
-      return moment("2019-09-04T03:50:04.428Z")
+        val = new Date(Number(val)).toISOString();
+      return moment(val)
         .startOf("day")
         .fromNow();
     }
@@ -101,23 +105,20 @@ export default {
     }
   },
   methods: {
-    ...mapActions("comment", ["fetchComments", "likeComment"]),
+    ...mapActions("comment", ["likeComment"]),
     fetchRoomComments() {
-      const payload = {
-        limit: 10,
-        topicId: this.currentRoom.currentTopic._id
-      };
-      this.fetchComments(payload)
-        .then(data => {
-          this.loadingComments = false;
-          if (data.graphQLErrors) {
-            this.$toast.error(data.graphQLErrors[0].message);
-            return;
+      this.$apollo.addSmartQuery("fetchComments", {
+        query: gql.fetchComments,
+        variables: {
+          limit: 10,
+          topicId: this.currentRoom.currentTopic._id
+        },
+        context: {
+          headers: {
+            Authorization: `Bearer ${this.getToken}`
           }
-        })
-        .catch(err => {
-          this.loadingComments = false;
-        });
+        }
+      });
     },
     LikeComment(commentId) {
       this.likeComment({ commentId })
@@ -126,7 +127,6 @@ export default {
             this.$toast.error(data.graphQLErrors[0].message);
             return;
           }
-          this.fetchRoomComments();
         })
         .catch(err => {});
     },
@@ -152,9 +152,6 @@ export default {
     }
   },
   mounted() {
-    this.$eventBus.$on("fetchComments", () => {
-      this.fetchRoomComments();
-    });
     if (this.currentRoom.currentTopic) {
       this.fetchRoomComments();
     }
