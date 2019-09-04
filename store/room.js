@@ -8,28 +8,20 @@ export default {
       MINISTRY: [],
       COURT: []
     },
-    joinedRooms: []
+    myRooms: []
   }),
 
   getters: {
     federalRooms: state => state.federalRooms,
-    getJoinedRooms: state => state.joinedRooms
+    myRooms: state => state.myRooms
   },
 
   mutations: {
     setFederalRooms(state, { roomType, data }) {
       state.federalRooms[roomType] = data;
     },
-    addRoom(state, roomId) {
-      state.joinedRooms.push(roomId);
-    },
-    removeRoom(state, id) {
-      let rooms = state.joinedRooms;
-      rooms.find((roomId, index) => {
-        if (roomId == id) {
-          rooms.splice(index, 1);
-        }
-      });
+    setMyRooms(state, data) {
+      state.myRooms = data;
     }
   },
 
@@ -51,11 +43,34 @@ export default {
           return err;
         });
     },
+    getMyRooms({ commit, rootState }) {
+      return this.app.apolloProvider.defaultClient
+        .query({
+          query: gql.getMyRooms,
+          context: {
+            headers: {
+              Authorization: `Bearer ${rootState.auth.token}`
+            }
+          }
+        })
+        .then(({ data }) => {
+          commit('setMyRooms', data.getMyRooms);
+          return data.getMyRooms;
+        })
+        .catch(err => {
+          return err;
+        });
+    },
     getRoomById({ commit, rootState }, payload) {
       return this.app.apolloProvider.defaultClient
         .query({
           query: gql.getRoomById,
-          variables: { roomId: payload }
+          variables: { roomId: payload },
+          context: {
+            headers: {
+              Authorization: `Bearer ${rootState.auth.token}`
+            }
+          }
         })
         .then(({ data }) => {
           return data.getRoomById;
@@ -76,7 +91,6 @@ export default {
           }
         })
         .then(({ data }) => {
-          commit('addRoom', data.joinRoom._id);
           return data.joinRoom;
         })
         .catch(err => {
@@ -95,7 +109,6 @@ export default {
           }
         })
         .then(({ data }) => {
-          commit('removeRoom', data.leaveRoom._id);
           return data.leaveRoom;
         })
         .catch(err => {

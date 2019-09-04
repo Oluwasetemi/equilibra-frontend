@@ -1,45 +1,61 @@
 <template>
   <div>
-    <CommentModal />
-    <div class="comments">
-      <div class="d-flex px-2 comment">
+    <CommentModal :comment="activeComment" />
+    <div class="comments" v-if="comments.edges.length > 0">
+      <div class="d-flex px-2 comment" v-for="(comment, i) in comments.edges" :key="i">
         <figure class="m-0 py-3 pr-1 pl-4 px d-inline-block">
-          <img :src="getUser.image || avatar" alt class="rounded-circle" height="40px" />
+          <img
+            :src="comment.author.image || avatar"
+            alt
+            class="rounded-circle avatar"
+            height="40px"
+          />
         </figure>
 
         <div class="form-input position-relative d-inline-block px-3" style="flex-grow: 1">
           <div class="comment py-3">
             <div class="user text-left">
-              <span class="username">Joseph Makanaki</span>
+              <span class="username">{{comment.author.username}}</span>
               <div class="d-block d-md-inline">
-                <span class="user-handle pr-2 px-md-2">@Joseph_Makanaki</span>
-                <span class="time-posted">30 mins</span>
+                <span class="user-handle pr-2 px-md-2">@{{comment.author.username}}</span>
+                <span class="time-posted">{{comment.createdAt | formatDate($moment)}}</span>
               </div>
             </div>
             <div class="comment-content mt-2 pr-3">
-              <p class="text-left">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, is sed do eiusmod tempor incididunt
-                ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-              </p>
+              <p class="text-left">{{comment.comment}}</p>
             </div>
             <div class="actions mr-2">
-              <a href="#" class="likes" data-toggle="tooltip" title="Like" @click="liked = !liked">
+              <a
+                href="#"
+                class="likes"
+                data-toggle="tooltip"
+                title="Like"
+                @click="LikeComment(comment._id)"
+              >
                 <img src="~/assets/icons/like-icon-outline.svg" alt v-if="!liked" />
                 <img src="~/assets/icons/like-icon-red-filled.svg" alt v-if="liked" />
-                <span class="px-1">{{!liked ? 4 : 4+1}}</span>
+                <span class="px-1">{{comment.likes}}</span>
               </a>
-              <a href="#" class="replies ml-2" data-toggle="modal" data-target="#commentModal">
+              <a
+                href="#"
+                class="replies ml-2"
+                data-toggle="modal"
+                data-target="#commentModal"
+                @click="activeComment = comment"
+              >
                 <span data-toggle="tooltip" title="Reply">
                   <img src="~/assets/icons/replies-icon.svg" alt />
-                  <span class="px-1">10</span>
+                  <span class="px-1">{{comment.replies.length}}</span>
                 </span>
               </a>
             </div>
           </div>
         </div>
       </div>
+    </div>
+    <div v-else class="text-center py-5">
+      <div class="spinner-border text-center text-light" v-if="loadingComments"></div>
+      <span v-else>Be the first to leave a comment</span>
     </div>
   </div>
 </template>
@@ -54,8 +70,10 @@ export default {
   props: ["currentRoom"],
   data() {
     return {
+      loadingComments: true,
       liked: false,
       avatar,
+      activeComment: null,
       imageUrl2: { imageUrl }
     };
   },
@@ -64,16 +82,81 @@ export default {
   },
   computed: {
     ...mapGetters("user", ["getUser"]),
+    ...mapGetters("comment", ["comments"]),
     ...mapGetters("auth", ["isAuthenticated"])
   },
+  filters: {
+    formatDate(val, moment) {
+      //   val = new Date(val).toISOString();
+      return moment("2019-09-04T03:50:04.428Z")
+        .startOf("day")
+        .fromNow();
+    }
+  },
+  watch: {
+    "currentRoom.currentTopic"(val) {
+      if (val) {
+        this.fetchRoomComments();
+      }
+    }
+  },
   methods: {
-    ...mapActions("auth", ["checkAuthStatus"]),
+    ...mapActions("comment", ["fetchComments", "likeComment"]),
+    fetchRoomComments() {
+      const payload = {
+        limit: 10,
+        topicId: this.currentRoom.currentTopic._id
+      };
+      this.fetchComments(payload)
+        .then(data => {
+          this.loadingComments = false;
+          if (data.graphQLErrors) {
+            this.$toast.error(data.graphQLErrors[0].message);
+            return;
+          }
+        })
+        .catch(err => {
+          this.loadingComments = false;
+        });
+    },
+    LikeComment(commentId) {
+      this.likeComment({ commentId })
+        .then(data => {
+          if (data.graphQLErrors) {
+            this.$toast.error(data.graphQLErrors[0].message);
+            return;
+          }
+          this.fetchRoomComments();
+        })
+        .catch(err => {});
+    },
+    UnlikeAComment() {
+      const payload = {
+        limit: 10
+      };
+      this.unLikeComment(payload)
+        .then(data => {
+          if (data.graphQLErrors) {
+            this.$toast.error(data.graphQLErrors[0].message);
+            return;
+          }
+        })
+        .catch(err => {});
+    },
     showModal(val) {
       if (!this.isAuthenticated) {
         this.$router.push("/login");
         return;
       }
       $(val).modal("show");
+    }
+  },
+  mounted() {
+    this.$eventBus.$on("fetchComments", () => {
+      this.fetchRoomComments();
+    });
+    if (this.currentRoom.currentTopic) {
+      this.fetchRoomComments();
     }
   }
 };
@@ -92,6 +175,12 @@ export default {
 </style>
 
 <style scoped>
+.avatar {
+  height: 40px;
+  width: 40px;
+  object-fit: cover;
+}
+
 .timer {
   font-size: 9px;
   border: 1px solid white;

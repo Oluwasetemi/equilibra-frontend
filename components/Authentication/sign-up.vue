@@ -48,6 +48,7 @@ import { mapActions, mapGetters } from "vuex";
 import googleButton from "~/components/Shared/googleButton";
 import facebookButton from "~/components/Shared/facebookButton";
 export default {
+  props: ["showModal"],
   data() {
     return {
       loading: false

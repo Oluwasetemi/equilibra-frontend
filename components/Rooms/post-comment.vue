@@ -2,7 +2,7 @@
   <div class="input-comment border-bottom pb-3 pb-md-0">
     <div class="d-flex align-items-center px-2">
       <figure class="m-0 d-flex align-items-center pr-2 pl-3 px d-inline-block">
-        <img :src="getUser.image || avatar" alt class="rounded-circle" height="40px" />
+        <img :src="getUser.image || avatar" alt class="rounded-circle avatar" height="40px" />
       </figure>
       <form
         autocomplete="off"
@@ -11,11 +11,17 @@
         @submit.prevent="postComment()"
       >
         <div class="form-input position-relative d-inline-block px-3" style="flex-grow: 1">
-          <input type="text" name="comment" id="comment" class="w-100 form-control" v-model="payload.comment"/>
+          <input
+            type="text"
+            name="comment"
+            id="comment"
+            class="w-100 form-control"
+            v-model="payload.comment"
+          />
           <img src alt class="position-absolute" />
         </div>
         <div class="px-2" style="flex: 0 0 140px">
-          <button class="post" type="submit" :disabled="!payload.comment">Post</button>
+          <button class="post" type="submit" :disabled="!payload.comment || loading">Post</button>
         </div>
       </form>
     </div>
@@ -30,10 +36,11 @@ export default {
   props: ["currentRoom"],
   data() {
     return {
+      loading: false,
       avatar,
       imageUrl2: { imageUrl },
       payload: {
-          comment: ''
+        comment: ""
       }
     };
   },
@@ -42,30 +49,42 @@ export default {
     ...mapGetters("auth", ["isAuthenticated"])
   },
   methods: {
+    ...mapActions("comment", ["createComment"]),
     showModal(val) {
       if (!this.isAuthenticated) {
         this.$router.push("/login");
         return;
       }
       $(val).modal("show");
+    },
+    postComment() {
+      this.payload.topic = this.currentRoom.currentTopic._id;
+      this.loading = true;
+      this.createComment(this.payload)
+        .then(data => {
+          this.loading = false;
+          if (data.graphQLErrors) {
+            this.$toast.error(data.graphQLErrors[0].message);
+            return;
+          }
+          this.payload.comment = "";
+          this.$eventBus.$emit("fetchComments");
+        })
+        .catch(err => {
+          this.loading = true;
+        });
     }
   }
 };
 </script>
 
 
-
-<style>
-.modal-backdrop.show {
-  opacity: 0.3;
-}
-.modal-backdrop {
-  background: #171725;
-  opacity: 0.3;
-}
-</style>
-
 <style scoped>
+.avatar {
+  height: 40px;
+  width: 40px;
+  object-fit: cover;
+}
 .timer {
   font-size: 9px;
   border: 1px solid white;

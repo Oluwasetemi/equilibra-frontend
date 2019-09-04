@@ -120,12 +120,12 @@
                   <div class="form-input my-2">
                     <label for="dob2">BIRTH DATE</label>
                     <input
-                      type="date"
+                      type="text"
                       name="dob2"
                       id="dob2"
                       class="form-control mt-0"
                       disabled
-                      :value="userDetail.dob | formatDate"
+                      :value="userDetail.dob | formatDate($moment)"
                       @input="value=>userDetail.dob=value"
                     />
                   </div>
@@ -324,19 +324,8 @@ export default {
     }
   },
   filters: {
-    formatDate(val) {
-      const date = new Date(val);
-      let year = date.getFullYear();
-      let month = date.getMonth() + 1;
-      let dt = date.getDate();
-
-      if (dt < 10) {
-        dt = "0" + dt;
-      }
-      if (month < 10) {
-        month = "0" + month;
-      }
-      return year + "-" + month + "-" + dt;
+    formatDate(val, moment) {
+      return moment(val).format("MMMM, YYYY");
     }
   },
   methods: {

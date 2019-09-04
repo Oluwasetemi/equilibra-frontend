@@ -14,14 +14,46 @@ export default {
         skip: $skip
         topicId: $topicId
       ) {
-        Comment {
+        edges {
           _id
           comment
-          topic
-          author
-          reporter
+          author {
+            _id
+            fullName
+            image
+            username
+            image
+          }
+          reporter {
+            _id
+            fullName
+            image
+            username
+            image
+          }
           report
-          replies
+          replies {
+            _id
+            comment
+            author {
+              _id
+              fullName
+              image
+              username
+              image
+            }
+            reporter {
+              _id
+              fullName
+              image
+              username
+              image
+            }
+            report
+            likes
+            createdAt
+            image
+          }
           reports
           likes
           reply
@@ -32,7 +64,7 @@ export default {
           updatedAt
           successMessage
         }
-        PageInfo {
+        pageInfo {
           endCursor
           hasNextPage
           totalCount
@@ -41,14 +73,14 @@ export default {
     }
   `,
   createComment: gql`
-    mutation createComment($comment: String!, $topic: ID!, $file: Upload!) {
+    mutation createComment($comment: String!, $topic: ID!, $file: Upload) {
       createComment(comment: $comment, topic: $topic, file: $file) {
         successMessage
       }
     }
   `,
   editComment: gql`
-    mutation createComment($comment: String!, $topic: ID!, $file: Upload!) {
+    mutation createComment($comment: String!, $topic: ID!, $file: Upload) {
       createComment(comment: $comment, topic: $topic, file: $file) {
         successMessage
       }
@@ -83,7 +115,7 @@ export default {
     }
   `,
   reportComment: gql`
-    mutation reportComment($reportTyp: report, $commentId: ID!) {
+    mutation reportComment($reportType: report, $commentId: ID!) {
       reportComment(commentId: $commentId) {
         successMessage
       }

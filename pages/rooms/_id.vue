@@ -2,8 +2,8 @@
   <div class="px-md-3 pl-0 forum-container py-4 scrollable">
     <div class="border">
       <RoomHeader :currentRoom="currentRoom" />
-      <PostComment />
-      <Comments />
+      <PostComment :currentRoom="currentRoom"/>
+      <Comments :currentRoom="currentRoom"/>
     </div>
   </div>
 </template>
@@ -20,7 +20,7 @@ export default {
     RoomHeader,
     PostComment,
     Comments
-  }
+  },
 };
 </script>
 
