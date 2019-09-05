@@ -2,7 +2,11 @@
   <div>
     <CommentModal :comment="activeComment" />
     <div class="comments" v-if="fetchComments.edges.length > 0">
-      <div class="d-flex px-2 comment" v-for="(comment, i) in fetchComments.edges" :key="i">
+      <div
+        class="d-flex px-2 comment border-bottom"
+        v-for="(comment, i) in fetchComments.edges"
+        :key="i"
+      >
         <figure class="m-0 py-3 pr-1 pl-4 px d-inline-block">
           <img
             :src="comment.author.image || avatar"
@@ -53,9 +57,13 @@
         </div>
       </div>
     </div>
-    <div v-else class="text-center py-5">
+
+    <div v-else class="text-center py-5 border-bottom">
       <div class="spinner-border text-center text-light" v-if="loadingComments"></div>
       <span v-else>Be the first to leave a comment</span>
+    </div>
+    <div class="text-center ">
+      <div class="spinner-border text-center mt-4" v-if="fetchComments.pageInfo.hasNextPage"></div>
     </div>
   </div>
 </template>
@@ -68,10 +76,9 @@ import CommentModal from "~/components/Rooms/view-comment-modal";
 import imageUrl from "~/assets/images/judiciary_BG.svg";
 export default {
   layout: "greenNavOnly",
-  props: ["currentRoom"],
+  props: ["currentRoom", "fetchMore"],
   data() {
     return {
-      loadingComments: true,
       liked: false,
       avatar,
       fetchComments: {
@@ -87,11 +94,14 @@ export default {
   },
   computed: {
     ...mapGetters("user", ["getUser"]),
-    ...mapGetters("auth", ["isAuthenticated", "getToken"])
+    ...mapGetters("auth", ["isAuthenticated", "getToken"]),
+    fetchMoreComments() {
+      return this.fetchMore;
+    }
   },
   filters: {
     formatDate(val, moment) {
-        val = new Date(Number(val)).toISOString();
+      val = new Date(Number(val)).toISOString();
       return moment(val)
         .startOf("day")
         .fromNow();
@@ -99,24 +109,77 @@ export default {
   },
   watch: {
     "currentRoom.currentTopic"(val) {
-      if (val) {
-        this.fetchRoomComments();
+      if (!val) {
+        this.fetchComments = {
+          edges: [],
+          pageInfo: []
+        };
+        return;
+      }
+      this.fetchRoomComments();
+    },
+    fetchMoreComments(val) {
+      if (val && this.fetchComments.pageInfo.hasNextPage) {
+        this.loadingMoreComments = true;
+        const cursor = this.fetchComments.pageInfo.endCursor;
+        const topicId = this.currentRoom.currentTopic._id;
+        const self = this;
+        this.$apollo.queries.fetchComments.fetchMore({
+          variables: {
+            cursor
+          },
+          context: {
+            headers: {
+              Authorization: `Bearer ${self.getToken}`
+            }
+          },
+          updateQuery: (previousResult, { fetchMoreResult }) => {
+            debugger;
+            this.$emit("fetchedMore");
+            this.loadingMoreComments = false;
+            const newComments = fetchMoreResult.fetchComments.edges;
+            const oldComments = previousResult.fetchComments.edges;
+            return newComments.length
+              ? {
+                  fetchComments: {
+                    __typename: previousResult.fetchComments.__typename,
+                    // Merging the tag list
+                    edges: [...oldComments, ...newComments],
+                    pageInfo: newComments.pageInfo
+                  }
+                }
+              : previousResult;
+          }
+
+          //   watchLoading(isLoading, countModifier) {
+          //     isLoading
+          //       ? (this.loadingComments = true)
+          //       : (this.loadingComments = false);
+          //   }
+        });
+        this.$emit("fetchedMore");
       }
     }
   },
   methods: {
     ...mapActions("comment", ["likeComment"]),
-    fetchRoomComments() {
+    fetchRoomComments(cursor = null) {
       this.$apollo.addSmartQuery("fetchComments", {
         query: gql.fetchComments,
         variables: {
           limit: 10,
-          topicId: this.currentRoom.currentTopic._id
+          topicId: this.currentRoom.currentTopic._id,
+          cursor
         },
         context: {
           headers: {
             Authorization: `Bearer ${this.getToken}`
           }
+        },
+        watchLoading(isLoading, countModifier) {
+          isLoading
+            ? (this.loadingComments = true)
+            : (this.loadingComments = false);
         }
       });
     },

@@ -1,9 +1,9 @@
 <template>
-  <div class="px-md-3 pl-0 forum-container py-4 scrollable">
-    <div class="border">
+  <div class="px-md-3 pl-0 forum-container py-4 scrollable" ref="comments">
+    <div class="border border-bottom-0">
       <RoomHeader :currentRoom="currentRoom" />
-      <PostComment :currentRoom="currentRoom"/>
-      <Comments :currentRoom="currentRoom"/>
+      <PostComment :currentRoom="currentRoom" />
+      <Comments :currentRoom="currentRoom" :fetchMore="fetchMore" @fetchedMore="fetchMore = false" />
     </div>
   </div>
 </template>
@@ -16,11 +16,29 @@ import PostComment from "~/components/Rooms/post-comment";
 export default {
   layout: "greenNavOnly",
   props: ["currentRoom"],
+  data() {
+    return {
+      fetchMore: false
+    };
+  },
   components: {
     RoomHeader,
     PostComment,
     Comments
   },
+  methods: {
+    fetchMoreComments({ target }) {
+      if (target.scrollTop + target.clientHeight == target.scrollHeight) {
+        this.fetchMore = true;
+      }
+    }
+  },
+  mounted() {
+    this.$refs.comments.addEventListener("scroll", this.fetchMoreComments);
+  },
+  destroyed() {
+    this.$refs.comments.removeEventListener("scroll", this.fetchMoreComments);
+  }
 };
 </script>
 
