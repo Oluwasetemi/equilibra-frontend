@@ -139,7 +139,7 @@
         <form
           class="new-comment border-top px-3"
           autocomplete="off"
-          @submit.prevent
+          @submit.prevent="postReply()"
           :class="{borderGreen: formActive}"
         >
           <div class="form-input position-relative d-flex">
@@ -159,6 +159,7 @@
                 type="text"
                 name="comment"
                 id="comment"
+                v-model="payload.comment"
                 class="d-inline-block border-0 px-4 w-100"
                 placeholder="Type a message..."
               />
@@ -167,14 +168,14 @@
               </div>
             </div>
 
-            <a href class="mt-2 pt-1">
+            <button class="mt-2 pt-1 post-btn" type="submit">
               <span
                 class="post-comment-icon"
                 data-toggle="tooltip"
                 title="Post"
                 style="position: relative;top: 7px;"
               ></span>
-            </a>
+            </button>
           </div>
         </form>
       </div>
@@ -184,7 +185,7 @@
 
 <script>
 import avatar from "~/assets/images/avatar.png";
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import shareLinkCard from "~/components/Rooms/share-link";
 import reportCommentCard from "~/components/Rooms/report-comment";
 import deleteCommentCard from "~/components/Rooms/delete-comment";
@@ -195,9 +196,13 @@ export default {
       avatar,
       showLink: false,
       liked: false,
+      file: "",
       formActive: false,
       imageContent: false,
-      setClass: false
+      setClass: false,
+      payload: {
+        comment: ""
+      }
     };
   },
   components: {
@@ -221,15 +226,33 @@ export default {
     }
   },
   methods: {
+    ...mapActions("comment", ["replyComment"]),
     previewImage() {
-      const avatar = event.target.files[0];
-      // this.formData.append("photo", avatar);
+      this.file = event.target.files[0];
       const reader = new FileReader();
       reader.readAsDataURL(avatar);
       reader.onload = e => {
         this.imageContent = true;
         this.$refs.imageContent.src = e.target.result;
       };
+    },
+    postReply() {
+      this.payload.commentId = this.comment._id;
+      if (this.file) payload.file = this.file;
+      this.loading = true;
+      this.replyComment(this.payload)
+        .then(data => {
+          this.loading = false;
+          if (data.graphQLErrors) {
+            this.$toast.error(data.graphQLErrors[0].message);
+            return;
+          }
+          this.$toast.success("Your reply has been posted");
+          this.payload.comment = "";
+        })
+        .catch(err => {
+          this.loading = true;
+        });
     }
   },
   mounted() {
@@ -274,8 +297,16 @@ input {
   border: 0;
 }
 
-input:focus ~ a span {
+input:focus ~ button span {
   background-color: #168a59;
+}
+
+button.post-btn {
+  background: transparent;
+  border: none;
+  padding: unset;
+  height: unset;
+  margin: auto;
 }
 
 .likes-button {

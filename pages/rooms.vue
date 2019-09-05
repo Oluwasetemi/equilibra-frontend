@@ -43,7 +43,7 @@
             </div>
           </aside>
         </div>
-        <nuxt-child :currentRoom="currentRoom" />
+        <nuxt-child :currentRoom="currentRoom" :isMyRoom="isMyRoom(currentRoom)" />
       </div>
     </div>
   </div>
@@ -58,6 +58,12 @@ import Card from "~/components/Forums/forum-card";
 import loginModal from "~/components/Authentication/sign-up";
 export default {
   layout: "greenNavOnly",
+  validate({ route, query, redirect }) {
+    if (!query.group) {
+      redirect(`${route.path}?group=Vent-The-Steam`);
+    }
+    return true;
+  },
   data() {
     return {
       imageUrl2: { imageUrl },
@@ -129,7 +135,7 @@ export default {
             this.$toast.error(data.graphQLErrors[0].message);
             return;
           }
-          this.$toast.success("You have successfully joined the conversation!");
+          this.$toast.success("You have now joined this conversation!");
         })
         .catch(err => {});
     },
@@ -147,15 +153,12 @@ export default {
     },
     isMyRoom(room) {
       if (!this.getMyRooms) {
-        return;
+        return false;
       }
       return this.getMyRooms.some(myRoom => myRoom._id == room._id);
     }
   },
   mounted() {
-    if (!this.$route.query.group) {
-      this.$router.push({ query: { group: "Vent-The-Steam" } });
-    }
     this.getFedRooms();
     if (this.isAuthenticated) {
       this.getAllMyRooms();

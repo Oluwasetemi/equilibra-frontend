@@ -1,6 +1,7 @@
 <template>
   <div>
     <CommentModal :comment="activeComment" />
+
     <div class="comments" v-if="fetchComments.edges.length > 0">
       <div
         class="d-flex px-2 comment border-bottom"
@@ -15,7 +16,6 @@
             height="40px"
           />
         </figure>
-
         <div class="form-input position-relative d-inline-block px-3" style="flex-grow: 1">
           <div class="comment py-3">
             <div class="user text-left">
@@ -62,8 +62,12 @@
       <div class="spinner-border text-center text-light" v-if="loadingComments"></div>
       <span v-else>Be the first to leave a comment</span>
     </div>
-    <div class="text-center ">
-      <div class="spinner-border text-center mt-4" v-if="fetchComments.pageInfo.hasNextPage"></div>
+    <div class="text-center">
+      <div
+        class="spinner-border text-center mt-4"
+        v-if="fetchComments.pageInfo.hasNextPage && loadingMoreComments"
+      ></div>
+      <div class="text-center" v-else>You have reached the end of this page</div>
     </div>
   </div>
 </template>
@@ -86,7 +90,9 @@ export default {
         pageInfo: []
       },
       activeComment: null,
-      imageUrl2: { imageUrl }
+      imageUrl2: { imageUrl },
+      loadingComments: false,
+      loadingMoreComments: false
     };
   },
   components: {
@@ -134,7 +140,6 @@ export default {
             }
           },
           updateQuery: (previousResult, { fetchMoreResult }) => {
-            debugger;
             this.$emit("fetchedMore");
             this.loadingMoreComments = false;
             const newComments = fetchMoreResult.fetchComments.edges;
@@ -145,17 +150,11 @@ export default {
                     __typename: previousResult.fetchComments.__typename,
                     // Merging the tag list
                     edges: [...oldComments, ...newComments],
-                    pageInfo: newComments.pageInfo
+                    pageInfo: fetchMoreResult.fetchComments.pageInfo
                   }
                 }
               : previousResult;
           }
-
-          //   watchLoading(isLoading, countModifier) {
-          //     isLoading
-          //       ? (this.loadingComments = true)
-          //       : (this.loadingComments = false);
-          //   }
         });
         this.$emit("fetchedMore");
       }
@@ -163,13 +162,12 @@ export default {
   },
   methods: {
     ...mapActions("comment", ["likeComment"]),
-    fetchRoomComments(cursor = null) {
+    fetchRoomComments() {
       this.$apollo.addSmartQuery("fetchComments", {
         query: gql.fetchComments,
         variables: {
           limit: 10,
-          topicId: this.currentRoom.currentTopic._id,
-          cursor
+          topicId: this.currentRoom.currentTopic._id
         },
         context: {
           headers: {
@@ -195,7 +193,7 @@ export default {
     },
     UnlikeAComment() {
       const payload = {
-        limit: 10
+        limit: 1
       };
       this.unLikeComment(payload)
         .then(data => {

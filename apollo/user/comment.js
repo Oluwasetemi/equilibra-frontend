@@ -4,7 +4,7 @@ export default {
   fetchComments: gql`
     query fetchComments(
       $cursor: String
-      $limit: Int!
+      $limit: Int
       $skip: Int
       $topicId: ID!
     ) {
@@ -50,13 +50,12 @@ export default {
               image
             }
             report
-            likes
             createdAt
             image
           }
           reports
-          likes
           reply
+          likes
           edited
           reported
           image
@@ -94,8 +93,8 @@ export default {
     }
   `,
   replyComment: gql`
-    mutation replyComment($comment: String!, $topic: ID!, $file: Upload!) {
-      replyComment(comment: $comment, topic: $topic, file: $file) {
+    mutation replyComment($comment: String!, $commentId: ID!, $file: Upload) {
+      replyComment(comment: $comment, commentId: $commentId, file: $file) {
         successMessage
       }
     }

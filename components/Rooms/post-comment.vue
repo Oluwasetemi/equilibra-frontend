@@ -1,5 +1,6 @@
 <template>
   <div class="input-comment border-bottom pb-3 pb-md-0">
+    <joinRoomModal :roomId="currentRoom._id" @joinedRoom="postComment(true)" />
     <div class="d-flex align-items-center px-2">
       <figure class="m-0 d-flex align-items-center pr-2 pl-3 px d-inline-block">
         <img :src="getUser.image || avatar" alt class="rounded-circle avatar" height="40px" />
@@ -31,9 +32,10 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import avatar from "~/assets/images/avatar.png";
+import joinRoomModal from "~/components/Rooms/join-room-modal";
 import imageUrl from "~/assets/images/judiciary_BG.svg";
 export default {
-  props: ["currentRoom"],
+  props: ["currentRoom", "isMyRoom"],
   data() {
     return {
       loading: false,
@@ -48,16 +50,20 @@ export default {
     ...mapGetters("user", ["getUser"]),
     ...mapGetters("auth", ["isAuthenticated"])
   },
+  components: {
+    joinRoomModal
+  },
   methods: {
     ...mapActions("comment", ["createComment"]),
-    showModal(val) {
+    postComment(joinedRoom = false) {
       if (!this.isAuthenticated) {
-        this.$router.push("/login");
+        $("#signUpModal").modal("show");
         return;
       }
-      $(val).modal("show");
-    },
-    postComment() {
+      if (!this.isMyRoom && !joinedRoom) {
+        $("#joinRoomModal").modal("show");
+        return;
+      }
       this.payload.topic = this.currentRoom.currentTopic._id;
       this.loading = true;
       this.createComment(this.payload)
