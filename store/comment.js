@@ -63,7 +63,7 @@ export default {
               Authorization: `Bearer ${rootState.auth.token}`
             }
           },
-          refetchQueries: ['fetchComments'],
+          refetchQueries: ['fetchComments']
         })
         .then(({ data }) => {
           return data.deleteComment;
@@ -82,7 +82,7 @@ export default {
               Authorization: `Bearer ${rootState.auth.token}`
             }
           },
-          refetchQueries: ['fetchComments'],
+          refetchQueries: ['fetchComments', 'fetchComment']
         })
         .then(({ data }) => {
           return data.replyComment;
@@ -101,7 +101,7 @@ export default {
               Authorization: `Bearer ${rootState.auth.token}`
             }
           },
-          refetchQueries: ['fetchComments'],
+          refetchQueries: ['fetchComments', 'fetchComment']
         })
         .then(({ data }) => {
           return data.likeComment;
@@ -120,7 +120,7 @@ export default {
               Authorization: `Bearer ${rootState.auth.token}`
             }
           },
-          refetchQueries: ['fetchComments'],
+          refetchQueries: ['fetchComments', 'fetchComment']
         })
         .then(({ data }) => {
           return data.unLikeComment;

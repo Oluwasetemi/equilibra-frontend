@@ -7,7 +7,7 @@
     aria-hidden="true"
   >
     <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content" v-if="comment">
+      <div class="modal-content" v-if="!loading && Object.keys(comment).length > 0">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -35,10 +35,8 @@
             <span>{{comment.createdAt | formatDate($moment)}}</span>
           </div>
           <div class="actions d-inline-block mr-2">
-            <span class="likes">
-              <img src="~/assets/icons/like-icon-outline.svg" alt />
-              <span class="px-1">{{comment.likes}}</span>
-            </span>
+            <likeIcon :commentId="comment._id" :liked="comment.liked" :likes="comment.likes" />
+
             <span class="replies ml-2">
               <img src="~/assets/icons/replies-icon.svg" alt />
               <span class="px-1">{{comment.replies.length}}</span>
@@ -91,7 +89,6 @@
               <div class="text-center dropdown" data-toggle="tooltip" title="Like">
                 <a href="#" class="inline-block px-2 border-right text-center">
                   <img src="~/assets/icons/like-icon-outline.svg" alt />
-                  <!-- <img src="~/assets/icons/like-icon-red-filled.svg" alt=""> -->
                 </a>
               </div>
               <div class="text-center dropdown" data-toggle="tooltip" title="Delete">
@@ -134,8 +131,6 @@
             </span>
           </div>
         </div>
-        <!-- <div v-else class="text-center">Be the first to reply to this comment</div> -->
-
         <form
           class="new-comment border-top px-3"
           autocomplete="off"
@@ -179,18 +174,26 @@
           </div>
         </form>
       </div>
+      <div class="py-4 text-center w-100" v-else>
+        <div class="spinner-border"></div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import likeIcon from "~/components/Rooms/like-icon";
 import avatar from "~/assets/images/avatar.png";
+import gql from "~/apollo/user/comment";
 import { mapGetters, mapActions } from "vuex";
 import shareLinkCard from "~/components/Rooms/share-link";
 import reportCommentCard from "~/components/Rooms/report-comment";
 import deleteCommentCard from "~/components/Rooms/delete-comment";
 export default {
-  props: ["comment"],
+  props: ["commentId"],
+  // asyncData() {
+
+  // }
   data() {
     return {
       avatar,
@@ -202,31 +205,56 @@ export default {
       setClass: false,
       payload: {
         comment: ""
-      }
+      },
+      fetchComment: {},
+      loading: false
     };
   },
   components: {
     shareLinkCard,
     reportCommentCard,
-    deleteCommentCard
+    deleteCommentCard,
+    likeIcon
   },
   computed: {
-    ...mapGetters("user", ["getUser"])
+    ...mapGetters("user", ["getUser"]),
+    ...mapGetters("auth", ["getToken"]),
+    comment() {
+      return this.fetchComment;
+    }
   },
   filters: {
     formatDate(val, moment) {
-      //   val = new Date(val).toISOString();
       return moment("2019-09-04T03:50:04.428Z")
         .startOf("day")
         .fromNow();
     },
     formatTime(val, moment) {
-      //   val = new Date(val).toISOString();
       return moment("2019-09-04T03:50:04.428Z").format("h:mm:ss a");
     }
   },
   methods: {
     ...mapActions("comment", ["replyComment"]),
+    fetchCommentByID() {
+      this.loading = true;
+      this.$apollo.addSmartQuery("fetchComment", {
+        query: gql.fetchComment,
+        variables: {
+          commentId: this.commentId
+        },
+        context: {
+          headers: {
+            Authorization: `Bearer ${this.getToken}`
+          }
+        },
+        watchLoading(isLoading, countModifier) {
+          isLoading ? (this.loading = true) : (this.loading = false);
+        },
+        result() {
+          this.loading = false;
+        }
+      });
+    },
     previewImage() {
       this.file = event.target.files[0];
       const reader = new FileReader();
@@ -256,8 +284,13 @@ export default {
     }
   },
   mounted() {
+    this.fetchCommentByID();
     $(document).ready(function() {
       $('[data-toggle="tooltip"]').tooltip();
+    });
+    const self = this;
+    $("#commentModal").on("hide.bs.modal", function() {
+      self.$emit("closeModal");
     });
   }
 };
@@ -266,6 +299,12 @@ export default {
 
 
 <style scoped>
+.spinner-border {
+  height: 4rem;
+  width: 4rem;
+  border: 0.4em solid currentColor;
+}
+
 .border-top,
 .border,
 .border-bottom {
