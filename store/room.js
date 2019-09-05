@@ -7,29 +7,16 @@ export default {
       SENATE: [],
       MINISTRY: [],
       COURT: []
-    },
-    joinedRooms: []
+    }
   }),
 
   getters: {
-    federalRooms: state => state.federalRooms,
-    getJoinedRooms: state => state.joinedRooms
+    federalRooms: state => state.federalRooms
   },
 
   mutations: {
     setFederalRooms(state, { roomType, data }) {
       state.federalRooms[roomType] = data;
-    },
-    addRoom(state, roomId) {
-      state.joinedRooms.push(roomId);
-    },
-    removeRoom(state, id) {
-      let rooms = state.joinedRooms;
-      rooms.find((roomId, index) => {
-        if (roomId == id) {
-          rooms.splice(index, 1);
-        }
-      });
     }
   },
 
@@ -55,7 +42,12 @@ export default {
       return this.app.apolloProvider.defaultClient
         .query({
           query: gql.getRoomById,
-          variables: { roomId: payload }
+          variables: { roomId: payload },
+          context: {
+            headers: {
+              Authorization: `Bearer ${rootState.auth.token}`
+            }
+          }
         })
         .then(({ data }) => {
           return data.getRoomById;
@@ -73,10 +65,10 @@ export default {
             headers: {
               Authorization: `Bearer ${rootState.auth.token}`
             }
-          }
+          },
+          refetchQueries: ['getMyRooms']
         })
         .then(({ data }) => {
-          commit('addRoom', data.joinRoom._id);
           return data.joinRoom;
         })
         .catch(err => {
@@ -92,10 +84,10 @@ export default {
             headers: {
               Authorization: `Bearer ${rootState.auth.token}`
             }
-          }
+          },
+          refetchQueries: ['getMyRooms']
         })
         .then(({ data }) => {
-          commit('removeRoom', data.leaveRoom._id);
           return data.leaveRoom;
         })
         .catch(err => {

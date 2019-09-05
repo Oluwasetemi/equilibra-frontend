@@ -6,7 +6,14 @@ export default {
       getFederalRooms(roomType: $roomType) {
         _id
         name
-        currentTopic
+        currentTopic {
+          _id
+          title
+          closeDate
+          startDate
+          votes
+          isClosed
+        }
         slug
         government
       }
@@ -17,9 +24,23 @@ export default {
       getRoomById(roomId: $roomId) {
         _id
         name
-        currentTopic
+        currentTopic {
+          _id
+          title
+          closeDate
+          startDate
+          votes
+          isClosed
+        }
         slug
         government
+      }
+    }
+  `,
+  getMyRooms: gql`
+    query getMyRooms {
+      getMyRooms {
+        _id
       }
     }
   `,
@@ -28,7 +49,14 @@ export default {
       joinRoom(roomId: $roomId) {
         _id
         name
-        currentTopic
+        currentTopic {
+          _id
+          title
+          closeDate
+          startDate
+          votes
+          isClosed
+        }
         slug
         government
         roomType
@@ -40,7 +68,14 @@ export default {
       leaveRoom(roomId: $roomId) {
         _id
         name
-        currentTopic
+        currentTopic {
+          _id
+          title
+          closeDate
+          startDate
+          votes
+          isClosed
+        }
         slug
         government
         roomType

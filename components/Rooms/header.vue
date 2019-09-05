@@ -1,5 +1,6 @@
 <template>
   <div>
+    <loginModal />
     <SuggestTopicModal />
     <ChangeTopicModal :currentRoom="currentRoom" />
     <div class="forum-header px-4 py-2 d-flex align-items-center">
@@ -13,14 +14,13 @@
         </div>
         <p
           class="description mb-2 mr-md-5 pr-md-5"
-          v-if="currentRoom"
-        >{{currentRoom ? currentRoom.currentTopic || 'This room has no topic' : 'This room has no topic'}}</p>
-        <p class="description mb-2 mr-md-5 pr-md-5" v-else>This room has no topic</p>
+          v-if="currentRoom && currentRoom.slug != 'Vent-The-Steam'"
+        >{{currentRoom.currentTopic ? currentRoom.currentTopic.title : 'This room has no topic' }}</p>
         <div class="d-flex justify-content-between align-items-end flex-wrap">
           <span>
             <div
               class="timer d-flex align-items-center mt-2"
-              v-if="currentRoom && currentRoom.currentTopic"
+              v-if="currentRoom && currentRoom.currentTopic && currentRoom.slug != 'Vent-The-Steam'"
             >
               <img src="~/assets/icons/timer.svg" alt class="mr-2" />
               <span>
@@ -31,7 +31,7 @@
             </div>
           </span>
 
-          <div class="topic-actions mt-2">
+          <div class="topic-actions mt-2" v-if="currentRoom.slug != 'Vent-The-Steam'">
             <button class="suggest-topic mr-2" @click="showModal('#suggestTopic')">Suggest Topic</button>
             <button
               class="change-topic ml-2"
@@ -48,12 +48,15 @@
 import { mapGetters } from "vuex";
 import SuggestTopicModal from "~/components/Rooms/suggest-topic";
 import ChangeTopicModal from "~/components/Rooms/change-topic";
+import loginModal from "~/components/Authentication/sign-up";
+
 export default {
   layout: "greenNavOnly",
   props: ["currentRoom"],
   components: {
     SuggestTopicModal,
-    ChangeTopicModal
+    ChangeTopicModal,
+    loginModal
   },
   computed: {
     ...mapGetters("auth", ["isAuthenticated"])
@@ -61,7 +64,7 @@ export default {
   methods: {
     showModal(val) {
       if (!this.isAuthenticated) {
-        this.$router.push("/login");
+        $("#signUpModal").modal("show");
         return;
       }
       $(val).modal("show");

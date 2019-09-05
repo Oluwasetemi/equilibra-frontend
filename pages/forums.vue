@@ -59,12 +59,7 @@
                         aria-haspopup="true"
                         aria-expanded="false"
                       >
-                        <img
-                          :src="getUser.image || avatar"
-                          alt
-                          height="38px"
-                          class="mr-1 avatar"
-                        />
+                        <img :src="getUser.image || avatar" alt height="38px" class="mr-1 avatar" />
                         <div
                           class="inline-block pl-2 user-name"
                           style="color: black"
@@ -269,28 +264,28 @@ export default {
           description:
             " We are positively minded Nigerians, committed to unity and to encouraging fairness, just and equitable life.",
           backgroundImage: judiciaryImage,
-          link: "/rooms/judiciary",
+          link: "/rooms/judiciary?group=Vent-The-Steam"
         },
         {
           title: "Executive",
           description:
             " We are positively minded Nigerians, committed to unity and to encouraging fairness, just and equitable life.",
           backgroundImage: executiveImage,
-          link: "/rooms/executive"
+          link: "/rooms/executive?group=Vent-The-Steam"
         },
         {
           title: "Senate",
           description:
             " We are positively minded Nigerians, committed to unity and to encouraging fairness, just and equitable life.",
           backgroundImage: senateImage,
-          link: "/rooms/senate"
+          link: "/rooms/senate?group=Vent-The-Steam"
         },
         {
           title: "House of Reps",
           description:
             " We are positively minded Nigerians, committed to unity and to encouraging fairness, just and equitable life.",
           backgroundImage: repsImage,
-          link: "/rooms/HOR"
+          link: "/rooms/HOR?group=Vent-The-Steam"
         }
       ],
       originCards: [
@@ -363,15 +358,14 @@ export default {
       let govtw = this.$store.getters["governments"].find(
         govt => self.getUser.stateOfOrigin == govt.id
       );
-      return govtw?govtw.name:'';
+      return govtw ? govtw.name : "";
     },
     stateOfResidence() {
       const self = this;
       let govtw = this.$store.getters["governments"].find(
         govt => self.getUser.stateOfResidence == govt.id
       );
-      return govtw?govtw.name:'';
-
+      return govtw ? govtw.name : "";
     }
   },
   filters: {

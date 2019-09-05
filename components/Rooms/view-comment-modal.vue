@@ -7,60 +7,72 @@
     aria-hidden="true"
   >
     <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content">
+      <div class="modal-content" v-if="comment">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
         <div class="user-details d-flex px-3 py-2 border-bottom">
           <figure class="m-0 pr-1 d-inline-block">
-            <img :src="getUser.image || avatar" alt class="rounded-circle" height="40px" />
+            <img
+              :src="getUser.image || avatar"
+              alt
+              class="rounded-circle"
+              height="40px"
+              width="40px"
+            />
           </figure>
           <div class="user text-left px-2">
-            <div class="username">Joseph Makanaki</div>
-            <div class="user-handle">@Joseph_Makanaki</div>
+            <div class="username">{{comment.author.username}}</div>
+            <div class="user-handle">@{{comment.author.username}}</div>
           </div>
         </div>
         <div class="comment-content p-3">
-          <p class="text-left m-0">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, is sed do eiusmod tempor incididunt
-            ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-            sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-          </p>
+          <p class="text-left m-0">{{comment.comment}}</p>
         </div>
         <div class="grey-wrapper px-3 py-2">
           <div class="time d-inline-block mr-4">
-            <span>11:46 PM</span> -
-            <span>20 Jun 2019</span>
+            <span>{{comment.createdAt | formatTime($moment)}}</span> -
+            <span>{{comment.createdAt | formatDate($moment)}}</span>
           </div>
           <div class="actions d-inline-block mr-2">
             <span class="likes">
               <img src="~/assets/icons/like-icon-outline.svg" alt />
-              <span class="px-1">4</span>
+              <span class="px-1">{{comment.likes}}</span>
             </span>
             <span class="replies ml-2">
               <img src="~/assets/icons/replies-icon.svg" alt />
-              <span class="px-1">10</span>
+              <span class="px-1">{{comment.replies.length}}</span>
             </span>
           </div>
         </div>
-        <div class="replies pb-4">
-          <div class="d-flex comment px-3 py-1 position-relative" :class="{active: setClass}">
+        <div class="replies pb-4" v-if="comment.replies.length > 0">
+          <div
+            class="d-flex comment px-3 py-1 position-relative"
+            :class="{active: setClass}"
+            v-for="(reply, i) in comment.replies"
+            :key="i"
+          >
             <figure class="m-0 py-3 pr-1 d-inline-block">
-              <img :src="getUser.image || avatar" alt class="rounded-circle" height="40px" />
+              <img
+                :src="comment.author.image || avatar"
+                alt
+                class="rounded-circle"
+                height="40px"
+                width="40px"
+              />
             </figure>
 
             <div class="form-input position-relative d-inline-block px-2" style="flex-grow: 1">
               <div class="py-3">
                 <div class="user text-left">
-                  <span class="username">Joseph Makanaki</span>
+                  <span class="username">{{reply.author.username}}</span>
                   <div class="d-block d-md-inline">
-                    <span class="user-handle pr-2 px-md-2">@Joseph_Makanaki</span>
-                    <span class="time-posted">30 mins</span>
+                    <span class="user-handle pr-2 px-md-2">@{{reply.author.username}}</span>
+                    <span class="time-posted">{{comment.createdAt | formatDate($moment)}}</span>
                   </div>
                 </div>
                 <div class="comment-content pr-3">
-                  <p class="text-left m-0">Congrats man, that's huge!</p>
+                  <p class="text-left m-0">{{reply.comment}}</p>
                 </div>
                 <div class="actions mr-2 pt-2">
                   <a
@@ -70,7 +82,7 @@
                     :class="{liked}"
                   >
                     <span class="likes-icon"></span>
-                    <span class="px-1">4</span>
+                    <span class="px-1">{{reply.likes}}</span>
                   </a>
                 </div>
               </div>
@@ -122,10 +134,12 @@
             </span>
           </div>
         </div>
+        <!-- <div v-else class="text-center">Be the first to reply to this comment</div> -->
+
         <form
           class="new-comment border-top px-3"
           autocomplete="off"
-          @submit.prevent
+          @submit.prevent="postReply()"
           :class="{borderGreen: formActive}"
         >
           <div class="form-input position-relative d-flex">
@@ -145,6 +159,7 @@
                 type="text"
                 name="comment"
                 id="comment"
+                v-model="payload.comment"
                 class="d-inline-block border-0 px-4 w-100"
                 placeholder="Type a message..."
               />
@@ -153,14 +168,14 @@
               </div>
             </div>
 
-            <a href class="mt-2 pt-1">
+            <button class="mt-2 pt-1 post-btn" type="submit">
               <span
                 class="post-comment-icon"
                 data-toggle="tooltip"
                 title="Post"
                 style="position: relative;top: 7px;"
               ></span>
-            </a>
+            </button>
           </div>
         </form>
       </div>
@@ -170,19 +185,24 @@
 
 <script>
 import avatar from "~/assets/images/avatar.png";
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import shareLinkCard from "~/components/Rooms/share-link";
 import reportCommentCard from "~/components/Rooms/report-comment";
 import deleteCommentCard from "~/components/Rooms/delete-comment";
 export default {
+  props: ["comment"],
   data() {
     return {
       avatar,
       showLink: false,
       liked: false,
+      file: "",
       formActive: false,
       imageContent: false,
-      setClass: false
+      setClass: false,
+      payload: {
+        comment: ""
+      }
     };
   },
   components: {
@@ -193,16 +213,46 @@ export default {
   computed: {
     ...mapGetters("user", ["getUser"])
   },
+  filters: {
+    formatDate(val, moment) {
+      //   val = new Date(val).toISOString();
+      return moment("2019-09-04T03:50:04.428Z")
+        .startOf("day")
+        .fromNow();
+    },
+    formatTime(val, moment) {
+      //   val = new Date(val).toISOString();
+      return moment("2019-09-04T03:50:04.428Z").format("h:mm:ss a");
+    }
+  },
   methods: {
+    ...mapActions("comment", ["replyComment"]),
     previewImage() {
-      const avatar = event.target.files[0];
-      // this.formData.append("photo", avatar);
+      this.file = event.target.files[0];
       const reader = new FileReader();
       reader.readAsDataURL(avatar);
       reader.onload = e => {
         this.imageContent = true;
         this.$refs.imageContent.src = e.target.result;
       };
+    },
+    postReply() {
+      this.payload.commentId = this.comment._id;
+      if (this.file) payload.file = this.file;
+      this.loading = true;
+      this.replyComment(this.payload)
+        .then(data => {
+          this.loading = false;
+          if (data.graphQLErrors) {
+            this.$toast.error(data.graphQLErrors[0].message);
+            return;
+          }
+          this.$toast.success("Your reply has been posted");
+          this.payload.comment = "";
+        })
+        .catch(err => {
+          this.loading = true;
+        });
     }
   },
   mounted() {
@@ -247,8 +297,16 @@ input {
   border: 0;
 }
 
-input:focus ~ a span {
+input:focus ~ button span {
   background-color: #168a59;
+}
+
+button.post-btn {
+  background: transparent;
+  border: none;
+  padding: unset;
+  height: unset;
+  margin: auto;
 }
 
 .likes-button {

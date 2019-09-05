@@ -378,22 +378,6 @@ export default {
           self.loading = false;
         });
     }
-  },
-  head() {
-    return {
-      meta: [
-        {
-          name: "google-signin-client_id",
-          content:
-            "769165313432-rq98o9410ntrgg2obvkhl86k82bueoq0.apps.googleusercontent.com"
-        }
-      ],
-      script: [
-        {
-          src: "https://apis.google.com/js/platform.js"
-        }
-      ]
-    };
   }
 };
 </script>

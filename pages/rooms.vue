@@ -1,5 +1,6 @@
 <template>
   <div class="container pr-0 px-0">
+    <loginModal />
     <div class="px-md-3 px-0">
       <div class="row no-gutters flex-row flex-lg-nowrap justify-content-between">
         <div class="px-3 card-container d-lg-block d-none py-4 scrollable">
@@ -20,7 +21,7 @@
                     v-for="(room, i) in federalRooms[roomType[$route.params.id]]"
                     :key="i"
                     :title="room.name"
-                    @click="currentRoom = room"
+                    @click="setRoom(room)"
                   >
                     <li
                       class="px-4 border-bottom d-flex align-items-center justify-content-between"
@@ -29,9 +30,10 @@
                       <span>{{room.name}}</span>
                       <div
                         class="join-status d-inline-flex align-items-center justify-content-between"
-                        @click="isRoomMember(room) ? leaveRoomForum(room) : joinRoomForum(room) "
+                        @click="checkRoomStatus(room)"
                       >
-                        <span>{{isRoomMember(room) ? 'Leave' : 'Join'}}</span>
+                        <!-- this.myRooms.some(myRoom => myRoom._id == room._id) -->
+                        <span>{{getMyRooms && getMyRooms.some(myRoom => myRoom._id == room._id) ? 'Leave' : 'Join'}}</span>
                         <span class="chat-icon"></span>
                       </div>
                     </li>
@@ -41,7 +43,7 @@
             </div>
           </aside>
         </div>
-        <nuxt-child :currentRoom="currentRoom" />
+        <nuxt-child :currentRoom="currentRoom" :isMyRoom="isMyRoom(currentRoom)" />
       </div>
     </div>
   </div>
@@ -50,28 +52,58 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import { roomType } from "~/static/js/constants";
+import gql from "~/apollo/user/room";
 import imageUrl from "~/assets/images/judiciary_BG.svg";
 import Card from "~/components/Forums/forum-card";
+import loginModal from "~/components/Authentication/sign-up";
 export default {
   layout: "greenNavOnly",
+  validate({ route, query, redirect }) {
+    if (!query.group) {
+      redirect(`${route.path}?group=Vent-The-Steam`);
+    }
+    return true;
+  },
   data() {
     return {
       imageUrl2: { imageUrl },
       roomType,
       loading: true,
-      currentRoom: { slug: "Vent-The-Steam" }
+      getMyRooms: [],
+      currentRoom: { slug: "Vent-The-Steam", currentTopic: null }
     };
   },
   components: {
-    Card
+    Card,
+    loginModal
   },
   computed: {
-    ...mapGetters("room", ["federalRooms", "getJoinedRooms"])
+    ...mapGetters("room", ["federalRooms"]),
+    ...mapGetters("auth", ["isAuthenticated", "getToken"])
   },
   methods: {
     ...mapActions("room", ["getFederalRooms", "joinRoom", "leaveRoom"]),
-    ...mapActions("auth", ["checkAuthStatus"]),
-    getRooms() {
+    checkRoomStatus(room) {
+      this.isMyRoom(room)
+        ? this.leaveRoomForum(room)
+        : this.joinRoomForum(room);
+    },
+    setRoom(room) {
+      this.currentRoom = room;
+      this.$router.push({ query: { group: room.slug } });
+    },
+    getAllMyRooms() {
+      this.$apollo.addSmartQuery("getMyRooms", {
+        query: gql.getMyRooms,
+        variables: { roomType: this.roomType[this.$route.params.id] },
+        context: {
+          headers: {
+            Authorization: `Bearer ${this.getToken}`
+          }
+        }
+      });
+    },
+    getFedRooms() {
       let self = this;
       this.getFederalRooms(this.roomType[self.$route.params.id])
         .then(data => {
@@ -80,13 +112,11 @@ export default {
             this.$toast.error(data.graphQLErrors[0].message);
             return;
           }
-          this.currentRoom = this.federalRooms[
-            this.roomType[this.$route.params.id][0]
+          const fedRooms = this.federalRooms[
+            this.roomType[this.$route.params.id]
           ];
-          console.log(
-            (this.currentRoom = this.federalRooms[
-              this.roomType[this.$route.params.id]
-            ][0])
+          this.currentRoom = fedRooms.find(
+            room => room.slug == this.$route.query.group
           );
         })
         .catch(err => {
@@ -94,20 +124,23 @@ export default {
         });
     },
     joinRoomForum(room) {
-      this.checkAuthStatus();
-      this.currentRoom = room;
+      if (!this.isAuthenticated) {
+        $("#signUpModal").modal("show");
+        return;
+      }
+      this.setRoom(room);
       this.joinRoom(this.currentRoom._id)
         .then(data => {
           if (data.graphQLErrors) {
             this.$toast.error(data.graphQLErrors[0].message);
             return;
           }
-          this.$toast.success("You have successfully joined the conversation!");
+          this.$toast.success("You have now joined this conversation!");
         })
         .catch(err => {});
     },
     leaveRoomForum(room) {
-      this.currentRoom = room;
+      this.setRoom(room);
       this.leaveRoom(this.currentRoom._id)
         .then(data => {
           if (data.graphQLErrors) {
@@ -118,12 +151,18 @@ export default {
         })
         .catch(err => {});
     },
-    isRoomMember(room) {
-      return this.getJoinedRooms.some(roomId => roomId == room._id);
+    isMyRoom(room) {
+      if (!this.getMyRooms) {
+        return false;
+      }
+      return this.getMyRooms.some(myRoom => myRoom._id == room._id);
     }
   },
   mounted() {
-    this.getRooms();
+    this.getFedRooms();
+    if (this.isAuthenticated) {
+      this.getAllMyRooms();
+    }
   }
 };
 </script>

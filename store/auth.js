@@ -199,13 +199,6 @@ export default {
       commit('setTempUserDetails', payload);
     },
 
-    checkAuthStatus({ state }) {
-      if (!state.isAuthenticated) {
-        this.$router.push('/login');
-        return;
-      }
-    },
-
     logout({ commit }) {
       commit('user/removeUser', null, { root: true });
       commit('logout');

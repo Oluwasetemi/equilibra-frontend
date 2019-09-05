@@ -1,8 +1,9 @@
 <template>
   <div class="input-comment border-bottom pb-3 pb-md-0">
+    <joinRoomModal :roomId="currentRoom._id" @joinedRoom="postComment(true)" />
     <div class="d-flex align-items-center px-2">
       <figure class="m-0 d-flex align-items-center pr-2 pl-3 px d-inline-block">
-        <img :src="getUser.image || avatar" alt class="rounded-circle" height="40px" />
+        <img :src="getUser.image || avatar" alt class="rounded-circle avatar" height="40px" />
       </figure>
       <form
         autocomplete="off"
@@ -11,11 +12,17 @@
         @submit.prevent="postComment()"
       >
         <div class="form-input position-relative d-inline-block px-3" style="flex-grow: 1">
-          <input type="text" name="comment" id="comment" class="w-100 form-control" v-model="payload.comment"/>
+          <input
+            type="text"
+            name="comment"
+            id="comment"
+            class="w-100 form-control"
+            v-model="payload.comment"
+          />
           <img src alt class="position-absolute" />
         </div>
         <div class="px-2" style="flex: 0 0 140px">
-          <button class="post" type="submit" :disabled="!payload.comment">Post</button>
+          <button class="post" type="submit" :disabled="!payload.comment || loading">Post</button>
         </div>
       </form>
     </div>
@@ -25,15 +32,17 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import avatar from "~/assets/images/avatar.png";
+import joinRoomModal from "~/components/Rooms/join-room-modal";
 import imageUrl from "~/assets/images/judiciary_BG.svg";
 export default {
-  props: ["currentRoom"],
+  props: ["currentRoom", "isMyRoom"],
   data() {
     return {
+      loading: false,
       avatar,
       imageUrl2: { imageUrl },
       payload: {
-          comment: ''
+        comment: ""
       }
     };
   },
@@ -41,31 +50,47 @@ export default {
     ...mapGetters("user", ["getUser"]),
     ...mapGetters("auth", ["isAuthenticated"])
   },
+  components: {
+    joinRoomModal
+  },
   methods: {
-    showModal(val) {
+    ...mapActions("comment", ["createComment"]),
+    postComment(joinedRoom = false) {
       if (!this.isAuthenticated) {
-        this.$router.push("/login");
+        $("#signUpModal").modal("show");
         return;
       }
-      $(val).modal("show");
+      if (!this.isMyRoom && !joinedRoom) {
+        $("#joinRoomModal").modal("show");
+        return;
+      }
+      this.payload.topic = this.currentRoom.currentTopic._id;
+      this.loading = true;
+      this.createComment(this.payload)
+        .then(data => {
+          this.loading = false;
+          if (data.graphQLErrors) {
+            this.$toast.error(data.graphQLErrors[0].message);
+            return;
+          }
+          this.payload.comment = "";
+          this.$eventBus.$emit("fetchComments");
+        })
+        .catch(err => {
+          this.loading = true;
+        });
     }
   }
 };
 </script>
 
 
-
-<style>
-.modal-backdrop.show {
-  opacity: 0.3;
-}
-.modal-backdrop {
-  background: #171725;
-  opacity: 0.3;
-}
-</style>
-
 <style scoped>
+.avatar {
+  height: 40px;
+  width: 40px;
+  object-fit: cover;
+}
 .timer {
   font-size: 9px;
   border: 1px solid white;
