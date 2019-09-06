@@ -234,7 +234,7 @@
 </template>
 
 <script>
-import avatar from "~/assets/images/avatar.png";
+import avatar from "~/assets/images/avatar.svg";
 // Federal Image backgrounds
 import judiciaryImage from "~/assets/images/judiciary_BG.svg";
 import senateImage from "~/assets/images/senate-BG.svg";

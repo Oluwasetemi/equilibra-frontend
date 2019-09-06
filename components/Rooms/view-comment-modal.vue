@@ -200,7 +200,7 @@
 
 <script>
 import likeIcon from "~/components/Rooms/like-icon";
-import avatar from "~/assets/images/avatar.png";
+import avatar from "~/assets/images/avatar.svg";
 import gql from "~/apollo/user/comment";
 import { mapGetters, mapActions } from "vuex";
 import shareLinkCard from "~/components/Rooms/share-link";

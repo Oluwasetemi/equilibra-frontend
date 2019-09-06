@@ -61,7 +61,7 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import avatar from "~/assets/images/avatar.png";
+import avatar from "~/assets/images/avatar.svg";
 import joinRoomModal from "~/components/Rooms/join-room-modal";
 import ChangeTopicModal from "~/components/Rooms/change-topic";
 import imageUrl from "~/assets/images/judiciary_BG.svg";
