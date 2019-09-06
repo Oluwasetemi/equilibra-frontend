@@ -157,7 +157,8 @@ export default {
         lastName: "",
         email: "",
         message: ""
-      }
+      },
+      loading: false
     };
   },
   validations: {
