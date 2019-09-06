@@ -139,7 +139,7 @@
             <div class="col-4" v-if="!origin">
               <button
                 class="white-btn w-100 mt-2 auth"
-                @click="origin = true"
+                @click="origin = false"
                 type="submit"
                 :disabled="loading"
               >BACK</button>
@@ -177,6 +177,7 @@
 </template>
 
 <script>
+import { required } from "vuelidate/lib/validators";
 import { mapActions, mapGetters } from "vuex";
 export default {
   layout: "authentication",
@@ -210,7 +211,7 @@ export default {
   },
   data() {
     return {
-      origin: true,
+      origin: false,
       loading: false,
       loadingLGA: false,
       localGovernments: [],
@@ -218,6 +219,9 @@ export default {
       stateConstituencies: [],
       senatorialDistricts: []
     };
+  },
+  validations: {
+    
   },
   computed: {
     ...mapGetters("auth", ["getTempUserDetails", "getToken"]),
@@ -341,7 +345,7 @@ export default {
         type: "origin",
         payload: this.userDetails
       });
-      this.origin = false;
+      this.origin = true;
     },
     completeUserSignUp() {
       this.setTempUserDetails({
@@ -399,9 +403,8 @@ export default {
         .then(data => {
           if (data.graphQLErrors) {
             this.errorMessage = data.graphQLErrors[0].message;
-            this.$toast.error(this.errorMessage),
-            this.loading = false;
-            this.$router.push('/login')
+            this.$toast.error(this.errorMessage), (this.loading = false);
+            this.$router.push("/login");
             return;
           }
           this.loading = false;

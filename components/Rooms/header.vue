@@ -1,7 +1,7 @@
 <template>
   <div>
     <loginModal />
-    <SuggestTopicModal />
+    <SuggestTopicModal :currentRoom="currentRoom"/>
     <ChangeTopicModal :currentRoom="currentRoom" />
     <div class="forum-header px-4 py-2 d-flex align-items-center">
       <div class="header-content w-100">

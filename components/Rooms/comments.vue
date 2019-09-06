@@ -61,7 +61,10 @@
         class="spinner-border text-center mt-4"
         v-if="fetchComments.pageInfo.hasNextPage && loadingMoreComments"
       ></div>
-      <div class="text-center" v-else>You have reached the end of this page</div>
+      <div
+        class="text-center"
+        v-if="fetchComments.edges.length > 10 && !fetchComments.pageInfo.hasNextPage"
+      >You have reached the end of this page</div>
     </div>
   </div>
 </template>

@@ -27,7 +27,7 @@
                       class="px-4 border-bottom d-flex align-items-center justify-content-between"
                       :class="{selected: currentRoom.slug == room.slug}"
                     >
-                      <span>{{room.name}}</span>
+                      <span class="">{{room.name}}</span>
                       <div
                         class="join-status d-inline-flex align-items-center justify-content-between"
                         @click="checkRoomStatus(room)"

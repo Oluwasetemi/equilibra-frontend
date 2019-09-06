@@ -87,7 +87,6 @@ export default {
         _id
         name
         slug
-        currentTopic
         government
       }
     }
