@@ -165,7 +165,8 @@
                   />
                 </div>
                 <div class="card-content p-4">
-                  <h3 class="pt-3">{{ item.title }}</h3>
+                  <h3 class="pt-3"> <span v-if="item.title == 'LGA'">{{localGovtResisdence | formatStateName}}</span>
+                  <span v-else>{{item.title}}</span></h3>
                   <p>
                     We are positively minded Nigerians, committed to unity and to
                     encouraging fairness, just and equitable lifee.
@@ -173,9 +174,12 @@
                   <nuxt-link
                     tag="button"
                     class="border-0 p-3 w-100"
-                    :to="item.link"
+                    :to="{path: item.link, query: {state:true, isOrigin:false}}"
                     style="background: #26B14F;"
-                  >Join {{item.title}}</nuxt-link>
+                  >Join 
+                  <span v-if="item.title == 'LGA'">{{localGovtResisdence | formatStateName}}</span>
+                  <span v-else>{{item.title}}</span>
+                  </nuxt-link>
                 </div>
               </div>
             </div>
@@ -206,7 +210,8 @@
                   />
                 </div>
                 <div class="card-content p-4">
-                  <h3 class="pt-3">{{ item.title }}</h3>
+                  <h3 class="pt-3"><span v-if="item.title == 'LGA'">{{localGovtOrigin | formatStateName}}</span>
+                  <span v-else>{{item.title}}</span></h3>
                   <p>
                     We are positively minded Nigerians, committed to unity and to
                     encouraging fairness, just and equitable lifee.
@@ -214,9 +219,10 @@
                   <nuxt-link
                     tag="button"
                     class="border-0 p-3 w-100"
-                    :to="{path: item.link}"
+                    :to="{path: item.link, query: {state:true, isOrigin:true }}"
                     style="background: #26B14F;"
-                  >Join {{item.title}}</nuxt-link>
+                  >Join <span v-if="item.title == 'LGA'">{{localGovtOrigin | formatStateName}}</span>
+                  <span v-else>{{item.title}}</span></nuxt-link>
                 </div>
               </div>
             </div>
@@ -258,6 +264,8 @@ export default {
   data() {
     return {
       avatar,
+      localGovtResisdence: "",
+      localGovtOrigin: "",
       cards: [
         {
           title: "Judiciary",
@@ -294,28 +302,28 @@ export default {
           description:
             " We are positively minded Nigerians, committed to unity and to encouraging fairness, just and equitable life.",
           backgroundImage: originJudiciaryImage,
-          link: "/rooms/judiciary"
+          link: "/rooms/judiciary?group=Vent-The-Steam"
         },
         {
           title: "Executive",
           description:
             " We are positively minded Nigerians, committed to unity and to encouraging fairness, just and equitable life.",
           backgroundImage: originExecutiveImage,
-          link: "/rooms/judiciary"
+          link: "/rooms/executive?group=Vent-The-Steam"
         },
         {
           title: "House of Assembly",
           description:
             " We are positively minded Nigerians, committed to unity and to encouraging fairness, just and equitable life.",
           backgroundImage: originHOAImage,
-          link: "/rooms/judiciary"
+          link: "/rooms/HOA?group=Vent-The-Steam"
         },
         {
-          title: "Gassol",
+          title: "LGA",
           description:
             " We are positively minded Nigerians, committed to unity and to encouraging fairness, just and equitable life.",
           backgroundImage: originLGAImage,
-          link: "/rooms/house-of-representatives"
+          link: "/rooms/LGA?group=Vent-The-Steam"
         }
       ],
       residenceCards: [
@@ -324,28 +332,28 @@ export default {
           description:
             " We are positively minded Nigerians, committed to unity and to encouraging fairness, just and equitable life.",
           backgroundImage: residenceJudiciaryImage,
-          link: "/rooms/judiciary"
+          link: "/rooms/judiciary?group=Vent-The-Steam"
         },
         {
           title: "Executive",
           description:
             " We are positively minded Nigerians, committed to unity and to encouraging fairness, just and equitable life.",
           backgroundImage: residenceExecutiveImage,
-          link: "/rooms/judiciary"
+          link: "/rooms/executive?group=Vent-The-Steam"
         },
         {
           title: "House of Assembly",
           description:
             " We are positively minded Nigerians, committed to unity and to encouraging fairness, just and equitable life.",
           backgroundImage: residenceHOAImage,
-          link: "/rooms/judiciary"
+          link: "/rooms/HOA?group=Vent-The-Steam"
         },
         {
-          title: "Gassol",
+          title: "LGA",
           description:
             " We are positively minded Nigerians, committed to unity and to encouraging fairness, just and equitable life.",
           backgroundImage: residenceLGAImage,
-          link: "/rooms/house-of-representatives"
+          link: "/rooms/LGA?group=Vent-The-Steam"
         }
       ]
     };
@@ -370,16 +378,43 @@ export default {
   },
   filters: {
     formatStateName(str) {
-      str = str.split(" ");
-      str.pop();
-      return `${str[0].charAt(0).toUpperCase()}${str[0].slice(1)}`;
+      return str
+        .split(" ")
+        .map(word => {
+          return word.charAt(0).toUpperCase() + word.substring(1);
+        })
+        .join(" ");
     }
   },
   methods: {
     ...mapActions("auth", ["logout"]),
+    fetchLGAs(stateID, val) {
+      const self = this;
+      this.$store
+        .dispatch("localGovernments", {
+          stateGovernmentID: stateID
+        })
+        .then(data => {
+          if (data.graphQLErrors) {
+            this.$toast.error(data.graphQLErrors[0].message);
+            this.loadingLGA = false;
+            return;
+          }
+          this[val] = this.getState(data, this.getUser[val], val);
+        })
+        .catch(err => {});
+    },
+    getState(LGAS, id, key) {
+      let lga = LGAS.find(lga => this.getUser[key] == id);
+      return lga ? lga.name : "";
+    },
     logoutUser() {
       this.logout();
     }
+  },
+  mounted() {
+    this.fetchLGAs(this.getUser.stateOfResidence, "localGovtResisdence");
+    this.fetchLGAs(this.getUser.stateOfOrigin, "localGovtOrigin");
   }
 };
 </script>
