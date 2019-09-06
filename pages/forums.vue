@@ -36,7 +36,7 @@
                   <a class="nav-link" href="http://www.theequilibra.com/blog/">Blog</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="#">Contact Us</a>
+                  <nuxt-link to="/contact-us" class="nav-link">Contact Us</nuxt-link>
                 </li>
                 <li class="nav-item ml-4">
                   <transition

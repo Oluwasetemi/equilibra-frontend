@@ -48,16 +48,16 @@
                   <h6>COMPANY</h6>
                   <ul class="py-2 px-0">
                     <li>
-                      <a href>Home</a>
+                      <nuxt-link to="/">Home</nuxt-link>
                     </li>
                     <li>
-                      <a href>Partner With Us</a>
+                       <nuxt-link to="/contact-us" class="footer-link">Partner With Us</nuxt-link>
                     </li>
                     <li>
                       <a href>About Us</a>
                     </li>
                     <li>
-                      <a href>Contact Us</a>
+                      <nuxt-link to="/contact-us" class="footer-link">Contact Us</nuxt-link>
                     </li>
                   </ul>
                 </div>
