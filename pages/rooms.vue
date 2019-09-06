@@ -18,7 +18,7 @@
                   <a
                     v-else
                     href="#"
-                    v-for="(room, i) in federalRooms[roomType[$route.params.id]]"
+                    v-for="(room, i) in rooms"
                     :key="i"
                     :title="room.name | formatText"
                     @click="setRoom(room)"
@@ -78,8 +78,13 @@ export default {
     loginModal
   },
   computed: {
-    ...mapGetters("room", ["federalRooms"]),
-    ...mapGetters("auth", ["isAuthenticated", "getToken"])
+    ...mapGetters("room", ["federalRooms", "stateRooms"]),
+    ...mapGetters("auth", ["isAuthenticated", "getToken"]),
+    rooms() {
+      return this.$route.query.state
+        ? this.stateRooms[this.roomType[this.$route.params.id]]
+        : this.federalRooms[this.roomType[this.$route.params.id]];
+    }
   },
   filters: {
     formatText(val) {
@@ -92,7 +97,12 @@ export default {
     }
   },
   methods: {
-    ...mapActions("room", ["getFederalRooms", "joinRoom", "leaveRoom"]),
+    ...mapActions("room", [
+      "getFederalRooms",
+      "getStateRooms",
+      "joinRoom",
+      "leaveRoom"
+    ]),
     checkRoomStatus(room) {
       this.isMyRoom(room)
         ? this.leaveRoomForum(room)
@@ -126,6 +136,31 @@ export default {
             this.roomType[this.$route.params.id]
           ];
           this.currentRoom = fedRooms.find(
+            room => room.slug == this.$route.query.group
+          );
+        })
+        .catch(err => {
+          this.loading = false;
+        });
+    },
+    getStateRooms_() {
+      let self = this;
+      const payload = {
+        roomType: this.roomType[self.$route.params.id],
+        isOrigin: this.$route.query.state
+      };
+      this.getStateRooms(this.roomType[self.$route.params.id])
+        .then(data => {
+          this.loading = false;
+          console.log(data)
+          if (data.graphQLErrors) {
+            this.$toast.error(data.graphQLErrors[0].message);
+            return;
+          }
+          const stateRooms = this.stateRooms[
+            this.roomType[this.$route.params.id]
+          ];
+          this.currentRoom = stateRooms.find(
             room => room.slug == this.$route.query.group
           );
         })
@@ -169,10 +204,14 @@ export default {
     }
   },
   mounted() {
-    this.getFedRooms();
     if (this.isAuthenticated) {
       this.getAllMyRooms();
     }
+    if (this.$route.query.state) {
+      this.getStateRooms_();
+      return;
+    }
+    this.getFedRooms();
   }
 };
 </script>

@@ -19,6 +19,24 @@ export default {
       }
     }
   `,
+  getStateRooms: gql`
+    query getStateRooms($roomType: RoomType, $isOrigin: Boolean) {
+      getStateRooms(roomType: $roomType, isOrigin: $isOrigin) {
+        _id
+        name
+        currentTopic {
+          _id
+          title
+          closeDate
+          startDate
+          votes
+          isClosed
+        }
+        slug
+        government
+      }
+    }
+  `,
   getRoomById: gql`
     query getRoomById($roomId: darangiGraphId!) {
       getRoomById(roomId: $roomId) {

@@ -7,16 +7,26 @@ export default {
       SENATE: [],
       MINISTRY: [],
       COURT: []
+    },
+    stateRooms: {
+      HOUSE_OF_ASSEMBLY: [],
+      COURT: [],
+      MINISTRY: [],
+      LGA: []
     }
   }),
 
   getters: {
-    federalRooms: state => state.federalRooms
+    federalRooms: state => state.federalRooms,
+    stateRooms: state => state.stateRooms
   },
 
   mutations: {
     setFederalRooms(state, { roomType, data }) {
       state.federalRooms[roomType] = data;
+    },
+    setStateRooms(state, { roomType, data }) {
+      state.stateRooms[roomType] = data;
     }
   },
 
@@ -33,6 +43,28 @@ export default {
             roomType: payload
           });
           return data.getFederalRooms;
+        })
+        .catch(err => {
+          return err;
+        });
+    },
+    getStateRooms({ commit, rootState }, payload) {
+      return this.app.apolloProvider.defaultClient
+        .query({
+          query: gql.getStateRooms,
+          variables: { roomType: payload },
+          context: {
+            headers: {
+              Authorization: `Bearer ${rootState.auth.token}`
+            }
+          }
+        })
+        .then(({ data }) => {
+          commit('setStateRooms', {
+            data: data.getStateRooms,
+            roomType: payload
+          });
+          return data.getStateRooms;
         })
         .catch(err => {
           return err;
