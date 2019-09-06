@@ -76,7 +76,7 @@
 
 
 <script>
-import avatar from "~/assets/images/avatar.png";
+import avatar from "~/assets/images/avatar.svg";
 import { mapActions, mapGetters } from "vuex";
 import signUpModal from "~/components/Authentication/sign-up";
 export default {

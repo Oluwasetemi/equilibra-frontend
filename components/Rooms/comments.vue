@@ -77,7 +77,7 @@
 import { mapGetters, mapActions } from "vuex";
 import likeIcon from "~/components/Rooms/like-icon";
 import gql from "~/apollo/user/comment";
-import avatar from "~/assets/images/avatar.png";
+import avatar from "~/assets/images/avatar.svg";
 import CommentModal from "~/components/Rooms/view-comment-modal";
 import imageUrl from "~/assets/images/judiciary_BG.svg";
 export default {

@@ -383,7 +383,7 @@
 </template>
 
 <script>
-import avatar from "~/assets/images/avatar.png";
+import avatar from "~/assets/images/avatar.svg";
 import { mapActions, mapGetters } from "vuex";
 import Map from "~/components/Map";
 import Footer from "~/components/Shared/footer";

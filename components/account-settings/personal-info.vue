@@ -259,7 +259,7 @@
 
 
 <script>
-import avatar from "~/assets/images/avatar.png";
+import avatar from "~/assets/images/avatar.svg";
 import {
   required,
   minLength,
