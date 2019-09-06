@@ -12,5 +12,17 @@ export default {
         isClosed
       }
     }
+  `,
+  suggestTopic: gql`
+    mutation suggestTopic($title: String!, $description: String!) {
+      suggestTopic(title: $title, description: $description) {
+        _id
+        title
+        closeDate
+        startDate
+        votes
+        isClosed
+      }
+    }
   `
 };

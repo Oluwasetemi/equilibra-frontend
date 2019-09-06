@@ -1,6 +1,10 @@
 <template>
   <div>
-    <CommentModal :comment="activeComment" />
+    <CommentModal
+      :commentId="activeComment ? activeComment._id : null"
+      v-if="openModal"
+      @closeModal="openModal = false"
+    />
 
     <div class="comments" v-if="fetchComments.edges.length > 0">
       <div
@@ -28,24 +32,17 @@
             <div class="comment-content mt-2 pr-3">
               <p class="text-left">{{comment.comment}}</p>
             </div>
+            <div class="comment-image pb-3" v-if="comment.image">
+            <img :src="comment.image" alt="photo content" class="photo-content" />
+          </div>
             <div class="actions mr-2">
-              <a
-                href="#"
-                class="likes"
-                data-toggle="tooltip"
-                title="Like"
-                @click="LikeComment(comment._id)"
-              >
-                <img src="~/assets/icons/like-icon-outline.svg" alt v-if="!liked" />
-                <img src="~/assets/icons/like-icon-red-filled.svg" alt v-if="liked" />
-                <span class="px-1">{{comment.likes}}</span>
-              </a>
+              <likeIcon :commentId="comment._id" :liked="comment.liked" :likes="comment.likes" />
               <a
                 href="#"
                 class="replies ml-2"
                 data-toggle="modal"
                 data-target="#commentModal"
-                @click="activeComment = comment"
+                @click="activeComment = comment, openModal = true"
               >
                 <span data-toggle="tooltip" title="Reply">
                   <img src="~/assets/icons/replies-icon.svg" alt />
@@ -60,20 +57,25 @@
 
     <div v-else class="text-center py-5 border-bottom">
       <div class="spinner-border text-center text-light" v-if="loadingComments"></div>
-      <span v-else>Be the first to leave a comment</span>
+      <div v-else>
+          <img src="~/assets/images/no-chat.svg" alt="" style="height: 150px" class="mb-4">
+            <p class="m-0" style="font-size: 24px; color: #737373; font-weight: 600">No ongoing chat</p>
+            <p class="color: #737373;">Be the first to leave a comment</p>
+      </div>
+      
     </div>
     <div class="text-center">
       <div
         class="spinner-border text-center mt-4"
         v-if="fetchComments.pageInfo.hasNextPage && loadingMoreComments"
       ></div>
-      <div class="text-center" v-else>You have reached the end of this page</div>
     </div>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from "vuex";
+import likeIcon from "~/components/Rooms/like-icon";
 import gql from "~/apollo/user/comment";
 import avatar from "~/assets/images/avatar.png";
 import CommentModal from "~/components/Rooms/view-comment-modal";
@@ -89,6 +91,8 @@ export default {
         edges: [],
         pageInfo: []
       },
+      key: 0,
+      openModal: false,
       activeComment: null,
       imageUrl2: { imageUrl },
       loadingComments: false,
@@ -96,7 +100,8 @@ export default {
     };
   },
   components: {
-    CommentModal
+    CommentModal,
+    likeIcon
   },
   computed: {
     ...mapGetters("user", ["getUser"]),
@@ -161,7 +166,6 @@ export default {
     }
   },
   methods: {
-    ...mapActions("comment", ["likeComment"]),
     fetchRoomComments() {
       this.$apollo.addSmartQuery("fetchComments", {
         query: gql.fetchComments,
@@ -181,34 +185,12 @@ export default {
         }
       });
     },
-    LikeComment(commentId) {
-      this.likeComment({ commentId })
-        .then(data => {
-          if (data.graphQLErrors) {
-            this.$toast.error(data.graphQLErrors[0].message);
-            return;
-          }
-        })
-        .catch(err => {});
-    },
-    UnlikeAComment() {
-      const payload = {
-        limit: 1
-      };
-      this.unLikeComment(payload)
-        .then(data => {
-          if (data.graphQLErrors) {
-            this.$toast.error(data.graphQLErrors[0].message);
-            return;
-          }
-        })
-        .catch(err => {});
-    },
     showModal(val) {
       if (!this.isAuthenticated) {
         this.$router.push("/login");
         return;
       }
+      this.openModal = true;
       $(val).modal("show");
     }
   },
@@ -237,6 +219,12 @@ export default {
   height: 40px;
   width: 40px;
   object-fit: cover;
+}
+
+img.photo-content {
+  /* width: 100%; */
+  /* object-fit: contain; */
+  height: 100px;
 }
 
 .timer {

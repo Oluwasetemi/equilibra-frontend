@@ -56,6 +56,7 @@ export default {
           reports
           reply
           likes
+          liked
           edited
           reported
           image
@@ -68,6 +69,60 @@ export default {
           hasNextPage
           totalCount
         }
+      }
+    }
+  `,
+  fetchComment: gql`
+    query fetchComment($commentId: ID!) {
+      fetchComment(commentId: $commentId) {
+        _id
+        comment
+        author {
+          _id
+          fullName
+          image
+          username
+          image
+        }
+        reporter {
+          _id
+          fullName
+          image
+          username
+          image
+        }
+        report
+        replies {
+          _id
+          comment
+          author {
+            _id
+            fullName
+            image
+            username
+            image
+          }
+          reporter {
+            _id
+            fullName
+            image
+            username
+            image
+          }
+          report
+          createdAt
+          image
+        }
+        reports
+        reply
+        likes
+        liked
+        edited
+        reported
+        image
+        createdAt
+        updatedAt
+        successMessage
       }
     }
   `,

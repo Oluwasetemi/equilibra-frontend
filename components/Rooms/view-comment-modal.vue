@@ -7,134 +7,134 @@
     aria-hidden="true"
   >
     <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content" v-if="comment">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-        <div class="user-details d-flex px-3 py-2 border-bottom">
-          <figure class="m-0 pr-1 d-inline-block">
-            <img
-              :src="getUser.image || avatar"
-              alt
-              class="rounded-circle"
-              height="40px"
-              width="40px"
-            />
-          </figure>
-          <div class="user text-left px-2">
-            <div class="username">{{comment.author.username}}</div>
-            <div class="user-handle">@{{comment.author.username}}</div>
-          </div>
-        </div>
-        <div class="comment-content p-3">
-          <p class="text-left m-0">{{comment.comment}}</p>
-        </div>
-        <div class="grey-wrapper px-3 py-2">
-          <div class="time d-inline-block mr-4">
-            <span>{{comment.createdAt | formatTime($moment)}}</span> -
-            <span>{{comment.createdAt | formatDate($moment)}}</span>
-          </div>
-          <div class="actions d-inline-block mr-2">
-            <span class="likes">
-              <img src="~/assets/icons/like-icon-outline.svg" alt />
-              <span class="px-1">{{comment.likes}}</span>
-            </span>
-            <span class="replies ml-2">
-              <img src="~/assets/icons/replies-icon.svg" alt />
-              <span class="px-1">{{comment.replies.length}}</span>
-            </span>
-          </div>
-        </div>
-        <div class="replies pb-4" v-if="comment.replies.length > 0">
-          <div
-            class="d-flex comment px-3 py-1 position-relative"
-            :class="{active: setClass}"
-            v-for="(reply, i) in comment.replies"
-            :key="i"
-          >
-            <figure class="m-0 py-3 pr-1 d-inline-block">
+      <div class="modal-content" v-if="!loading && Object.keys(comment).length > 0">
+        <div class="scrollable">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <div class="user-details d-flex px-3 py-2 border-bottom">
+            <figure class="m-0 pr-1 d-inline-block">
               <img
-                :src="comment.author.image || avatar"
+                :src="getUser.image || avatar"
                 alt
                 class="rounded-circle"
                 height="40px"
                 width="40px"
               />
             </figure>
+            <div class="user text-left px-2">
+              <div class="username">{{comment.author.username}}</div>
+              <div class="user-handle">@{{comment.author.username}}</div>
+            </div>
+          </div>
+          <div class="comment-content p-3">
+            <p class="text-left m-0">{{comment.comment}}</p>
+          </div>
+          <div class="comment-image pb-3" v-if="comment.image">
+            <img :src="comment.image" alt="photo content" class="photo-content" />
+          </div>
+          <div class="grey-wrapper px-3 py-2">
+            <div class="time d-inline-block mr-4">
+              <span>{{comment.createdAt | formatTime($moment)}}</span> -
+              <span>{{comment.createdAt | formatDate($moment)}}</span>
+            </div>
+            <div class="actions d-inline-block mr-2">
+              <likeIcon :commentId="comment._id" :liked="comment.liked" :likes="comment.likes" />
 
-            <div class="form-input position-relative d-inline-block px-2" style="flex-grow: 1">
-              <div class="py-3">
-                <div class="user text-left">
-                  <span class="username">{{reply.author.username}}</span>
-                  <div class="d-block d-md-inline">
-                    <span class="user-handle pr-2 px-md-2">@{{reply.author.username}}</span>
-                    <span class="time-posted">{{comment.createdAt | formatDate($moment)}}</span>
+              <span class="replies ml-2">
+                <img src="~/assets/icons/replies-icon.svg" alt />
+                <span class="px-1">{{comment.replies.length}}</span>
+              </span>
+            </div>
+          </div>
+          <div class="replies pb-4" v-if="comment.replies.length > 0">
+            <div
+              class="d-flex comment px-3 py-1 position-relative"
+              :class="{active: setClass}"
+              v-for="(reply, i) in comment.replies"
+              :key="i"
+            >
+              <figure class="m-0 py-3 pr-1 d-inline-block">
+                <img
+                  :src="comment.author.image || avatar"
+                  alt
+                  class="rounded-circle"
+                  height="40px"
+                  width="40px"
+                />
+              </figure>
+              <div class="form-input position-relative d-inline-block px-2" style="flex-grow: 1">
+                <div class="py-3">
+                  <div class="user text-left">
+                    <span class="username">{{reply.author.username}}</span>
+                    <div class="d-block d-md-inline">
+                      <span class="user-handle pr-2 px-md-2">@{{reply.author.username}}</span>
+                      <span class="time-posted">{{comment.createdAt | formatDate($moment)}}</span>
+                    </div>
+                  </div>
+                  <div class="comment-content pr-3">
+                    <p class="text-left m-0">{{reply.comment}}</p>
+                  </div>
+                  <div class="actions mr-2 pt-2">
+                    <a
+                      href="#"
+                      class="likes-button d-inline-flex align-items-center justify-content-around px-1"
+                      @click.stop="liked = !liked"
+                      :class="{liked}"
+                    >
+                      <span class="likes-icon"></span>
+                      <span class="px-1">{{reply.likes}}</span>
+                    </a>
                   </div>
                 </div>
-                <div class="comment-content pr-3">
-                  <p class="text-left m-0">{{reply.comment}}</p>
-                </div>
-                <div class="actions mr-2 pt-2">
-                  <a
-                    href="#"
-                    class="likes-button d-inline-flex align-items-center justify-content-around px-1"
-                    @click.stop="liked = !liked"
-                    :class="{liked}"
-                  >
-                    <span class="likes-icon"></span>
-                    <span class="px-1">{{reply.likes}}</span>
+              </div>
+              <div class="options position-absolute d-flex">
+                <div class="text-center dropdown border-right" data-toggle="tooltip" title="Like">
+                  <a href="#" class="inline-block px-2 text-center">
+                    <img src="~/assets/icons/like-icon-outline.svg" alt />
                   </a>
                 </div>
+                <div class="text-center dropdown border-right" data-toggle="tooltip" title="Delete">
+                  <a
+                    id="deleteComment"
+                    href="#"
+                    class="inline-block px-2 text-center"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                  >
+                    <img src="~/assets/icons/delete-icon.svg" alt />
+                  </a>
+                  <deleteCommentCard class="dropdown-menu" aria-labelledby="deleteComment" />
+                </div>
+                <div class="text-center dropdown" data-toggle="tooltip" title="Share">
+                  <a
+                    href="#"
+                    class="inline-block px-2"
+                    id="shareLink"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                  >
+                    <img src="~/assets/icons/share.svg" alt />
+                  </a>
+                  <shareLinkCard class="dropdown-menu" aria-labelledby="shareLink" />
+                </div>
               </div>
-            </div>
-            <div class="options position-absolute d-flex">
-              <div class="text-center dropdown" data-toggle="tooltip" title="Like">
-                <a href="#" class="inline-block px-2 border-right text-center">
-                  <img src="~/assets/icons/like-icon-outline.svg" alt />
-                  <!-- <img src="~/assets/icons/like-icon-red-filled.svg" alt=""> -->
-                </a>
-              </div>
-              <div class="text-center dropdown" data-toggle="tooltip" title="Delete">
+              <span class="text-center dropdown">
                 <a
-                  id="deleteComment"
                   href="#"
-                  class="inline-block px-2 text-center border-right"
+                  id="reportComment"
+                  class="report text-center"
                   data-toggle="dropdown"
                   aria-haspopup="true"
                   aria-expanded="false"
-                >
-                  <img src="~/assets/icons/delete-icon.svg" alt />
-                </a>
-                <deleteCommentCard class="dropdown-menu" aria-labelledby="deleteComment" />
-              </div>
-              <div class="text-center dropdown" data-toggle="tooltip" title="Share">
-                <a
-                  href="#"
-                  class="inline-block px-2"
-                  id="shareLink"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                >
-                  <img src="~/assets/icons/share.svg" alt />
-                </a>
-                <shareLinkCard class="dropdown-menu" aria-labelledby="shareLink" />
-              </div>
+                >Report Post</a>
+                <reportCommentCard aria-labelledby="reportComment" />
+              </span>
             </div>
-            <span class="text-center dropdown">
-              <a
-                href="#"
-                id="reportComment"
-                class="report text-center"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
-              >Report Post</a>
-              <reportCommentCard aria-labelledby="reportComment" />
-            </span>
           </div>
         </div>
-        <!-- <div v-else class="text-center">Be the first to reply to this comment</div> -->
 
         <form
           class="new-comment border-top px-3"
@@ -143,14 +143,14 @@
           :class="{borderGreen: formActive}"
         >
           <div class="form-input position-relative d-flex">
-            <label for="photo" class="m-0" style="display: inline-flex">
+            <label for="replyPhoto" class="m-0" style="display: inline-flex">
               <span class="add-photo-icon mt-2 pt-1" style="position: relative;top: 7px;"></span>
               <input
                 type="file"
-                name="photo"
-                id="photo"
+                name="replyPhoto"
+                id="replyPhoto"
                 accept="image/*"
-                @change="previewImage()"
+                @change="previewReplyImage()"
                 hidden
               />
             </label>
@@ -163,8 +163,20 @@
                 class="d-inline-block border-0 px-4 w-100"
                 placeholder="Type a message..."
               />
-              <div class="text-center">
-                <img ref="imageContent" src alt height="340px" class="pb-4" style="max-width: 80%" />
+              <div class="text-center" :class="{'position-absolute': !imageContent}">
+                <figure class="position-relative d-inline-block">
+                  <a href="#" class="close" @click="removeReplyImage()" v-if="imageContent">
+                    <span>&times;</span>
+                  </a>
+                  <img
+                    ref="replyimageContent"
+                    src
+                    alt
+                    height="340px"
+                    class="pb-4"
+                    style="max-width: 80%"
+                  />
+                </figure>
               </div>
             </div>
 
@@ -179,18 +191,26 @@
           </div>
         </form>
       </div>
+      <div class="py-4 text-center w-100" v-else>
+        <div class="spinner-border"></div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import likeIcon from "~/components/Rooms/like-icon";
 import avatar from "~/assets/images/avatar.png";
+import gql from "~/apollo/user/comment";
 import { mapGetters, mapActions } from "vuex";
 import shareLinkCard from "~/components/Rooms/share-link";
 import reportCommentCard from "~/components/Rooms/report-comment";
 import deleteCommentCard from "~/components/Rooms/delete-comment";
 export default {
-  props: ["comment"],
+  props: ["commentId"],
+  // asyncData() {
+
+  // }
   data() {
     return {
       avatar,
@@ -202,43 +222,76 @@ export default {
       setClass: false,
       payload: {
         comment: ""
-      }
+      },
+      fetchComment: {},
+      loading: false
     };
   },
   components: {
     shareLinkCard,
     reportCommentCard,
-    deleteCommentCard
+    deleteCommentCard,
+    likeIcon
   },
   computed: {
-    ...mapGetters("user", ["getUser"])
+    ...mapGetters("user", ["getUser"]),
+    ...mapGetters("auth", ["getToken"]),
+    comment() {
+      return this.fetchComment;
+    }
   },
   filters: {
     formatDate(val, moment) {
-      //   val = new Date(val).toISOString();
       return moment("2019-09-04T03:50:04.428Z")
         .startOf("day")
         .fromNow();
     },
     formatTime(val, moment) {
-      //   val = new Date(val).toISOString();
       return moment("2019-09-04T03:50:04.428Z").format("h:mm:ss a");
     }
   },
   methods: {
     ...mapActions("comment", ["replyComment"]),
-    previewImage() {
+    removeReplyImage() {
+      this.imageContent = false;
+      this.file = "";
+
+      this.$refs.replyimageContent.src = "";
+    },
+    fetchCommentByID() {
+      this.loading = true;
+      this.$apollo.addSmartQuery("fetchComment", {
+        query: gql.fetchComment,
+        variables: {
+          commentId: this.commentId
+        },
+        context: {
+          headers: {
+            Authorization: `Bearer ${this.getToken}`
+          }
+        },
+        watchLoading(isLoading, countModifier) {
+          isLoading ? (this.loading = true) : (this.loading = false);
+        },
+        result() {
+          this.loading = false;
+        }
+      });
+    },
+    previewReplyImage() {
+      debugger
       this.file = event.target.files[0];
       const reader = new FileReader();
-      reader.readAsDataURL(avatar);
+      reader.readAsDataURL(this.file);
       reader.onload = e => {
         this.imageContent = true;
-        this.$refs.imageContent.src = e.target.result;
+        debugger;
+        this.$refs.replyimageContent.src = e.target.result;
       };
     },
     postReply() {
       this.payload.commentId = this.comment._id;
-      if (this.file) payload.file = this.file;
+      if (this.file) this.payload.file = this.file;
       this.loading = true;
       this.replyComment(this.payload)
         .then(data => {
@@ -247,6 +300,7 @@ export default {
             this.$toast.error(data.graphQLErrors[0].message);
             return;
           }
+          this.removeReplyImage();
           this.$toast.success("Your reply has been posted");
           this.payload.comment = "";
         })
@@ -256,8 +310,13 @@ export default {
     }
   },
   mounted() {
+    this.fetchCommentByID();
     $(document).ready(function() {
       $('[data-toggle="tooltip"]').tooltip();
+    });
+    const self = this;
+    $("#commentModal").on("hide.bs.modal", function() {
+      self.$emit("closeModal");
     });
   }
 };
@@ -266,6 +325,37 @@ export default {
 
 
 <style scoped>
+a.close {
+  border: solid 2px #07834e;
+  border-radius: 50%;
+  height: 25px;
+  width: 27px;
+  font-weight: 200;
+  position: absolute;
+  right: -10px;
+}
+.spinner-border {
+  height: 4rem;
+  width: 4rem;
+  border: 0.4em solid currentColor;
+}
+
+img.photo-content {
+  width: 100%;
+  object-fit: contain;
+  height: 300px;
+}
+
+div.replies {
+  max-height: 80vh;
+  overflow-y: scroll;
+}
+
+div.scrollable {
+  max-height: 80vh;
+  overflow-y: scroll;
+}
+
 .border-top,
 .border,
 .border-bottom {
@@ -352,6 +442,10 @@ a.report {
   right: 40px;
   height: 26px;
   opacity: 0;
+}
+
+.options .dropdown {
+  box-shadow: none;
 }
 
 .comment:hover {

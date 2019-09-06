@@ -46,6 +46,24 @@ export default {
     },
     setTempUserDetails(state, { type, payload }) {
       state.tempUserDetails[type] = payload;
+    },
+    resetTempUser(state) {
+      state.tempUserDetails = {
+        origin: {
+          state: '',
+          LGA: '',
+          stateFedConstituency: '',
+          senatorialDistrict: '',
+          stateConstituency: ''
+        },
+        residence: {
+          state: '',
+          LGA: '',
+          stateFedConstituency: '',
+          senatorialDistrict: '',
+          stateConstituency: ''
+        }
+      };
     }
   },
 
@@ -104,6 +122,7 @@ export default {
         .then(({ data }) => {
           commit('setToken', data.completeSignup);
           commit('user/setUser', data.completeSignup, { root: true });
+          // commit('resetTempUser');
           return data.completeSignup;
         })
         .catch(err => {

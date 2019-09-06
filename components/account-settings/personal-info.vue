@@ -37,6 +37,7 @@
                   hidden
                   accept="image/*"
                   @change="previewImage()"
+                  :disabled="loading.profile"
                 />
 
                 <p class="py-1 m-0">Maximum size allowed is 600kb of PNG, JPEG ,JPG.</p>
@@ -57,17 +58,8 @@
                       id="email2"
                       class="form-control mt-0"
                       disabled
-                      :class="{invalid: $v.userDetail.email.$error}"
-                      @blur="$v.userDetail.email.$touch()"
-                      v-model="userDetail.email"
+                      :value="userDetail.email"
                     />
-                    <template v-if="$v.userDetail.email.$dirty">
-                      <p v-if="!$v.userDetail.email.required" class="invalid">This field is required</p>
-                      <p
-                        v-else-if="!$v.userDetail.email.email"
-                        class="invalid"
-                      >Please provide a valid email address</p>
-                    </template>
                   </div>
                 </div>
               </div>
@@ -80,7 +72,10 @@
                       name="name2"
                       id="name2"
                       class="form-control mt-0"
+                      @blur="$v.userDetail.fullName.$touch()"
+                      :class="{invalid: $v.userDetail.fullName.$error}"
                       v-model="userDetail.fullName"
+                      :disabled="loading.profile"
                     />
                     <template v-if="$v.userDetail.fullName.$dirty">
                       <p
@@ -102,7 +97,10 @@
                       name="username2"
                       id="username2"
                       class="form-control mt-0"
+                      @blur="$v.userDetail.username.$touch()"
+                      :class="{invalid: $v.userDetail.username.$error}"
                       v-model="userDetail.username"
+                      :disabled="loading.profile"
                     />
                     <template v-if="$v.userDetail.username.$dirty">
                       <p
@@ -170,8 +168,9 @@
                       :class="{invalid: $v.payload.currentPassword.$error || errorMessage}"
                       @blur="$v.payload.currentPassword.$touch()"
                       v-model="payload.currentPassword"
+                      :disabled="loading.password"
                     />
-                    <template v-if="$v.payload.currentPassword.$dirty">
+                    <template v-if="$v.payload.currentPassword.$dirty && $v.payload.currentPassword.$model">
                       <p
                         v-if="!$v.payload.currentPassword.required"
                         class="invalid"
@@ -195,6 +194,7 @@
                       :class="{invalid: $v.payload.newPassword.$error || errorMessage}"
                       @blur="$v.payload.newPassword.$touch()"
                       v-model="payload.newPassword"
+                      :disabled="loading.password"
                     />
                     <template v-if="$v.payload.newPassword.$dirty">
                       <p
@@ -220,6 +220,7 @@
                       :class="{invalid: $v.confirmPassword.$error || errorMessage}"
                       @blur="$v.confirmPassword.$touch()"
                       v-model="confirmPassword"
+                      :disabled="loading.password"
                     />
                     <template v-if="$v.confirmPassword.$dirty">
                       <p v-if="!$v.confirmPassword.required" class="invalid">This field is required</p>
@@ -268,6 +269,7 @@ import {
 } from "vuelidate/lib/validators";
 import { mapActions, mapGetters } from "vuex";
 export default {
+
   data() {
     return {
       avatar,
@@ -281,7 +283,8 @@ export default {
       payload: {
         newPassword: "",
         currentPassword: ""
-      }
+      },
+      userDetail: {}
     };
   },
   validations: {
@@ -307,10 +310,6 @@ export default {
         required,
         minLength: minLength(2)
       },
-      email: {
-        email,
-        required
-      },
       username: {
         required,
         minLength: minLength(6)
@@ -318,10 +317,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters("user", ["getUser"]),
-    userDetail() {
-      return JSON.parse(JSON.stringify(this.getUser));
-    }
+    ...mapGetters("user", ["getUser"])
   },
   filters: {
     formatDate(val, moment) {
@@ -339,6 +335,11 @@ export default {
       };
     },
     updateUserPassword() {
+      this.$v.payload.$touch();
+      this.$v.confirmPassword.$touch();
+      if (this.$v.payload.$error === true || this.$v.confirmPassword.$error) {
+        return;
+      }
       const self = this;
       this.loading.password = true;
       this.changePassword(this.payload)
@@ -359,6 +360,10 @@ export default {
         });
     },
     updateUserProfile() {
+      this.$v.userDetail.$touch();
+      if (this.$v.userDetail.$error === true) {
+        return;
+      }
       this.loading.profile = true;
       const payload = {
         fullName: this.userDetail.fullName,
@@ -368,15 +373,13 @@ export default {
       const self = this;
       this.updateProfile(payload)
         .then(data => {
+          this.loading.profile = false;
           if (data.graphQLErrors) {
             self.errorMessage = data.graphQLErrors[0].message;
             self.$toast.error(data.graphQLErrors[0].message);
-            this.loading.profile = false;
             return;
           }
-          this.loading.profile = false;
           self.$toast.success("Your profile has been updated!");
-          this.resetProfileForm();
           return;
         })
         .catch(err => {
@@ -392,6 +395,9 @@ export default {
       this.$v.confirmPassword.$reset();
       this.$v.payload.$reset();
     }
+  },
+  beforeMount() {
+    this.userDetail = JSON.parse(JSON.stringify(this.getUser));
   }
 };
 </script>

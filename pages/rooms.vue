@@ -20,16 +20,16 @@
                     href="#"
                     v-for="(room, i) in federalRooms[roomType[$route.params.id]]"
                     :key="i"
-                    :title="room.name"
+                    :title="room.name | formatText"
                     @click="setRoom(room)"
                   >
                     <li
                       class="px-4 border-bottom d-flex align-items-center justify-content-between"
                       :class="{selected: currentRoom.slug == room.slug}"
                     >
-                      <span>{{room.name}}</span>
+                      <span class="room-name">{{room.name | formatText}}</span>
                       <div
-                        class="join-status d-inline-flex align-items-center justify-content-between"
+                        class="join-status align-items-center justify-content-between"
                         @click="checkRoomStatus(room)"
                       >
                         <!-- this.myRooms.some(myRoom => myRoom._id == room._id) -->
@@ -80,6 +80,16 @@ export default {
   computed: {
     ...mapGetters("room", ["federalRooms"]),
     ...mapGetters("auth", ["isAuthenticated", "getToken"])
+  },
+  filters: {
+    formatText(val) {
+      return val
+        .split(" ")
+        .map(word => {
+          return word.charAt(0).toUpperCase() + word.substring(1).toLowerCase();
+        })
+        .join(" ");
+    }
   },
   methods: {
     ...mapActions("room", ["getFederalRooms", "joinRoom", "leaveRoom"]),
@@ -178,7 +188,7 @@ export default {
   background: white;
   color: #07834e;
   padding: 5px 13px;
-  opacity: 0;
+  display: none;
   border: solid 1px #07834e;
   width: 80px;
   border-radius: 2px;
@@ -188,15 +198,15 @@ export default {
 
 li.selected .join-status {
   border: solid 1px white;
-  opacity: 1;
+  display: inline-flex;
 }
 
 li.selected:hover > .join-status {
-  opacity: 1;
+  display: inline-flex;
 }
 
 li:hover > .join-status {
-  opacity: 1;
+  display: inline-flex;
 }
 
 li .join-status:hover {
@@ -221,6 +231,14 @@ div.group-list {
 a li {
   height: 55px;
 }
+
+a li:hover .room-name {
+  width: 70%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .scrollable {
   overflow-y: scroll;
   max-height: calc(100vh - 80px);

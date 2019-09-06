@@ -49,7 +49,8 @@ export default {
           }
         })
         .then(({ data }) => {
-          commit('setUser', data.updateProfile.user);
+          debugger;
+          commit('setUser', data.updateProfile);
           return data.updateProfile;
         })
         .catch(err => {

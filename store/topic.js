@@ -32,11 +32,11 @@ export default {
           return err;
         });
     },
-    requestChangeTopic({ commit, rootState }, payload) {
+    suggestTopic({ commit, rootState }, payload) {
       return this.app.apolloProvider.defaultClient
         .mutate({
-          mutation: gql.requestChangeTopic,
-          variables: { topic: payload },
+          mutation: gql.suggestTopic,
+          variables: payload,
           context: {
             headers: {
               Authorization: `Bearer ${rootState.auth.token}`
@@ -44,11 +44,11 @@ export default {
           }
         })
         .then(({ data }) => {
-          return data.requestChangeTopic;
+          return data.suggestTopic;
         })
         .catch(err => {
           return err;
         });
-    },
+    }
   }
 };

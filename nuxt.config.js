@@ -74,8 +74,8 @@ export default {
     '~/plugins/',
     { src: '~/plugins/fb-sdk.js', mode: 'client' },
     { src: '~/plugins/vuex-persist', mode: 'client' },
-    {src: '~/plugins/apollo.config.js', mode: 'client'},
-    {src: '~/plugins/apollo-overrides.js', mode: 'client'},
+    { src: '~/plugins/apollo.config.js', mode: 'client' },
+    { src: '~/plugins/apollo-overrides.js', mode: 'client' },
     { src: '~/plugins/vuelidate', mode: 'client' },
     { src: '~/plugins/lazyload', mode: 'client' },
     { src: '~plugins/filters.js', mode: 'client' }
@@ -114,7 +114,7 @@ export default {
     }
   },
   toast: {
-    position: 'top-right',
+    position: 'top-center',
     className: 'toast',
     duration: 5000,
     register: [
