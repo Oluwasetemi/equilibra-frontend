@@ -32,6 +32,9 @@
             <div class="comment-content mt-2 pr-3">
               <p class="text-left">{{comment.comment}}</p>
             </div>
+            <div class="comment-image pb-3" v-if="comment.image">
+            <img :src="comment.image" alt="photo content" class="photo-content" />
+          </div>
             <div class="actions mr-2">
               <likeIcon :commentId="comment._id" :liked="comment.liked" :likes="comment.likes" />
               <a
@@ -54,17 +57,18 @@
 
     <div v-else class="text-center py-5 border-bottom">
       <div class="spinner-border text-center text-light" v-if="loadingComments"></div>
-      <span v-else>Be the first to leave a comment</span>
+      <div v-else>
+          <img src="~/assets/images/no-chat.svg" alt="" style="height: 150px" class="mb-4">
+            <p class="m-0" style="font-size: 24px; color: #737373; font-weight: 600">No ongoing chat</p>
+            <p class="color: #737373;">Be the first to leave a comment</p>
+      </div>
+      
     </div>
     <div class="text-center">
       <div
         class="spinner-border text-center mt-4"
         v-if="fetchComments.pageInfo.hasNextPage && loadingMoreComments"
       ></div>
-      <div
-        class="text-center"
-        v-if="fetchComments.edges.length > 10 && !fetchComments.pageInfo.hasNextPage"
-      >You have reached the end of this page</div>
     </div>
   </div>
 </template>
@@ -215,6 +219,12 @@ export default {
   height: 40px;
   width: 40px;
   object-fit: cover;
+}
+
+img.photo-content {
+  /* width: 100%; */
+  /* object-fit: contain; */
+  height: 100px;
 }
 
 .timer {

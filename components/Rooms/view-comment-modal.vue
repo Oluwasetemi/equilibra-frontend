@@ -143,14 +143,14 @@
           :class="{borderGreen: formActive}"
         >
           <div class="form-input position-relative d-flex">
-            <label for="photo" class="m-0" style="display: inline-flex">
+            <label for="replyPhoto" class="m-0" style="display: inline-flex">
               <span class="add-photo-icon mt-2 pt-1" style="position: relative;top: 7px;"></span>
               <input
                 type="file"
-                name="photo"
-                id="photo"
+                name="replyPhoto"
+                id="replyPhoto"
                 accept="image/*"
-                @change="previewImage()"
+                @change="previewReplyImage()"
                 hidden
               />
             </label>
@@ -163,8 +163,20 @@
                 class="d-inline-block border-0 px-4 w-100"
                 placeholder="Type a message..."
               />
-              <div class="text-center">
-                <img ref="imageContent" src alt height="340px" class="pb-4" style="max-width: 80%" />
+              <div class="text-center" :class="{'position-absolute': !imageContent}">
+                <figure class="position-relative d-inline-block">
+                  <a href="#" class="close" @click="removeReplyImage()" v-if="imageContent">
+                    <span>&times;</span>
+                  </a>
+                  <img
+                    ref="replyimageContent"
+                    src
+                    alt
+                    height="340px"
+                    class="pb-4"
+                    style="max-width: 80%"
+                  />
+                </figure>
               </div>
             </div>
 
@@ -240,6 +252,12 @@ export default {
   },
   methods: {
     ...mapActions("comment", ["replyComment"]),
+    removeReplyImage() {
+      this.imageContent = false;
+      this.file = "";
+
+      this.$refs.replyimageContent.src = "";
+    },
     fetchCommentByID() {
       this.loading = true;
       this.$apollo.addSmartQuery("fetchComment", {
@@ -260,13 +278,15 @@ export default {
         }
       });
     },
-    previewImage() {
+    previewReplyImage() {
+      debugger
       this.file = event.target.files[0];
       const reader = new FileReader();
       reader.readAsDataURL(this.file);
       reader.onload = e => {
         this.imageContent = true;
-        this.$refs.imageContent.src = e.target.result;
+        debugger;
+        this.$refs.replyimageContent.src = e.target.result;
       };
     },
     postReply() {
@@ -280,6 +300,7 @@ export default {
             this.$toast.error(data.graphQLErrors[0].message);
             return;
           }
+          this.removeReplyImage();
           this.$toast.success("Your reply has been posted");
           this.payload.comment = "";
         })
@@ -304,6 +325,15 @@ export default {
 
 
 <style scoped>
+a.close {
+  border: solid 2px #07834e;
+  border-radius: 50%;
+  height: 25px;
+  width: 27px;
+  font-weight: 200;
+  position: absolute;
+  right: -10px;
+}
 .spinner-border {
   height: 4rem;
   width: 4rem;

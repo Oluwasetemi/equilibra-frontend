@@ -18,7 +18,10 @@
                     name="state"
                     id="state"
                     class="form-control mt-0"
+                    @blur="$v.userDetails.state.$touch()"
+                    :class="{invalid: $v.userDetails.state.$error}"
                     v-model="userDetails.state"
+                    :disabled="loading"
                   >
                     <option value>What state are you from?</option>
                     <option
@@ -33,6 +36,9 @@
                     class="position-absolute down-arrow"
                   />
                 </div>
+                <template v-if="$v.userDetails.state.$dirty">
+                  <p v-if="!$v.userDetails.state.required" class="invalid">This field is required</p>
+                </template>
               </div>
             </div>
           </div>
@@ -40,7 +46,15 @@
             <div class="row">
               <div class="col-12">
                 <div class="form-input position-relative">
-                  <select name="lga" id="lga" class="form-control mt-0" v-model="userDetails.LGA">
+                  <select
+                    name="lga"
+                    id="lga"
+                    class="form-control mt-0"
+                    v-model="userDetails.LGA"
+                    @blur="$v.userDetails.LGA.$touch()"
+                    :class="{invalid: $v.userDetails.LGA.$error}"
+                    :disabled="loading"
+                  >
                     <option value>What LGA are you from?</option>
                     <option
                       v-for="(govt, i) in localGovernments"
@@ -54,6 +68,9 @@
                     class="position-absolute down-arrow"
                   />
                 </div>
+                <template v-if="$v.userDetails.LGA.$dirty">
+                  <p v-if="!$v.userDetails.LGA.required" class="invalid">This field is required</p>
+                </template>
               </div>
             </div>
           </div>
@@ -65,7 +82,10 @@
                     name="stateFedConstituency"
                     id="stateFedConstituency"
                     class="form-control mt-0"
+                    @blur="$v.userDetails.stateFedConstituency.$touch()"
+                    :class="{invalid: $v.userDetails.stateFedConstituency.$error}"
                     v-model="userDetails.stateFedConstituency"
+                    :disabled="loading"
                   >
                     <option value>Federal Constituency?</option>
                     <option
@@ -80,6 +100,12 @@
                     class="position-absolute down-arrow"
                   />
                 </div>
+                <template v-if="$v.userDetails.stateFedConstituency.$dirty">
+                  <p
+                    v-if="!$v.userDetails.stateFedConstituency.required"
+                    class="invalid"
+                  >This field is required</p>
+                </template>
               </div>
             </div>
           </div>
@@ -91,7 +117,10 @@
                     name="senatorialDistrict"
                     id="senatorialDistrict"
                     class="form-control mt-0"
+                    @blur="$v.userDetails.senatorialDistrict.$touch()"
+                    :class="{invalid: $v.userDetails.senatorialDistrict.$error}"
                     v-model="userDetails.senatorialDistrict"
+                    :disabled="loading"
                   >
                     <option value>Senatorial District?</option>
                     <option
@@ -106,6 +135,12 @@
                     class="position-absolute down-arrow"
                   />
                 </div>
+                <template v-if="$v.userDetails.senatorialDistrict.$dirty">
+                  <p
+                    v-if="!$v.userDetails.senatorialDistrict.required"
+                    class="invalid"
+                  >This field is required</p>
+                </template>
               </div>
             </div>
           </div>
@@ -117,7 +152,10 @@
                     name="stateConstituency"
                     id="stateConstituency"
                     class="form-control mt-0"
+                    @blur="$v.userDetails.stateConstituency.$touch()"
+                    :class="{invalid: $v.userDetails.stateConstituency.$error}"
                     v-model="userDetails.stateConstituency"
+                    :disabled="loading"
                   >
                     <option value>State Constituency?</option>
                     <option
@@ -132,38 +170,46 @@
                     class="position-absolute down-arrow"
                   />
                 </div>
+                <template v-if="$v.userDetails.stateConstituency.$dirty">
+                  <p
+                    v-if="!$v.userDetails.stateConstituency.required"
+                    class="invalid"
+                  >This field is required</p>
+                </template>
               </div>
             </div>
           </div>
-          <div class="row">
-            <div class="col-4" v-if="!origin">
+          <div class="row" v-if="origin">
+              <div class="col-4">
+                <button
+                  class="white-btn w-100 mt-2 auth"
+                  @click="origin = false"
+                  type="submit"
+                  :disabled="loading"
+                >BACK</button>
+              </div>
+              <div class="col-8">
+                <button
+                  class="sign-up w-100 mt-2 auth d-flex align-items-center justify-content-center"
+                  @click="completeUserSignUp()"
+                  type="button"
+                  :disabled="loading"
+                >
+                  <div class="spinner-grow text-success" role="status" v-if="loading">
+                    <span class="sr-only">Loading...</span>
+                  </div>
+                  <span>SAVE</span>
+                </button>
+              </div>
+          </div>
+          <div class="row" v-else>
+            <div class="col-12" >
               <button
-                class="white-btn w-100 mt-2 auth"
-                @click="origin = false"
-                type="submit"
-                :disabled="loading"
-              >BACK</button>
-            </div>
-            <div class="col-8">
-              <button
-                v-if="origin"
                 class="sign-up w-100 mt-2 auth"
                 @click="continueSignUp()"
                 type="button"
                 :disabled="loading"
               >CONTINUE</button>
-              <button
-                v-else
-                class="sign-up w-100 mt-2 auth d-flex align-items-center justify-content-center"
-                @click="completeUserSignUp()"
-                type="button"
-                :disabled="loading"
-              >
-                <div class="spinner-grow text-success" role="status" v-if="loading">
-                  <span class="sr-only">Loading...</span>
-                </div>
-                <span>SAVE</span>
-              </button>
             </div>
           </div>
         </form>
@@ -221,7 +267,23 @@ export default {
     };
   },
   validations: {
-    
+    userDetails: {
+      state: {
+        required
+      },
+      LGA: {
+        required
+      },
+      stateFedConstituency: {
+        required
+      },
+      senatorialDistrict: {
+        required
+      },
+      stateConstituency: {
+        required
+      }
+    }
   },
   computed: {
     ...mapGetters("auth", ["getTempUserDetails", "getToken"]),
@@ -255,10 +317,12 @@ export default {
   },
   filters: {
     formatStateName(str) {
-      return `${str
-        .split(" ")[0]
-        .charAt(0)
-        .toUpperCase()}${str.split(" ")[0].slice(1)}`;
+      return str
+        .split(" ")
+        .map(word => {
+          return word.charAt(0).toUpperCase() + word.substring(1);
+        })
+        .join(" ");
     }
   },
   methods: {
@@ -341,15 +405,20 @@ export default {
         });
     },
     continueSignUp() {
+      this.$v.userDetails.$touch();
+      if (this.$v.userDetails.$error) {
+        return;
+      }
       this.setTempUserDetails({
-        type: "origin",
+        type: "residence",
         payload: this.userDetails
       });
+      this.$v.userDetails.$reset();
       this.origin = true;
     },
     completeUserSignUp() {
       this.setTempUserDetails({
-        type: "residence",
+        type: "origin",
         payload: this.userDetails
       });
       let origin = this.getTempUserDetails.origin;
@@ -513,6 +582,12 @@ button.auth {
   font-weight: 600;
   font-size: 11px;
   letter-spacing: 0.8px;
+}
+
+p.invalid {
+  position: relative;
+  top: -10px;
+  margin: 0;
 }
 
 @media screen and (max-width: 767px) {

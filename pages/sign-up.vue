@@ -9,7 +9,7 @@
         </div>
         <div class="p-4">
           <div class="social-media-login px-3">
-            <googleButton @loggedInWithGoogle="authenticateGoogleUser" />
+            <googleButton @loggedInWithGoogle="authenticateGoogleUser" :disabled="loading"/>
             <facebookButton @loggedInWithFacebook="authenticateFacebookUser" :disabled="loading" />
           </div>
           <!-- <div class="g-signin2" data-onsuccess="onSignIn"></div> -->
