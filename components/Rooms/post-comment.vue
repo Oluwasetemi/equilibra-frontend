@@ -34,15 +34,22 @@
         </div>
         <div class="px-2" style="flex: 0 0 140px">
           <button
-            class="post"
+            class="post d-flex align-items-center justify-content-center"
             type="submit"
             :disabled="(!payload.comment && !imageContent) || loading"
-          >Post</button>
+          >
+            <div
+              class="spinner-grow"
+              style="color: green !important;"
+              v-if="loading"
+            ></div>
+            <span>Post</span>
+          </button>
         </div>
       </form>
     </div>
     <div class="text-center" :class="{'position-absolute': !imageContent}">
-      <figure class="position-relative d-inline-block">
+      <figure class="position-relative d-inline-block px-5">
         <a href="#" class="close" @click="removeImage()" v-if="imageContent">
           <span>&times;</span>
         </a>
