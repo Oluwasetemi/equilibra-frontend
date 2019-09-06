@@ -1,11 +1,9 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-light d-flex justify-space-between px-lg-4">
-    <signUpModal />
+  <nav class="navbar navbar-expand-lg navbar-light d-flex justify-space-between mx-lg-4 pt-3">
     <div class="container">
-      <nuxt-link to="/" class="navbar-brand ml-lg-2">
-        <img src="~/assets/icons/logo.svg" alt />
+      <nuxt-link to="/" class="navbar-brand">
+        <img src="~/assets/icons/green-logo.svg" alt />
       </nuxt-link>
-
       <button
         class="navbar-toggler"
         type="button"
@@ -59,14 +57,13 @@
                 />
               </a>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <nuxt-link class="dropdown-item" to="/account-settings">Account Settings</nuxt-link>
+                <nuxt-link class="dropdown-item" to="account-settings">Account Settings</nuxt-link>
                 <a class="dropdown-item" href="#">Feedback</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="#" @click.stop="logoutUser()">Logout</a>
               </div>
             </div>
-            <button class="btn" data-toggle="modal" data-target="#signUpModal" v-else>Join Us</button>
-            <!-- <nuxt-link to="/sign-up" tag="button" class="btn"></nuxt-link> -->
+            <nuxt-link to="/sign-up" tag="button" class="btn" v-else>Join Us</nuxt-link>
           </li>
         </ul>
       </div>
@@ -74,19 +71,14 @@
   </nav>
 </template>
 
-
 <script>
 import avatar from "~/assets/images/avatar.png";
 import { mapActions, mapGetters } from "vuex";
-import signUpModal from "~/components/Authentication/sign-up";
 export default {
   data() {
     return {
       avatar
     };
-  },
-  components: {
-    signUpModal
   },
   computed: {
     ...mapGetters("auth", ["isAuthenticated", "user"]),
@@ -107,18 +99,11 @@ export default {
 .navbar-light .navbar-nav .active > .nav-link,
 .navbar-light .navbar-nav .nav-link:hover,
 .navbar-light .navbar-nav .nav-link:focus {
-  color: white;
-  font-weight: 100;
-}
-
-.navbar-collapse {
-  z-index: 4;
-  background: rgb(7, 131, 78);
+  color: var(--black-text);
 }
 
 nav {
-  background: #07834e;
-  height: 70px;
+  background: transparent;
 }
 
 .btn {
@@ -131,9 +116,19 @@ nav {
   font-weight: 600;
 }
 
+li .nuxt-link-exact-active::after {
+    content: '';
+    bottom: 6px;
+    left: 50%;
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    background: black;
+    border-radius: 50%;
+}
 @media (min-width: 1200px) {
   .container {
-    max-width: 1400px !important;
+    max-width: 1380px !important;
   }
 }
 </style>

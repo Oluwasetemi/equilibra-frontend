@@ -89,6 +89,10 @@ nav .btn {
   text-decoration: none;
   background-color: #07834e;
 }
+
+.dropdown-toggle::after {
+  display: none !important;
+}
 .navbar-toggler {
   border: 0;
 }
@@ -128,12 +132,12 @@ li {
   list-style: none;
 }
 
-.nuxt-link-exact-active {
+.nuxt-link-exact-active:not(.footer-link) {
   font-weight: 700;
   position: relative;
 }
 
-li .nuxt-link-exact-active::after {
+li .nuxt-link-exact-active:not(.footer-link)::after {
   content: '';
   bottom: 6px;
   left: 50%;
