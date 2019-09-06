@@ -242,7 +242,7 @@ export default {
   },
   methods: {
     ...mapActions("admin/data", [
-      "getAllGovts"
+      "getAllHOA"
     ]),
     nextPage() {
       this.skip += this.limit;
@@ -323,7 +323,7 @@ export default {
     getGovts() {
       this.loading = true;
       let self = this;
-      this.getAllGovts({skip: self.skip, limit: self.limit, })
+      this.getAllHOA({roomType: "HOUSE_OF_ASSEMBLY", limit: self.limit})
         .then(data => {
           this.loading = false;
           if (data.graphQLErrors) {

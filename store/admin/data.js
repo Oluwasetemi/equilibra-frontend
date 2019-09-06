@@ -35,6 +35,26 @@ const state = () => ({
         });
     },
 
+    getAllHOA({ commit, state, rootState }, payload){
+      return this.app.apolloProvider.defaultClient
+      .query({
+        query: gql.Data.allRooms,
+        variables: {roomType: payload.roomType, start: payload.skip},
+        context: {
+          headers: {
+            Authorization: `Bearer ${rootState.admin.sub.token}`
+          }
+        }
+      })
+      .then(({ data }) => {      
+          commit('setGovts', data.governments);
+          return data.governments;
+        })
+        .catch(err => {
+          return err;
+        });
+    },
+
     
     // create a user of type ADMIN
     createAdmin({ commit, state }, payload){

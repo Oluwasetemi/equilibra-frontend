@@ -149,7 +149,7 @@ const state = () => ({
       return this.app.apolloProvider.defaultClient
       .query({
         query: gql.Admin.allTopics,
-        variables: {limit: payload.limit, skip: payload.skip},
+        variables: {query: payload.query,limit: payload.limit, skip: payload.skip},
         context: {
           headers: {
             Authorization: `Bearer ${Cookie.get('EQUI_AUTH_ADMIN')}`
@@ -208,6 +208,27 @@ const state = () => ({
         });
     },
 
+    // delete a topic of type topicType
+    deleteTopic({ commit, state }, payload){
+      return this.app.apolloProvider.defaultClient
+        .mutate({
+          mutation: gql.Admin.deleteTopic,
+          variables: { topicId: payload.topicId },
+          context: {
+            headers: {
+              Authorization: `Bearer ${Cookie.get('EQUI_AUTH_ADMIN')}`
+            }
+          }
+        })
+        .then(({ data }) => {
+          commit('setTopics', state.sub.admins.filter(e=>e._id!==payload.topicId));
+          return  data.deleteTopic;
+        })
+        .catch(err => {
+          return err;
+        });
+    },
+
     // create a user of type ADMIN
     createAdmin({ commit, state }, payload){
       return this.app.apolloProvider.defaultClient
@@ -248,6 +269,29 @@ const state = () => ({
           collection.edges.push(data.createTopic);
           commit('setTopics', collection);
           return  data.createTopic;
+        })
+        .catch(err => {
+          return err;
+        });
+    },
+
+    // create a topic
+    updateTopic({ commit, state }, payload){
+      return this.app.apolloProvider.defaultClient
+        .mutate({
+          mutation: gql.Admin.updateTopic,
+          variables: { topic: payload.topic, topicId: payload._id },
+          context: {
+            headers: {
+              Authorization: `Bearer ${Cookie.get('EQUI_AUTH_ADMIN')}`
+            }
+          }
+        })
+        .then(({ data }) => {
+          let collection = JSON.parse(JSON.stringify(state.sub.topics));
+          collection.edges.push(data.updateTopic);
+          commit('setTopics', collection);
+          return  data.updateTopic;
         })
         .catch(err => {
           return err;
