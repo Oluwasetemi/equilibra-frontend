@@ -5,12 +5,14 @@
       v-if="openModal"
       @closeModal="openModal = false"
     />
+    <ImageModal :img="imageModalSrc" />
 
     <div class="comments" v-if="fetchComments.edges.length > 0">
       <div
         class="d-flex px-2 comment border-bottom"
         v-for="(comment, i) in fetchComments.edges"
         :key="i"
+        :id="comment._id"
       >
         <figure class="m-0 py-3 pr-1 pl-4 px d-inline-block">
           <img
@@ -33,8 +35,14 @@
               <p class="text-left">{{comment.comment}}</p>
             </div>
             <div class="comment-image pb-3" v-if="comment.image">
-            <img :src="comment.image" alt="photo content" class="photo-content" />
-          </div>
+              <a
+                data-toggle="modal"
+                data-target="#imageModal"
+                @click="imageModalSrc = $event.target.src"
+              >
+                <img :src="comment.image" alt="photo content" class="photo-content" style="cursor: pointer"/>
+              </a>
+            </div>
             <div class="actions mr-2">
               <likeIcon :commentId="comment._id" :liked="comment.liked" :likes="comment.likes" />
               <a
@@ -56,13 +64,12 @@
     </div>
 
     <div v-else class="text-center py-5 border-bottom">
-      <div class="spinner-border text-center text-light" v-if="loadingComments"></div>
+      <div class="spinner-border text-center" v-if="loadingComments"></div>
       <div v-else>
-          <img src="~/assets/images/no-chat.svg" alt="" style="height: 150px" class="mb-4">
-            <p class="m-0" style="font-size: 24px; color: #737373; font-weight: 600">No ongoing chat</p>
-            <p class="color: #737373;">Be the first to leave a comment</p>
+        <img src="~/assets/images/no-chat.svg" alt style="height: 150px" class="mb-4" />
+        <p class="m-0" style="font-size: 24px; color: #737373; font-weight: 600">No ongoing chat</p>
+        <p class="color: #737373;">Be the first to leave a comment</p>
       </div>
-      
     </div>
     <div class="text-center">
       <div
@@ -79,6 +86,7 @@ import likeIcon from "~/components/Rooms/like-icon";
 import gql from "~/apollo/user/comment";
 import avatar from "~/assets/images/avatar.svg";
 import CommentModal from "~/components/Rooms/view-comment-modal";
+import ImageModal from "~/components/Rooms/image-modal";
 import imageUrl from "~/assets/images/judiciary_BG.svg";
 export default {
   layout: "greenNavOnly",
@@ -96,12 +104,14 @@ export default {
       activeComment: null,
       imageUrl2: { imageUrl },
       loadingComments: false,
-      loadingMoreComments: false
+      loadingMoreComments: false,
+      imageModalSrc: null
     };
   },
   components: {
     CommentModal,
-    likeIcon
+    likeIcon,
+    ImageModal
   },
   computed: {
     ...mapGetters("user", ["getUser"]),
@@ -166,6 +176,11 @@ export default {
     }
   },
   methods: {
+    // imageModalSrc(val) {
+    //   val
+    //   debugger
+    //   // = $event.target.childNode.src
+    // },
     fetchRoomComments() {
       this.$apollo.addSmartQuery("fetchComments", {
         query: gql.fetchComments,

@@ -1,43 +1,92 @@
 <template>
-  <div class="dropdown-menu p-4" @click.stop="">
+  <div class="dropdown-menu p-4">
     <h5 class="mb-3 text-center">Choose a reason for reporting tHIs post</h5>
-    <form action>
-      <div class="form-check my-2" :class="{selected: selected == 'spam'}">
-        <input type="radio" name="report" id="spam" value="spam" class="form-check-input" hidden v-model="selected"/>
+    <form @submit.prevent="reportComment()">
+      <div
+        class="form-check my-2"
+        :class="{selected: selected == 'spam'}"
+        @click="selected = 'spam'"
+      >
+        <input
+          type="radio"
+          name="report"
+          id="spam"
+          value="spam"
+          class="form-check-input"
+          hidden
+          v-model="selected"
+        />
         <div class="radio-btn rounded-circle text-center">
           <img src="~/assets/icons/white-checkmark.svg" alt />
         </div>
         <label for="spam" class="mb-0 ml-3">It's Spam</label>
       </div>
-      <div class="form-check my-2" :class="{selected: selected == 'inappropriate'}">
-        <input type="radio" name="report" id="inappropriate" value="inappropriate" class="form-check-input" hidden v-model="selected"/>
+      <div
+        class="form-check my-2"
+        :class="{selected: selected == 'inappropriate'}"
+        @click="selected = 'inappropriate'"
+      >
+        <input
+          type="radio"
+          name="report"
+          id="inappropriate"
+          value="inappropriate"
+          class="form-check-input"
+          hidden
+          v-model="selected"
+        />
         <div class="radio-btn rounded-circle text-center">
           <img src="~/assets/icons/white-checkmark.svg" alt />
         </div>
         <label for="inappropriate" class="mb-0 ml-3">It’s inappropriate</label>
       </div>
-      <div class="form-check my-2" :class="{selected: selected == 'abusive'}">
-        <input type="radio" name="report" id="abusive" value="abusive" class="form-check-input" hidden v-model="selected"/>
+      <div
+        class="form-check my-2"
+        :class="{selected: selected == 'abusive'}"
+        @click="selected = 'abusive'"
+      >
+        <input
+          type="radio"
+          name="report"
+          id="abusive"
+          value="abusive"
+          class="form-check-input"
+          hidden
+          v-model="selected"
+        />
         <div class="radio-btn rounded-circle text-center">
           <img src="~/assets/icons/white-checkmark.svg" alt />
         </div>
         <label for="abusive" class="mb-0 ml-3">It’s abusive or harmful</label>
       </div>
+      <div class="footer d-flex justify-content-between pt-1 mt-3">
+        <button
+          type="submit"
+          class="d-flex align-items-center justify-content-center"
+          :disabled="loading"
+        >
+          <div class="spinner-grow text-success" v-if="loading"></div>
+          <span>Send Report</span>
+        </button>
+      </div>
     </form>
-    <div class="footer d-flex justify-content-between pt-1 mt-3">
-      <button>Send Report</button>
-    </div>
   </div>
 </template>
 
 <script>
 export default {
-    data() {
-        return {
-            selected: null
-        }
+  props: ["loading"],
+  data() {
+    return {
+      selected: null
+    };
+  },
+  methods: {
+    reportComment() {
+      this.$emit("reportComment", this.selected.toUpperCase());
     }
-}
+  }
+};
 </script>
 
 

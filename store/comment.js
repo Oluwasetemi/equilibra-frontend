@@ -15,7 +15,7 @@ export default {
   mutations: {},
 
   actions: {
-    createComment({ commit, dispatch, rootState }, payload) {
+    createComment({ commit, rootState }, payload) {
       return this.app.apolloProvider.defaultClient
         .mutate({
           mutation: gql.createComment,
@@ -63,7 +63,7 @@ export default {
               Authorization: `Bearer ${rootState.auth.token}`
             }
           },
-          refetchQueries: ['fetchComments']
+          refetchQueries: ['fetchComments', 'fetchComment']
         })
         .then(({ data }) => {
           return data.deleteComment;
@@ -128,24 +128,24 @@ export default {
         .catch(err => {
           return err;
         });
-    }
-  },
-  reportComment({ commit, rootState }, payload) {
-    return this.app.apolloProvider.defaultClient
-      .mutate({
-        mutation: gql.reportComment,
-        variables: payload,
-        context: {
-          headers: {
-            Authorization: `Bearer ${rootState.auth.token}`
+    },
+    reportComment({ commit, rootState }, payload) {
+      return this.app.apolloProvider.defaultClient
+        .mutate({
+          mutation: gql.reportComment,
+          variables: payload,
+          context: {
+            headers: {
+              Authorization: `Bearer ${rootState.auth.token}`
+            }
           }
-        }
-      })
-      .then(({ data }) => {
-        return data.reportComment;
-      })
-      .catch(err => {
-        return err;
-      });
+        })
+        .then(({ data }) => {
+          return data.reportComment;
+        })
+        .catch(err => {
+          return err;
+        });
+    }
   }
 };

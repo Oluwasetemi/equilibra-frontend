@@ -186,6 +186,8 @@
           </div>
         </div>
       </template>
+      {{getUser}} state of Residence<br>
+      {{getUser.localGovtOrigin}} state of Origin<br>
 
       <template v-if="isAuthenticated">
         <div class="row">

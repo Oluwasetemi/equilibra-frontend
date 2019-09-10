@@ -23,6 +23,7 @@ export default {
         stateOfOrigin
         stateOfResidence
         localGovtOrigin
+        localGovtResisdence
         stateConstituency
         stateOfResidenceConstituency
         stateFedConstituency
@@ -54,6 +55,7 @@ export default {
         stateOfOrigin
         stateOfResidence
         localGovtOrigin
+        localGovtResisdence
         stateConstituency
         stateOfResidenceConstituency
         stateFedConstituency
@@ -85,6 +87,7 @@ export default {
         stateOfOrigin
         stateOfResidence
         localGovtOrigin
+        localGovtResisdence
         stateConstituency
         stateOfResidenceConstituency
         stateFedConstituency
@@ -125,6 +128,7 @@ export default {
         stateOfOrigin
         stateOfResidence
         localGovtOrigin
+        localGovtResisdence
         stateConstituency
         stateOfResidenceConstituency
         stateFedConstituency
@@ -155,6 +159,7 @@ export default {
         isSuspended
         stateOfOrigin
         stateOfResidence
+        localGovtResisdence
         localGovtOrigin
         stateConstituency
         stateOfResidenceConstituency
@@ -187,6 +192,7 @@ export default {
         stateOfOrigin
         stateOfResidence
         localGovtOrigin
+        localGovtResisdence
         stateConstituency
         stateOfResidenceConstituency
         stateFedConstituency

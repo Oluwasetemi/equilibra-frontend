@@ -42,8 +42,24 @@
               <likeIcon :commentId="comment._id" :liked="comment.liked" :likes="comment.likes" />
 
               <span class="replies ml-2">
-                <img src="~/assets/icons/replies-icon.svg" alt />
-                <span class="px-1">{{comment.replies.length}}</span>
+                <span
+                  class="text-center dropdown share-comment"
+                  data-toggle="tooltip"
+                  title="Share"
+                >
+                  <a
+                    href="#"
+                    class="inline-block px-2"
+                    id="shareLink"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                  >
+                    <span>Share</span>
+                    <img src="~/assets/icons/share.svg" alt />
+                  </a>
+                  <shareLinkCard class="dropdown-menu" aria-labelledby="shareLink" />
+                </span>
               </span>
             </div>
           </div>
@@ -53,6 +69,7 @@
               :class="{active: setClass}"
               v-for="(reply, i) in comment.replies"
               :key="i"
+              @click="activeReply = reply._id"
             >
               <figure class="m-0 py-3 pr-1 d-inline-block">
                 <img
@@ -75,12 +92,15 @@
                   <div class="comment-content pr-3">
                     <p class="text-left m-0">{{reply.comment}}</p>
                   </div>
+                  <div class="comment-image pb-3" v-if="reply.image">
+                    <img :src="reply.image" alt="photo content" class="photo-reply mt-3" />
+                  </div>
                   <div class="actions mr-2 pt-2">
                     <a
                       href="#"
                       class="likes-button d-inline-flex align-items-center justify-content-around px-1"
-                      @click.stop="liked = !liked"
-                      :class="{liked}"
+                      :class="{liked: reply.liked}"
+                      @click="toggleLike.id = reply._id, toggleLike.count += 1"
                     >
                       <span class="likes-icon"></span>
                       <span class="px-1">{{reply.likes}}</span>
@@ -88,25 +108,18 @@
                   </div>
                 </div>
               </div>
-              <div class="options position-absolute d-flex">
+              <div class="options position-absolute">
                 <div class="text-center dropdown border-right" data-toggle="tooltip" title="Like">
-                  <a href="#" class="inline-block px-2 text-center">
-                    <img src="~/assets/icons/like-icon-outline.svg" alt />
-                  </a>
+                  <likeIcon
+                    :commentId="reply._id"
+                    :liked="reply.liked"
+                    :likes="reply.likes"
+                    :hideCount="true"
+                    :toggleLike="toggleLike"
+                  />
                 </div>
-                <div class="text-center dropdown border-right" data-toggle="tooltip" title="Delete">
-                  <a
-                    id="deleteComment"
-                    href="#"
-                    class="inline-block px-2 text-center"
-                    data-toggle="dropdown"
-                    aria-haspopup="true"
-                    aria-expanded="false"
-                  >
-                    <img src="~/assets/icons/delete-icon.svg" alt />
-                  </a>
-                  <deleteCommentCard class="dropdown-menu" aria-labelledby="deleteComment" />
-                </div>
+
+                <DeleteCommentIcon :commentId="activeReply" v-if="reply.author._id == getUser._id" />
                 <div class="text-center dropdown" data-toggle="tooltip" title="Share">
                   <a
                     href="#"
@@ -121,17 +134,7 @@
                   <shareLinkCard class="dropdown-menu" aria-labelledby="shareLink" />
                 </div>
               </div>
-              <span class="text-center dropdown">
-                <a
-                  href="#"
-                  id="reportComment"
-                  class="report text-center"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                >Report Post</a>
-                <reportCommentCard aria-labelledby="reportComment" />
-              </span>
+              <ReportCommentIcon :commentId="activeReply" v-if="reply.author._id != getUser._id" />
             </div>
           </div>
         </div>
@@ -204,8 +207,8 @@ import avatar from "~/assets/images/avatar.svg";
 import gql from "~/apollo/user/comment";
 import { mapGetters, mapActions } from "vuex";
 import shareLinkCard from "~/components/Rooms/share-link";
-import reportCommentCard from "~/components/Rooms/report-comment";
-import deleteCommentCard from "~/components/Rooms/delete-comment";
+import ReportCommentIcon from "~/components/Rooms/report-comment-icon";
+import DeleteCommentIcon from "~/components/Rooms/delete-comment-icon";
 export default {
   props: ["commentId"],
   // asyncData() {
@@ -220,6 +223,8 @@ export default {
       formActive: false,
       imageContent: false,
       setClass: false,
+      toggleLike: { id: null, count: 0 },
+      activeReply: {},
       payload: {
         comment: ""
       },
@@ -229,8 +234,8 @@ export default {
   },
   components: {
     shareLinkCard,
-    reportCommentCard,
-    deleteCommentCard,
+    ReportCommentIcon,
+    DeleteCommentIcon,
     likeIcon
   },
   computed: {
@@ -251,7 +256,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions("comment", ["replyComment"]),
+    ...mapActions("comment", ["replyComment", "reportComment"]),
     removeReplyImage() {
       this.imageContent = false;
       this.file = "";
@@ -279,13 +284,11 @@ export default {
       });
     },
     previewReplyImage() {
-      debugger
       this.file = event.target.files[0];
       const reader = new FileReader();
       reader.readAsDataURL(this.file);
       reader.onload = e => {
         this.imageContent = true;
-        debugger;
         this.$refs.replyimageContent.src = e.target.result;
       };
     },
@@ -295,14 +298,15 @@ export default {
       this.loading = true;
       this.replyComment(this.payload)
         .then(data => {
+          this.payload.comment = "";
           this.loading = false;
+          this.removeReplyImage();
           if (data.graphQLErrors) {
             this.$toast.error(data.graphQLErrors[0].message);
             return;
           }
-          this.removeReplyImage();
+
           this.$toast.success("Your reply has been posted");
-          this.payload.comment = "";
         })
         .catch(err => {
           this.loading = true;
@@ -325,6 +329,12 @@ export default {
 
 
 <style scoped>
+.dropdown.share-comment {
+  background: transparent;
+  width: unset;
+  height: unset;
+}
+
 a.close {
   border: solid 2px #07834e;
   border-radius: 50%;
@@ -340,15 +350,16 @@ a.close {
   border: 0.4em solid currentColor;
 }
 
+img.photo-reply {
+  width: 80px;
+  object-fit: cover;
+  height: 100px;
+}
+
 img.photo-content {
   width: 100%;
   object-fit: contain;
   height: 300px;
-}
-
-div.replies {
-  max-height: 80vh;
-  overflow-y: scroll;
 }
 
 div.scrollable {
@@ -381,7 +392,7 @@ input {
 }
 .modal-content {
   background: white;
-  transition: all 0.5s;
+  /* transition: all 0.5s; */
 }
 .modal-content {
   border: 0;
@@ -422,7 +433,7 @@ button.post-btn {
   border-top: 1px solid #168a59 !important;
 }
 
-a.report {
+/* a.report {
   width: 120px;
   border: 1px solid #ebeced;
   border-radius: 2px;
@@ -434,14 +445,14 @@ a.report {
   color: #000000;
   background: white;
   opacity: 0;
-}
+} */
 .options {
   border: 1px solid #ebeced;
   border-radius: 2px;
   top: -20px;
   right: 40px;
   height: 26px;
-  opacity: 0;
+  display: none;
 }
 
 .options .dropdown {
@@ -453,10 +464,13 @@ a.report {
   background: #dceee6;
 }
 
-.comment:hover .options,
+.comment:hover .options {
+  display: flex;
+}
+
 .comment:hover .report {
-  opacity: 1;
-  transition: all 600ms;
+  display: inline-block;
+  /* transition: all 600ms; */
 }
 
 div.dropdown {

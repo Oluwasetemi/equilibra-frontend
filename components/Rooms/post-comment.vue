@@ -49,11 +49,11 @@
       </form>
     </div>
     <div class="text-center" :class="{'position-absolute': !imageContent}">
-      <figure class="position-relative d-inline-block px-5">
+      <figure class="position-relative d-inline-block mx-5 my-3">
         <a href="#" class="close" @click="removeImage()" v-if="imageContent">
           <span>&times;</span>
         </a>
-        <img ref="imageContent" src alt height="340px" class="pb-4" style="max-width: 100%" />
+        <img ref="imageContent" src alt height="340px" class="pb-4" style="max-width: 90%" />
       </figure>
     </div>
   </div>
@@ -129,7 +129,6 @@ export default {
           this.payload.comment = "";
           this.removeImage();
           this.$toast.success("Your comment has been posted");
-          this.$eventBus.$emit("fetchComments");
         })
         .catch(err => {
           this.loading = true;
@@ -142,7 +141,6 @@ export default {
 
 <style scoped>
 a.close {
-  border: solid 2px #07834e;
   border-radius: 50%;
   height: 25px;
   width: 27px;
@@ -152,7 +150,6 @@ a.close {
 }
 
 .close span {
-  color: #07834e;
   font-weight: 100;
 }
 .avatar {
