@@ -266,9 +266,9 @@ const state = () => ({
         })
         .then(({ data }) => {
           let collection = JSON.parse(JSON.stringify(state.sub.topics));
-          collection.edges.push(data.createTopic);
+          collection.edges.push(data.scheduleTopic);
           commit('setTopics', collection);
-          return  data.createTopic;
+          return  data.scheduleTopic;
         })
         .catch(err => {
           return err;

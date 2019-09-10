@@ -323,7 +323,7 @@ export default {
     getGovts() {
       this.loading = true;
       let self = this;
-      this.getAllGovts({skip: self.skip, limit: self.limit, })
+      this.getAllGovts({skip: self.skip, limit: self.limit, slug: this.filter})
         .then(data => {
           this.loading = false;
           if (data.graphQLErrors) {

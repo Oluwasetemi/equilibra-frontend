@@ -214,7 +214,7 @@
                   </div>
 
                   <div class="form-group pt-3">
-                    <button>Save</button>
+                    <el-button class="button-i" native-type="submit" :loading="loading">Save</el-button>
                   </div>
                 </form>
               </div>
@@ -333,7 +333,7 @@ export default {
         rooms: [],
         title: "",
         description: "",
-        startDate: "",
+        date: "",
       };
       this.$router.push({ query: { new: true } });
     },
@@ -383,6 +383,7 @@ export default {
             self.$toast.error(data.graphQLErrors[0].message);
             return;
           }
+          this.$router.push({query: {}});
           this.$toast.error("Topic updated");
           return;
         })
@@ -400,6 +401,7 @@ export default {
             self.$toast.error(data.graphQLErrors[0].message);
             return;
           }
+          this.$router.push({query: {}});
           this.$toast.error("Topic Created");
         })
         .catch(err => {
@@ -534,6 +536,22 @@ button {
   border: none;
   height: 30px;
   transition: box-shadow 0.2s ease-in-out;
+}
+.button-i {
+  background: #f58634;
+  border-radius: 2px;
+  color: white;
+  font-size: 12px;
+  letter-spacing: 0.2px;
+  /* width: 100%; */
+  width: 136px;
+  border: none;
+  height: 30px;
+  transition: box-shadow 0.2s ease-in-out;
+}
+.button-i:hover, .button-i:focus {
+  background: #f58634;
+  color: white;
 }
 
 button.view {
