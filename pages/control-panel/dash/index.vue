@@ -92,13 +92,12 @@
 					</figure>
 					<figure
             class="d-flex justify-content-between position-relative"
-            v-for="(comment, i) in adminStatistics.latestComments" :key="i"
+            v-for="(comment, i) in recentComments" :key="i"
           >
             <div class="d-flex position-relative">
-              <img src="~/assets/images/total-insurance-icon.svg" alt v-if="!comment.author.image" />
-              <img :src="comment.author.image" class="mt-4" style="width: 30px; height: 30px; border-radius: 100%;" alt v-else />
+              <img :src="comment.author.image" class="mt-4" style="width: 30px; height: 30px; border-radius: 100%;" alt />
               <div>
-                <div class="title ml-3 pt-4">{{comment.comment}}</div>
+                <div class="title ml-3 pt-3">{{comment.comment}}</div>
                 <small class="ml-3">{{comment.author.fullName}}</small>
               </div>
             </div>
@@ -150,6 +149,13 @@ export default {
   },
   computed: {
   	...mapGetters('admin', ['adminStatistics', 'user']),
+    recentComments(){
+      let rec = [];
+      if(this.adminStatistics.latestComments){
+        rec = this.adminStatistics.latestComments.filter(e=>e.author.image);
+      }
+      return rec;
+    }
   },
   methods: {
 	  ...mapActions('admin', ['getAdminStatistics']),

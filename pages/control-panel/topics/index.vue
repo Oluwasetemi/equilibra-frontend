@@ -236,7 +236,7 @@ export default {
       skip: 0,
       limit: 10,
       total: 0,
-      filter: false,
+      filter: true,
       filters: [{value: true, label: 'Approved'},{value: false, label: 'Not Approved'}],
       loading: false,
       pickerOptions: {
@@ -352,7 +352,7 @@ export default {
     modifyTopic: async function(topic){
       // modify topic logic happens here
       this.topicPayload = {...topic};
-      this.$router.push({query: {update: true}});
+      this.$router.push({query: {update: topic._id}});
     },
     getAllRooms: async function() {
       this.loading = true;
@@ -369,13 +369,12 @@ export default {
       }
     },
     submitTopic() {
-      debugger;
       this.$v.$touch();
       let isInvalid = this.$v.$invalid;
       if(isInvalid) return;
       this.loading = true;
       let self = this;
-      var {_id, title, rooms, description, startDate} = self.topicPayload;
+      var {_id, title, rooms, description} = self.topicPayload;
       if(this.$route.query.update){
         this.updateTopic({topic: {title, rooms, description}, _id})
         .then(data => {
@@ -409,6 +408,11 @@ export default {
         });
       }
     },
+    resetFields(){
+      if(this.$route.query.update){
+        this.topicPayload = this.topics.filter(e=>e._id==this.$route.query.update);
+      }
+    },
     getTopics: async function() {
       this.loading = true;
       let self = this;
@@ -427,6 +431,9 @@ export default {
   created() {
     this.getTopics();
     this.getAllRooms();
+  },
+  mounted(){
+    this.resetFields();
   }
 };
 </script>

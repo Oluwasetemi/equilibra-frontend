@@ -70,6 +70,10 @@ export default {
         title
         closeDate
         startDate
+        description
+        rooms {
+          _id
+        }
         isClosed
         createdBy {
           fullName
@@ -103,12 +107,12 @@ export default {
     scheduleTopic(topic: $topic) {
       _id
       title
-      closeDate
       rooms {
         _id
       }
-      startDate
+      description
       isClosed
+      startDate
       createdBy {
         _id
       }
