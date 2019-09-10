@@ -36,7 +36,7 @@
                   <a class="nav-link" href="http://www.theequilibra.com/blog/">Blog</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="#">Contact Us</a>
+                  <nuxt-link to="/contact-us" class="nav-link">Contact Us</nuxt-link>
                 </li>
                 <li class="nav-item ml-4">
                   <transition
@@ -59,12 +59,7 @@
                         aria-haspopup="true"
                         aria-expanded="false"
                       >
-                        <img
-                          :src="getUser.image || avatar"
-                          alt
-                          height="38px"
-                          class="mr-1 avatar"
-                        />
+                        <img :src="getUser.image || avatar" alt height="38px" class="mr-1 avatar" />
                         <div
                           class="inline-block pl-2 user-name"
                           style="color: black"
@@ -170,7 +165,8 @@
                   />
                 </div>
                 <div class="card-content p-4">
-                  <h3 class="pt-3">{{ item.title }}</h3>
+                  <h3 class="pt-3"> <span v-if="item.title == 'LGA'">{{localGovtResisdence | formatStateName}}</span>
+                  <span v-else>{{item.title}}</span></h3>
                   <p>
                     We are positively minded Nigerians, committed to unity and to
                     encouraging fairness, just and equitable lifee.
@@ -178,9 +174,12 @@
                   <nuxt-link
                     tag="button"
                     class="border-0 p-3 w-100"
-                    :to="item.link"
+                    :to="{path: item.link, query: {state:true, isOrigin:false}}"
                     style="background: #26B14F;"
-                  >Join {{item.title}}</nuxt-link>
+                  >Join 
+                  <span v-if="item.title == 'LGA'">{{localGovtResisdence | formatStateName}}</span>
+                  <span v-else>{{item.title}}</span>
+                  </nuxt-link>
                 </div>
               </div>
             </div>
@@ -211,7 +210,8 @@
                   />
                 </div>
                 <div class="card-content p-4">
-                  <h3 class="pt-3">{{ item.title }}</h3>
+                  <h3 class="pt-3"><span v-if="item.title == 'LGA'">{{localGovtOrigin | formatStateName}}</span>
+                  <span v-else>{{item.title}}</span></h3>
                   <p>
                     We are positively minded Nigerians, committed to unity and to
                     encouraging fairness, just and equitable lifee.
@@ -219,9 +219,10 @@
                   <nuxt-link
                     tag="button"
                     class="border-0 p-3 w-100"
-                    :to="{path: item.link}"
+                    :to="{path: item.link, query: {state:true, isOrigin:true }}"
                     style="background: #26B14F;"
-                  >Join {{item.title}}</nuxt-link>
+                  >Join <span v-if="item.title == 'LGA'">{{localGovtOrigin | formatStateName}}</span>
+                  <span v-else>{{item.title}}</span></nuxt-link>
                 </div>
               </div>
             </div>
@@ -233,7 +234,7 @@
 </template>
 
 <script>
-import avatar from "~/assets/images/avatar.png";
+import avatar from "~/assets/images/avatar.svg";
 // Federal Image backgrounds
 import judiciaryImage from "~/assets/images/judiciary_BG.svg";
 import senateImage from "~/assets/images/senate-BG.svg";
@@ -263,34 +264,36 @@ export default {
   data() {
     return {
       avatar,
+      localGovtResisdence: "",
+      localGovtOrigin: "",
       cards: [
         {
           title: "Judiciary",
           description:
             " We are positively minded Nigerians, committed to unity and to encouraging fairness, just and equitable life.",
           backgroundImage: judiciaryImage,
-          link: "/rooms/judiciary",
+          link: "/rooms/judiciary?group=Vent-The-Steam"
         },
         {
           title: "Executive",
           description:
             " We are positively minded Nigerians, committed to unity and to encouraging fairness, just and equitable life.",
           backgroundImage: executiveImage,
-          link: "/rooms/executive"
+          link: "/rooms/executive?group=Vent-The-Steam"
         },
         {
           title: "Senate",
           description:
             " We are positively minded Nigerians, committed to unity and to encouraging fairness, just and equitable life.",
           backgroundImage: senateImage,
-          link: "/rooms/senate"
+          link: "/rooms/senate?group=Vent-The-Steam"
         },
         {
           title: "House of Reps",
           description:
             " We are positively minded Nigerians, committed to unity and to encouraging fairness, just and equitable life.",
           backgroundImage: repsImage,
-          link: "/rooms/HOR"
+          link: "/rooms/HOR?group=Vent-The-Steam"
         }
       ],
       originCards: [
@@ -299,28 +302,28 @@ export default {
           description:
             " We are positively minded Nigerians, committed to unity and to encouraging fairness, just and equitable life.",
           backgroundImage: originJudiciaryImage,
-          link: "/rooms/judiciary"
+          link: "/rooms/judiciary?group=Vent-The-Steam"
         },
         {
           title: "Executive",
           description:
             " We are positively minded Nigerians, committed to unity and to encouraging fairness, just and equitable life.",
           backgroundImage: originExecutiveImage,
-          link: "/rooms/judiciary"
+          link: "/rooms/executive?group=Vent-The-Steam"
         },
         {
           title: "House of Assembly",
           description:
             " We are positively minded Nigerians, committed to unity and to encouraging fairness, just and equitable life.",
           backgroundImage: originHOAImage,
-          link: "/rooms/judiciary"
+          link: "/rooms/HOA?group=Vent-The-Steam"
         },
         {
-          title: "Gassol",
+          title: "LGA",
           description:
             " We are positively minded Nigerians, committed to unity and to encouraging fairness, just and equitable life.",
           backgroundImage: originLGAImage,
-          link: "/rooms/house-of-representatives"
+          link: "/rooms/LGA?group=Vent-The-Steam"
         }
       ],
       residenceCards: [
@@ -329,28 +332,28 @@ export default {
           description:
             " We are positively minded Nigerians, committed to unity and to encouraging fairness, just and equitable life.",
           backgroundImage: residenceJudiciaryImage,
-          link: "/rooms/judiciary"
+          link: "/rooms/judiciary?group=Vent-The-Steam"
         },
         {
           title: "Executive",
           description:
             " We are positively minded Nigerians, committed to unity and to encouraging fairness, just and equitable life.",
           backgroundImage: residenceExecutiveImage,
-          link: "/rooms/judiciary"
+          link: "/rooms/executive?group=Vent-The-Steam"
         },
         {
           title: "House of Assembly",
           description:
             " We are positively minded Nigerians, committed to unity and to encouraging fairness, just and equitable life.",
           backgroundImage: residenceHOAImage,
-          link: "/rooms/judiciary"
+          link: "/rooms/HOA?group=Vent-The-Steam"
         },
         {
-          title: "Gassol",
+          title: "LGA",
           description:
             " We are positively minded Nigerians, committed to unity and to encouraging fairness, just and equitable life.",
           backgroundImage: residenceLGAImage,
-          link: "/rooms/house-of-representatives"
+          link: "/rooms/LGA?group=Vent-The-Steam"
         }
       ]
     };
@@ -363,29 +366,55 @@ export default {
       let govtw = this.$store.getters["governments"].find(
         govt => self.getUser.stateOfOrigin == govt.id
       );
-      return govtw?govtw.name:'';
+      return govtw ? govtw.name : "";
     },
     stateOfResidence() {
       const self = this;
       let govtw = this.$store.getters["governments"].find(
         govt => self.getUser.stateOfResidence == govt.id
       );
-      return govtw?govtw.name:'';
-
+      return govtw ? govtw.name : "";
     }
   },
   filters: {
     formatStateName(str) {
-      str = str.split(" ");
-      str.pop();
-      return `${str[0].charAt(0).toUpperCase()}${str[0].slice(1)}`;
+      return str
+        .split(" ")
+        .map(word => {
+          return word.charAt(0).toUpperCase() + word.substring(1);
+        })
+        .join(" ");
     }
   },
   methods: {
     ...mapActions("auth", ["logout"]),
+    fetchLGAs(stateID, val) {
+      const self = this;
+      this.$store
+        .dispatch("localGovernments", {
+          stateGovernmentID: stateID
+        })
+        .then(data => {
+          if (data.graphQLErrors) {
+            this.$toast.error(data.graphQLErrors[0].message);
+            this.loadingLGA = false;
+            return;
+          }
+          this[val] = this.getState(data, this.getUser[val], val);
+        })
+        .catch(err => {});
+    },
+    getState(LGAS, id, key) {
+      let lga = LGAS.find(lga => this.getUser[key] == id);
+      return lga ? lga.name : "";
+    },
     logoutUser() {
       this.logout();
     }
+  },
+  mounted() {
+    this.fetchLGAs(this.getUser.stateOfResidence, "localGovtResisdence");
+    this.fetchLGAs(this.getUser.stateOfOrigin, "localGovtOrigin");
   }
 };
 </script>

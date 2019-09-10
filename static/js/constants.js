@@ -3,5 +3,6 @@ export const roomType = {
   senate: 'SENATE',
   executive: 'MINISTRY',
   HOR: 'HOUSE_OF_REPRESENTATIVE',
-  HOA: 'HOUSE_OF_ASSEMBLY'
+  HOA: 'HOUSE_OF_ASSEMBLY',
+  LGA: 'LGA'
 };

@@ -4,7 +4,7 @@ export default {
   fetchComments: gql`
     query fetchComments(
       $cursor: String
-      $limit: Int!
+      $limit: Int
       $skip: Int
       $topicId: ID!
     ) {
@@ -14,17 +14,49 @@ export default {
         skip: $skip
         topicId: $topicId
       ) {
-        Comment {
+        edges {
           _id
           comment
-          topic
-          author
-          reporter
+          author {
+            _id
+            fullName
+            image
+            username
+            image
+          }
+          reporter {
+            _id
+            fullName
+            image
+            username
+            image
+          }
           report
-          replies
+          replies {
+            _id
+            comment
+            author {
+              _id
+              fullName
+              image
+              username
+              image
+            }
+            reporter {
+              _id
+              fullName
+              image
+              username
+              image
+            }
+            report
+            createdAt
+            image
+          }
           reports
-          likes
           reply
+          likes
+          liked
           edited
           reported
           image
@@ -32,7 +64,7 @@ export default {
           updatedAt
           successMessage
         }
-        PageInfo {
+        pageInfo {
           endCursor
           hasNextPage
           totalCount
@@ -40,15 +72,69 @@ export default {
       }
     }
   `,
+  fetchComment: gql`
+    query fetchComment($commentId: ID!) {
+      fetchComment(commentId: $commentId) {
+        _id
+        comment
+        author {
+          _id
+          fullName
+          image
+          username
+          image
+        }
+        reporter {
+          _id
+          fullName
+          image
+          username
+          image
+        }
+        report
+        replies {
+          _id
+          comment
+          author {
+            _id
+            fullName
+            image
+            username
+            image
+          }
+          reporter {
+            _id
+            fullName
+            image
+            username
+            image
+          }
+          report
+          createdAt
+          image
+        }
+        reports
+        reply
+        likes
+        liked
+        edited
+        reported
+        image
+        createdAt
+        updatedAt
+        successMessage
+      }
+    }
+  `,
   createComment: gql`
-    mutation createComment($comment: String!, $topic: ID!, $file: Upload!) {
+    mutation createComment($comment: String!, $topic: ID!, $file: Upload) {
       createComment(comment: $comment, topic: $topic, file: $file) {
         successMessage
       }
     }
   `,
   editComment: gql`
-    mutation createComment($comment: String!, $topic: ID!, $file: Upload!) {
+    mutation createComment($comment: String!, $topic: ID!, $file: Upload) {
       createComment(comment: $comment, topic: $topic, file: $file) {
         successMessage
       }
@@ -62,8 +148,8 @@ export default {
     }
   `,
   replyComment: gql`
-    mutation replyComment($comment: String!, $topic: ID!, $file: Upload!) {
-      replyComment(comment: $comment, topic: $topic, file: $file) {
+    mutation replyComment($comment: String!, $commentId: ID!, $file: Upload) {
+      replyComment(comment: $comment, commentId: $commentId, file: $file) {
         successMessage
       }
     }
@@ -83,7 +169,7 @@ export default {
     }
   `,
   reportComment: gql`
-    mutation reportComment($reportTyp: report, $commentId: ID!) {
+    mutation reportComment($reportType: report, $commentId: ID!) {
       reportComment(commentId: $commentId) {
         successMessage
       }

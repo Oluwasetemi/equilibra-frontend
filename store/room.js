@@ -8,28 +8,25 @@ export default {
       MINISTRY: [],
       COURT: []
     },
-    joinedRooms: []
+    stateRooms: {
+      HOUSE_OF_ASSEMBLY: [],
+      COURT: [],
+      MINISTRY: [],
+      LGA: []
+    }
   }),
 
   getters: {
     federalRooms: state => state.federalRooms,
-    getJoinedRooms: state => state.joinedRooms
+    stateRooms: state => state.stateRooms
   },
 
   mutations: {
     setFederalRooms(state, { roomType, data }) {
       state.federalRooms[roomType] = data;
     },
-    addRoom(state, roomId) {
-      state.joinedRooms.push(roomId);
-    },
-    removeRoom(state, id) {
-      let rooms = state.joinedRooms;
-      rooms.find((roomId, index) => {
-        if (roomId == id) {
-          rooms.splice(index, 1);
-        }
-      });
+    setStateRooms(state, { roomType, data }) {
+      state.stateRooms[roomType] = data;
     }
   },
 
@@ -51,11 +48,38 @@ export default {
           return err;
         });
     },
+    getStateRooms({ commit, rootState }, payload) {
+      return this.app.apolloProvider.defaultClient
+        .query({
+          query: gql.getStateRooms,
+          variables: { roomType: payload },
+          context: {
+            headers: {
+              Authorization: `Bearer ${rootState.auth.token}`
+            }
+          }
+        })
+        .then(({ data }) => {
+          commit('setStateRooms', {
+            data: data.getStateRooms,
+            roomType: payload
+          });
+          return data.getStateRooms;
+        })
+        .catch(err => {
+          return err;
+        });
+    },
     getRoomById({ commit, rootState }, payload) {
       return this.app.apolloProvider.defaultClient
         .query({
           query: gql.getRoomById,
-          variables: { roomId: payload }
+          variables: { roomId: payload },
+          context: {
+            headers: {
+              Authorization: `Bearer ${rootState.auth.token}`
+            }
+          }
         })
         .then(({ data }) => {
           return data.getRoomById;
@@ -73,10 +97,10 @@ export default {
             headers: {
               Authorization: `Bearer ${rootState.auth.token}`
             }
-          }
+          },
+          refetchQueries: ['getMyRooms']
         })
         .then(({ data }) => {
-          commit('addRoom', data.joinRoom._id);
           return data.joinRoom;
         })
         .catch(err => {
@@ -92,10 +116,10 @@ export default {
             headers: {
               Authorization: `Bearer ${rootState.auth.token}`
             }
-          }
+          },
+          refetchQueries: ['getMyRooms']
         })
         .then(({ data }) => {
-          commit('removeRoom', data.leaveRoom._id);
           return data.leaveRoom;
         })
         .catch(err => {

@@ -39,7 +39,10 @@
                         name="new-state"
                         id="new-state"
                         class="form-control mt-0"
+                        @blur="$v.payload.stateOfResidence.$touch()"
+                        :class="{invalid: $v.payload.stateOfResidence.$error}"
                         v-model="payload.stateOfResidence"
+                        :disabled="loading"
                       >
                         <option></option>
                         <option
@@ -53,6 +56,12 @@
                         alt
                         class="position-absolute down-arrow"
                       />
+                      <template v-if="$v.payload.stateOfResidence.$dirty">
+                        <p
+                          v-if="!$v.payload.stateOfResidence.required"
+                          class="invalid"
+                        >This field is required</p>
+                      </template>
                     </div>
                   </div>
                 </div>
@@ -64,7 +73,10 @@
                         name="lga"
                         id="lga"
                         class="form-control mt-0"
+                        @blur="$v.payload.localGovtResidence.$touch()"
+                        :class="{invalid: $v.payload.localGovtResidence.$error}"
                         v-model="payload.localGovtResidence"
+                        :disabled="loading"
                       >
                         <option value></option>
                         <option
@@ -78,6 +90,12 @@
                         alt
                         class="position-absolute down-arrow"
                       />
+                      <template v-if="$v.payload.localGovtResidence.$dirty">
+                        <p
+                          v-if="!$v.payload.localGovtResidence.required"
+                          class="invalid"
+                        >This field is required</p>
+                      </template>
                     </div>
                   </div>
                 </div>
@@ -89,7 +107,10 @@
                         name="fed-constituencies"
                         id="fed-constituencies"
                         class="form-control mt-0"
+                        @blur="$v.payload.residenceFederalConstituency.$touch()"
+                        :class="{invalid: $v.payload.residenceFederalConstituency.$error}"
                         v-model="payload.residenceFederalConstituency"
+                        :disabled="loading"
                       >
                         <option value></option>
                         <option
@@ -103,6 +124,12 @@
                         alt
                         class="position-absolute down-arrow"
                       />
+                      <template v-if="$v.payload.residenceFederalConstituency.$dirty">
+                        <p
+                          v-if="!$v.payload.residenceFederalConstituency.required"
+                          class="invalid"
+                        >This field is required</p>
+                      </template>
                     </div>
                   </div>
                 </div>
@@ -116,7 +143,10 @@
                         name="senatorialDistrict"
                         id="senatorialDistrict"
                         class="form-control mt-0"
+                        @blur="$v.payload.stateOfResidenceSenatorialDistrict.$touch()"
+                        :class="{invalid: $v.payload.stateOfResidenceSenatorialDistrict.$error}"
                         v-model="payload.stateOfResidenceSenatorialDistrict"
+                        :disabled="loading"
                       >
                         <option value></option>
                         <option
@@ -130,6 +160,12 @@
                         alt
                         class="position-absolute down-arrow"
                       />
+                      <template v-if="$v.payload.stateOfResidenceSenatorialDistrict.$dirty">
+                        <p
+                          v-if="!$v.payload.stateOfResidenceSenatorialDistrict.required"
+                          class="invalid"
+                        >This field is required</p>
+                      </template>
                     </div>
                   </div>
                 </div>
@@ -141,7 +177,10 @@
                         name="stateConstituency"
                         id="stateConstituency"
                         class="form-control mt-0"
+                        @blur="$v.payload.residenceStateConstituency.$touch()"
+                        :class="{invalid: $v.payload.residenceStateConstituency.$error}"
                         v-model="payload.residenceStateConstituency"
+                        :disabled="loading"
                       >
                         <option value></option>
                         <option
@@ -155,6 +194,12 @@
                         alt
                         class="position-absolute down-arrow"
                       />
+                      <template v-if="$v.payload.residenceStateConstituency.$dirty">
+                        <p
+                          v-if="!$v.payload.residenceStateConstituency.required"
+                          class="invalid"
+                        >This field is required</p>
+                      </template>
                     </div>
                   </div>
                 </div>
@@ -182,6 +227,7 @@
 </template>
 
 <script>
+import { required } from "vuelidate/lib/validators";
 import { mapGetters, mapActions } from "vuex";
 export default {
   data() {
@@ -199,6 +245,25 @@ export default {
         stateOfResidenceSenatorialDistrict: ""
       }
     };
+  },
+  validations: {
+    payload: {
+      localGovtResidence: {
+        required
+      },
+      stateOfResidence: {
+        required
+      },
+      residenceStateConstituency: {
+        required
+      },
+      residenceFederalConstituency: {
+        required
+      },
+      stateOfResidenceSenatorialDistrict: {
+        required
+      }
+    }
   },
   computed: {
     ...mapGetters("user", ["getUser"]),
@@ -235,6 +300,10 @@ export default {
   methods: {
     ...mapActions("user", ["updateResidence"]),
     updateUserResidence() {
+      this.$v.payload.$touch();
+      if (this.$v.payload.$error === true) {
+        return;
+      }
       this.loading = true;
       const self = this;
       this.updateResidence(this.payload)
@@ -248,6 +317,7 @@ export default {
           this.loading = false;
           self.$toast.success(data.successMessage);
           this.resetForm();
+          this.$v.$reset();
           return;
         })
         .catch(err => {

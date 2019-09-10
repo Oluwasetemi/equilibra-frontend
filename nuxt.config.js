@@ -55,8 +55,9 @@ export default {
     ]
   },
   env: {
-    googleClientID: "769165313432-rq98o9410ntrgg2obvkhl86k82bueoq0.apps.googleusercontent.com",
-    facebookAppID: "2310649132486818"
+    googleClientID:
+      '832023611491-25tvnsvouh2a5rsghbmsuo39f09r7pae.apps.googleusercontent.com',
+    facebookAppID: '2310649132486818'
   },
   /*
    ** Customize the progress-bar color
@@ -73,11 +74,11 @@ export default {
     '~/plugins/',
     { src: '~/plugins/fb-sdk.js', mode: 'client' },
     { src: '~/plugins/vuex-persist', mode: 'client' },
-    {src: '~/plugins/apollo.config.js', mode: 'client'},
-    {src: '~/plugins/apollo-overrides.js', mode: 'client'},
+    { src: '~/plugins/apollo.config.js', mode: 'client' },
+    { src: '~/plugins/apollo-overrides.js', mode: 'client' },
     { src: '~/plugins/vuelidate', mode: 'client' },
     { src: '~/plugins/lazyload', mode: 'client' },
-    { src: '~plugins/filters.js', mode: 'client' },
+    { src: '~plugins/filters.js', mode: 'client' }
   ],
   /*
    ** Nuxt.js modules
@@ -86,7 +87,8 @@ export default {
     // Doc: https://bootstrap-vue.js.org/docs/
     'bootstrap-vue/nuxt',
     '@nuxtjs/apollo',
-    '@nuxtjs/toast'
+    '@nuxtjs/toast',
+    '@nuxtjs/moment'
   ],
 
   axios: {
@@ -104,7 +106,7 @@ export default {
     /*
      ** You can extend webpack config here
      */
-    extend(config, ctx) {},
+    extend(config, ctx) {}
   },
   apollo: {
     clientConfigs: {
@@ -112,7 +114,7 @@ export default {
     }
   },
   toast: {
-    position: 'top-right',
+    position: 'top-center',
     className: 'toast',
     duration: 5000,
     register: [

@@ -1,39 +1,52 @@
 <template>
   <div>
-    <CommentModal />
-    <div class="comments">
-      <div class="d-flex px-2 comment">
-        <figure class="m-0 py-3 pr-1 pl-4 px d-inline-block">
-          <img :src="getUser.image || avatar" alt class="rounded-circle" height="40px" />
-        </figure>
+    <CommentModal
+      :commentId="activeComment ? activeComment._id : null"
+      v-if="openModal"
+      @closeModal="openModal = false"
+    />
 
+    <div class="comments" v-if="fetchComments.edges.length > 0">
+      <div
+        class="d-flex px-2 comment border-bottom"
+        v-for="(comment, i) in fetchComments.edges"
+        :key="i"
+      >
+        <figure class="m-0 py-3 pr-1 pl-4 px d-inline-block">
+          <img
+            :src="comment.author.image || avatar"
+            alt
+            class="rounded-circle avatar"
+            height="40px"
+          />
+        </figure>
         <div class="form-input position-relative d-inline-block px-3" style="flex-grow: 1">
           <div class="comment py-3">
             <div class="user text-left">
-              <span class="username">Joseph Makanaki</span>
+              <span class="username">{{comment.author.username}}</span>
               <div class="d-block d-md-inline">
-                <span class="user-handle pr-2 px-md-2">@Joseph_Makanaki</span>
-                <span class="time-posted">30 mins</span>
+                <span class="user-handle pr-2 px-md-2">@{{comment.author.username}}</span>
+                <span class="time-posted">{{comment.createdAt | formatDate($moment)}}</span>
               </div>
             </div>
             <div class="comment-content mt-2 pr-3">
-              <p class="text-left">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, is sed do eiusmod tempor incididunt
-                ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-              </p>
+              <p class="text-left">{{comment.comment}}</p>
             </div>
+            <div class="comment-image pb-3" v-if="comment.image">
+            <img :src="comment.image" alt="photo content" class="photo-content" />
+          </div>
             <div class="actions mr-2">
-              <a href="#" class="likes" data-toggle="tooltip" title="Like" @click="liked = !liked">
-                <img src="~/assets/icons/like-icon-outline.svg" alt v-if="!liked" />
-                <img src="~/assets/icons/like-icon-red-filled.svg" alt v-if="liked" />
-                <span class="px-1">{{!liked ? 4 : 4+1}}</span>
-              </a>
-              <a href="#" class="replies ml-2" data-toggle="modal" data-target="#commentModal">
+              <likeIcon :commentId="comment._id" :liked="comment.liked" :likes="comment.likes" />
+              <a
+                href="#"
+                class="replies ml-2"
+                data-toggle="modal"
+                data-target="#commentModal"
+                @click="activeComment = comment, openModal = true"
+              >
                 <span data-toggle="tooltip" title="Reply">
                   <img src="~/assets/icons/replies-icon.svg" alt />
-                  <span class="px-1">10</span>
+                  <span class="px-1">{{comment.replies.length}}</span>
                 </span>
               </a>
             </div>
@@ -41,39 +54,149 @@
         </div>
       </div>
     </div>
+
+    <div v-else class="text-center py-5 border-bottom">
+      <div class="spinner-border text-center text-light" v-if="loadingComments"></div>
+      <div v-else>
+          <img src="~/assets/images/no-chat.svg" alt="" style="height: 150px" class="mb-4">
+            <p class="m-0" style="font-size: 24px; color: #737373; font-weight: 600">No ongoing chat</p>
+            <p class="color: #737373;">Be the first to leave a comment</p>
+      </div>
+      
+    </div>
+    <div class="text-center">
+      <div
+        class="spinner-border text-center mt-4"
+        v-if="fetchComments.pageInfo.hasNextPage && loadingMoreComments"
+      ></div>
+    </div>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import avatar from "~/assets/images/avatar.png";
+import likeIcon from "~/components/Rooms/like-icon";
+import gql from "~/apollo/user/comment";
+import avatar from "~/assets/images/avatar.svg";
 import CommentModal from "~/components/Rooms/view-comment-modal";
 import imageUrl from "~/assets/images/judiciary_BG.svg";
 export default {
   layout: "greenNavOnly",
-  props: ["currentRoom"],
+  props: ["currentRoom", "fetchMore"],
   data() {
     return {
       liked: false,
       avatar,
-      imageUrl2: { imageUrl }
+      fetchComments: {
+        edges: [],
+        pageInfo: []
+      },
+      key: 0,
+      openModal: false,
+      activeComment: null,
+      imageUrl2: { imageUrl },
+      loadingComments: false,
+      loadingMoreComments: false
     };
   },
   components: {
-    CommentModal
+    CommentModal,
+    likeIcon
   },
   computed: {
     ...mapGetters("user", ["getUser"]),
-    ...mapGetters("auth", ["isAuthenticated"])
+    ...mapGetters("auth", ["isAuthenticated", "getToken"]),
+    fetchMoreComments() {
+      return this.fetchMore;
+    }
+  },
+  filters: {
+    formatDate(val, moment) {
+      val = new Date(Number(val)).toISOString();
+      return moment(val)
+        .startOf("day")
+        .fromNow();
+    }
+  },
+  watch: {
+    "currentRoom.currentTopic"(val) {
+      if (!val) {
+        this.fetchComments = {
+          edges: [],
+          pageInfo: []
+        };
+        return;
+      }
+      this.fetchRoomComments();
+    },
+    fetchMoreComments(val) {
+      if (val && this.fetchComments.pageInfo.hasNextPage) {
+        this.loadingMoreComments = true;
+        const cursor = this.fetchComments.pageInfo.endCursor;
+        const topicId = this.currentRoom.currentTopic._id;
+        const self = this;
+        this.$apollo.queries.fetchComments.fetchMore({
+          variables: {
+            cursor
+          },
+          context: {
+            headers: {
+              Authorization: `Bearer ${self.getToken}`
+            }
+          },
+          updateQuery: (previousResult, { fetchMoreResult }) => {
+            this.$emit("fetchedMore");
+            this.loadingMoreComments = false;
+            const newComments = fetchMoreResult.fetchComments.edges;
+            const oldComments = previousResult.fetchComments.edges;
+            return newComments.length
+              ? {
+                  fetchComments: {
+                    __typename: previousResult.fetchComments.__typename,
+                    // Merging the tag list
+                    edges: [...oldComments, ...newComments],
+                    pageInfo: fetchMoreResult.fetchComments.pageInfo
+                  }
+                }
+              : previousResult;
+          }
+        });
+        this.$emit("fetchedMore");
+      }
+    }
   },
   methods: {
-    ...mapActions("auth", ["checkAuthStatus"]),
+    fetchRoomComments() {
+      this.$apollo.addSmartQuery("fetchComments", {
+        query: gql.fetchComments,
+        variables: {
+          limit: 10,
+          topicId: this.currentRoom.currentTopic._id
+        },
+        context: {
+          headers: {
+            Authorization: `Bearer ${this.getToken}`
+          }
+        },
+        watchLoading(isLoading, countModifier) {
+          isLoading
+            ? (this.loadingComments = true)
+            : (this.loadingComments = false);
+        }
+      });
+    },
     showModal(val) {
       if (!this.isAuthenticated) {
         this.$router.push("/login");
         return;
       }
+      this.openModal = true;
       $(val).modal("show");
+    }
+  },
+  mounted() {
+    if (this.currentRoom.currentTopic) {
+      this.fetchRoomComments();
     }
   }
 };
@@ -92,6 +215,18 @@ export default {
 </style>
 
 <style scoped>
+.avatar {
+  height: 40px;
+  width: 40px;
+  object-fit: cover;
+}
+
+img.photo-content {
+  /* width: 100%; */
+  /* object-fit: contain; */
+  height: 100px;
+}
+
 .timer {
   font-size: 9px;
   border: 1px solid white;

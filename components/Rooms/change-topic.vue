@@ -15,7 +15,11 @@
           <h4 class="text-center py-3 m-0">CHANGE TOPIC</h4>
         </div>
         <div class="p-4">
-          <p class="current-topic text-center">
+          <p class="current-topic text-center" v-if="!hasTopic">
+            This room has no topic.
+            <br />Create a new topic to begin a conversation
+          </p>
+          <p class="current-topic text-center" v-else>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit,
             is sed do eiusmod tempor inci did is unt ut labore et dolore magna aliqua um dolor sit ame.
           </p>
@@ -61,7 +65,7 @@
 import { mapActions, mapGetters } from "vuex";
 import { required, minLength } from "vuelidate/lib/validators";
 export default {
-  props: ["currentRoom"],
+  props: ["currentRoom", "hasTopic"],
   data() {
     return {
       loading: false,
@@ -95,7 +99,7 @@ export default {
             title: "",
             description: ""
           };
-          $('#changeTopic').modal('toggle');
+          $("#changeTopic").modal("toggle");
           if (data.graphQLErrors) {
             this.$toast.error(data.graphQLErrors[0].message);
             return;

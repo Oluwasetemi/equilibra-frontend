@@ -1,8 +1,10 @@
 <template>
   <div class="input-comment border-bottom pb-3 pb-md-0">
+    <joinRoomModal :roomId="currentRoom._id" @joinedRoom="postComment(true)" />
+    <ChangeTopicModal :currentRoom="currentRoom" :hasTopic="false" />
     <div class="d-flex align-items-center px-2">
       <figure class="m-0 d-flex align-items-center pr-2 pl-3 px d-inline-block">
-        <img :src="getUser.image || avatar" alt class="rounded-circle" height="40px" />
+        <img :src="getUser.image || avatar" alt class="rounded-circle avatar" height="40px" />
       </figure>
       <form
         autocomplete="off"
@@ -11,61 +13,153 @@
         @submit.prevent="postComment()"
       >
         <div class="form-input position-relative d-inline-block px-3" style="flex-grow: 1">
-          <input type="text" name="comment" id="comment" class="w-100 form-control" v-model="payload.comment"/>
-          <img src alt class="position-absolute" />
+          <input
+            type="text"
+            name="comment"
+            id="comment"
+            class="w-100 form-control"
+            v-model="payload.comment"
+          />
+          <label for="photo" class="m-0 add-photo d-inline-flex">
+            <span class="add-photo-icon mt-2 pt-1"></span>
+            <input
+              type="file"
+              name="photo"
+              id="photo"
+              accept="image/*"
+              @change="previewImage()"
+              hidden
+            />
+          </label>
         </div>
         <div class="px-2" style="flex: 0 0 140px">
-          <button class="post" type="submit" :disabled="!payload.comment">Post</button>
+          <button
+            class="post d-flex align-items-center justify-content-center"
+            type="submit"
+            :disabled="(!payload.comment && !imageContent) || loading"
+          >
+            <div
+              class="spinner-grow"
+              style="color: green !important;"
+              v-if="loading"
+            ></div>
+            <span>Post</span>
+          </button>
         </div>
       </form>
+    </div>
+    <div class="text-center" :class="{'position-absolute': !imageContent}">
+      <figure class="position-relative d-inline-block px-5">
+        <a href="#" class="close" @click="removeImage()" v-if="imageContent">
+          <span>&times;</span>
+        </a>
+        <img ref="imageContent" src alt height="340px" class="pb-4" style="max-width: 100%" />
+      </figure>
     </div>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import avatar from "~/assets/images/avatar.png";
+import avatar from "~/assets/images/avatar.svg";
+import joinRoomModal from "~/components/Rooms/join-room-modal";
+import ChangeTopicModal from "~/components/Rooms/change-topic";
 import imageUrl from "~/assets/images/judiciary_BG.svg";
 export default {
-  props: ["currentRoom"],
+  props: ["currentRoom", "isMyRoom"],
   data() {
     return {
+      loading: false,
       avatar,
       imageUrl2: { imageUrl },
       payload: {
-          comment: ''
-      }
+        comment: ""
+      },
+      file: "",
+      imageContent: false
     };
   },
   computed: {
     ...mapGetters("user", ["getUser"]),
     ...mapGetters("auth", ["isAuthenticated"])
   },
+  components: {
+    joinRoomModal,
+    ChangeTopicModal
+  },
   methods: {
-    showModal(val) {
+    ...mapActions("comment", ["createComment"]),
+    removeImage() {
+      this.imageContent = false;
+      this.file = "";
+      this.$refs.imageContent.src = "";
+    },
+    previewImage() {
+      this.file = event.target.files[0];
+      const reader = new FileReader();
+      reader.readAsDataURL(this.file);
+      reader.onload = e => {
+        this.imageContent = true;
+        this.$refs.imageContent.src = e.target.result;
+      };
+    },
+    postComment(joinedRoom = false) {
       if (!this.isAuthenticated) {
-        this.$router.push("/login");
+        $("#signUpModal").modal("show");
         return;
       }
-      $(val).modal("show");
+      if (!this.isMyRoom && !joinedRoom) {
+        $("#joinRoomModal").modal("show");
+        return;
+      }
+      if (!this.currentRoom.currentTopic) {
+        $("#changeTopic").modal("show");
+        return;
+      }
+      this.payload.topic = this.currentRoom.currentTopic._id;
+      if (this.file) this.payload.file = this.file;
+      this.loading = true;
+      this.createComment(this.payload)
+        .then(data => {
+          this.loading = false;
+          if (data.graphQLErrors) {
+            this.$toast.error(data.graphQLErrors[0].message);
+            return;
+          }
+          this.payload.comment = "";
+          this.removeImage();
+          this.$toast.success("Your comment has been posted");
+          this.$eventBus.$emit("fetchComments");
+        })
+        .catch(err => {
+          this.loading = true;
+        });
     }
   }
 };
 </script>
 
 
-
-<style>
-.modal-backdrop.show {
-  opacity: 0.3;
-}
-.modal-backdrop {
-  background: #171725;
-  opacity: 0.3;
-}
-</style>
-
 <style scoped>
+a.close {
+  border: solid 2px #07834e;
+  border-radius: 50%;
+  height: 25px;
+  width: 27px;
+  font-weight: 200;
+  position: absolute;
+  right: -10px;
+}
+
+.close span {
+  color: #07834e;
+  font-weight: 100;
+}
+.avatar {
+  height: 40px;
+  width: 40px;
+  object-fit: cover;
+}
 .timer {
   font-size: 9px;
   border: 1px solid white;
@@ -191,6 +285,20 @@ button.post {
 a {
   color: inherit;
   text-decoration: none;
+}
+
+.add-photo-icon {
+  mask: url("~assets/icons/add-photo.svg");
+  mask-size: cover;
+  background-color: #9fa3a3;
+  width: 22px;
+  height: 18px;
+}
+
+label.add-photo {
+  position: absolute;
+  top: 29%;
+  right: 35px;
 }
 @media (min-width: 992px) {
   .forum-container {

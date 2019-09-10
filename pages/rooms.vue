@@ -1,5 +1,6 @@
 <template>
   <div class="container pr-0 px-0">
+    <loginModal />
     <div class="px-md-3 px-0">
       <div class="row no-gutters flex-row flex-lg-nowrap justify-content-between">
         <div class="px-3 card-container d-lg-block d-none py-4 scrollable">
@@ -17,21 +18,22 @@
                   <a
                     v-else
                     href="#"
-                    v-for="(room, i) in federalRooms[roomType[$route.params.id]]"
+                    v-for="(room, i) in rooms"
                     :key="i"
-                    :title="room.name"
-                    @click="currentRoom = room"
+                    :title="room.name | formatText"
+                    @click="setRoom(room)"
                   >
                     <li
                       class="px-4 border-bottom d-flex align-items-center justify-content-between"
                       :class="{selected: currentRoom.slug == room.slug}"
                     >
-                      <span>{{room.name}}</span>
+                      <span class="room-name">{{room.name | formatText}}</span>
                       <div
-                        class="join-status d-inline-flex align-items-center justify-content-between"
-                        @click="isRoomMember(room) ? leaveRoomForum(room) : joinRoomForum(room) "
+                        class="join-status align-items-center justify-content-between"
+                        @click="checkRoomStatus(room)"
                       >
-                        <span>{{isRoomMember(room) ? 'Leave' : 'Join'}}</span>
+                        <!-- this.myRooms.some(myRoom => myRoom._id == room._id) -->
+                        <span>{{getMyRooms && getMyRooms.some(myRoom => myRoom._id == room._id) ? 'Leave' : 'Join'}}</span>
                         <span class="chat-icon"></span>
                       </div>
                     </li>
@@ -41,7 +43,7 @@
             </div>
           </aside>
         </div>
-        <nuxt-child :currentRoom="currentRoom" />
+        <nuxt-child :currentRoom="currentRoom" :isMyRoom="isMyRoom(currentRoom)" />
       </div>
     </div>
   </div>
@@ -50,28 +52,78 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import { roomType } from "~/static/js/constants";
+import gql from "~/apollo/user/room";
 import imageUrl from "~/assets/images/judiciary_BG.svg";
 import Card from "~/components/Forums/forum-card";
+import loginModal from "~/components/Authentication/sign-up";
 export default {
   layout: "greenNavOnly",
+  validate({ route, query, redirect }) {
+    if (!query.group) {
+      redirect(`${route.path}?group=Vent-The-Steam`);
+    }
+    return true;
+  },
   data() {
     return {
       imageUrl2: { imageUrl },
       roomType,
       loading: true,
-      currentRoom: { slug: "Vent-The-Steam" }
+      getMyRooms: [],
+      currentRoom: { slug: "Vent-The-Steam", currentTopic: null }
     };
   },
   components: {
-    Card
+    Card,
+    loginModal
   },
   computed: {
-    ...mapGetters("room", ["federalRooms", "getJoinedRooms"])
+    ...mapGetters("room", ["federalRooms", "stateRooms"]),
+    ...mapGetters("auth", ["isAuthenticated", "getToken"]),
+    rooms() {
+      return this.$route.query.state
+        ? this.stateRooms[this.roomType[this.$route.params.id]]
+        : this.federalRooms[this.roomType[this.$route.params.id]];
+    }
+  },
+  filters: {
+    formatText(val) {
+      return val
+        .split(" ")
+        .map(word => {
+          return word.charAt(0).toUpperCase() + word.substring(1).toLowerCase();
+        })
+        .join(" ");
+    }
   },
   methods: {
-    ...mapActions("room", ["getFederalRooms", "joinRoom", "leaveRoom"]),
-    ...mapActions("auth", ["checkAuthStatus"]),
-    getRooms() {
+    ...mapActions("room", [
+      "getFederalRooms",
+      "getStateRooms",
+      "joinRoom",
+      "leaveRoom"
+    ]),
+    checkRoomStatus(room) {
+      this.isMyRoom(room)
+        ? this.leaveRoomForum(room)
+        : this.joinRoomForum(room);
+    },
+    setRoom(room) {
+      this.currentRoom = room;
+      this.$router.push({ query: { group: room.slug } });
+    },
+    getAllMyRooms() {
+      this.$apollo.addSmartQuery("getMyRooms", {
+        query: gql.getMyRooms,
+        variables: { roomType: this.roomType[this.$route.params.id] },
+        context: {
+          headers: {
+            Authorization: `Bearer ${this.getToken}`
+          }
+        }
+      });
+    },
+    getFedRooms() {
       let self = this;
       this.getFederalRooms(this.roomType[self.$route.params.id])
         .then(data => {
@@ -80,13 +132,36 @@ export default {
             this.$toast.error(data.graphQLErrors[0].message);
             return;
           }
-          this.currentRoom = this.federalRooms[
-            this.roomType[this.$route.params.id][0]
+          const fedRooms = this.federalRooms[
+            this.roomType[this.$route.params.id]
           ];
-          console.log(
-            (this.currentRoom = this.federalRooms[
-              this.roomType[this.$route.params.id]
-            ][0])
+          this.currentRoom = fedRooms.find(
+            room => room.slug == this.$route.query.group
+          );
+        })
+        .catch(err => {
+          this.loading = false;
+        });
+    },
+    getStateRooms_() {
+      let self = this;
+      const payload = {
+        roomType: this.roomType[self.$route.params.id],
+        isOrigin: this.$route.query.state
+      };
+      this.getStateRooms(this.roomType[self.$route.params.id])
+        .then(data => {
+          this.loading = false;
+          console.log(data)
+          if (data.graphQLErrors) {
+            this.$toast.error(data.graphQLErrors[0].message);
+            return;
+          }
+          const stateRooms = this.stateRooms[
+            this.roomType[this.$route.params.id]
+          ];
+          this.currentRoom = stateRooms.find(
+            room => room.slug == this.$route.query.group
           );
         })
         .catch(err => {
@@ -94,20 +169,23 @@ export default {
         });
     },
     joinRoomForum(room) {
-      this.checkAuthStatus();
-      this.currentRoom = room;
+      if (!this.isAuthenticated) {
+        $("#signUpModal").modal("show");
+        return;
+      }
+      this.setRoom(room);
       this.joinRoom(this.currentRoom._id)
         .then(data => {
           if (data.graphQLErrors) {
             this.$toast.error(data.graphQLErrors[0].message);
             return;
           }
-          this.$toast.success("You have successfully joined the conversation!");
+          this.$toast.success("You have now joined this conversation!");
         })
         .catch(err => {});
     },
     leaveRoomForum(room) {
-      this.currentRoom = room;
+      this.setRoom(room);
       this.leaveRoom(this.currentRoom._id)
         .then(data => {
           if (data.graphQLErrors) {
@@ -118,12 +196,22 @@ export default {
         })
         .catch(err => {});
     },
-    isRoomMember(room) {
-      return this.getJoinedRooms.some(roomId => roomId == room._id);
+    isMyRoom(room) {
+      if (!this.getMyRooms) {
+        return false;
+      }
+      return this.getMyRooms.some(myRoom => myRoom._id == room._id);
     }
   },
   mounted() {
-    this.getRooms();
+    if (this.isAuthenticated) {
+      this.getAllMyRooms();
+    }
+    if (this.$route.query.state) {
+      this.getStateRooms_();
+      return;
+    }
+    this.getFedRooms();
   }
 };
 </script>
@@ -139,7 +227,7 @@ export default {
   background: white;
   color: #07834e;
   padding: 5px 13px;
-  opacity: 0;
+  display: none;
   border: solid 1px #07834e;
   width: 80px;
   border-radius: 2px;
@@ -149,15 +237,15 @@ export default {
 
 li.selected .join-status {
   border: solid 1px white;
-  opacity: 1;
+  display: inline-flex;
 }
 
 li.selected:hover > .join-status {
-  opacity: 1;
+  display: inline-flex;
 }
 
 li:hover > .join-status {
-  opacity: 1;
+  display: inline-flex;
 }
 
 li .join-status:hover {
@@ -182,6 +270,14 @@ div.group-list {
 a li {
   height: 55px;
 }
+
+a li:hover .room-name {
+  width: 70%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .scrollable {
   overflow-y: scroll;
   max-height: calc(100vh - 80px);
