@@ -5,12 +5,14 @@ import gql from '~/apollo/admin';
 import ApolloCacheUpdater from "apollo-cache-updater";
 const state = () => ({
       sub: {
-        governments: []
+        governments: [],
+        categories: [],
       }
   })
   
   const getters = {
-    governments: state=> state.sub.governments
+    governments: state=> state.sub.governments,
+    categories: state=> state.sub.categories,
   }
   
   const actions = {
@@ -19,7 +21,7 @@ const state = () => ({
       return this.app.apolloProvider.defaultClient
       .query({
         query: gql.Data.allGovts,
-        variables: {first: payload.limit, start: payload.skip},
+        variables: {first: payload.limit, start: payload.skip, slug: payload.slug},
         context: {
           headers: {
             Authorization: `Bearer ${rootState.admin.sub.token}`
@@ -27,8 +29,27 @@ const state = () => ({
         }
       })
       .then(({ data }) => {      
-          commit('setGovts', data.governments);
-          return data.governments;
+          commit('setGovts', data.allGovernmentBasedOnCategory);
+          return data.allGovernmentBasedOnCategory;
+        })
+        .catch(err => {
+          return err;
+        });
+    },
+
+    getStateGovts({ commit, state, rootState }, payload){
+      return this.app.apolloProvider.defaultClient
+      .query({
+        query: gql.Data.allGovts,
+        variables: {slug: payload.slug},
+        context: {
+          headers: {
+            Authorization: `Bearer ${rootState.admin.sub.token}`
+          }
+        }
+      })
+      .then(({ data }) => {      
+          return data.allGovernmentBasedOnCategory;
         })
         .catch(err => {
           return err;
@@ -55,7 +76,25 @@ const state = () => ({
         });
     },
 
-    
+    getCats({ commit, state, rootState }, payload){
+      return this.app.apolloProvider.defaultClient
+      .query({
+        query: gql.Data.allCats,
+        variables: {},
+        context: {
+          headers: {
+            Authorization: `Bearer ${rootState.admin.sub.token}`
+          }
+        }
+      })
+      .then(({ data }) => {      
+          commit('setCategories', data.categories);
+          return data.categories;
+        })
+        .catch(err => {
+          return err;
+        });
+    },
     // create a user of type ADMIN
     createAdmin({ commit, state }, payload){
       return this.app.apolloProvider.defaultClient
@@ -85,6 +124,9 @@ const state = () => ({
      
     setGovts(state, payload){
       state.sub.governments = payload;
+    },
+    setCategories(state, payload){
+      state.sub.categories = payload;
     },
     resetState(state) {
       state = {

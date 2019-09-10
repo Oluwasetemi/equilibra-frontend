@@ -317,7 +317,7 @@ const state = () => ({
     setTopics(state, payload){
       state.sub.topics = payload;
     },
-    setRooms(state, payload){
+    setRooms(state, payload){ 
       state.sub.rooms = payload;
     },
     setReports(state, payload){

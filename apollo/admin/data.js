@@ -2,8 +2,8 @@ import gql from 'graphql-tag'
 
 export default {
   
-  allGovts: gql `query governments($start: Int, $first: Int){
-    governments(start: $start, first: $first){
+  allGovts: gql `query allGovernmentBasedOnCategory($start: Int, $first: Int, $slug: categoryEnum!){
+    allGovernmentBasedOnCategory(start: $start, first: $first, slug: $slug){
       id
       name
       slogan
@@ -26,6 +26,14 @@ export default {
       _id
       name
       
+    }
+  }`,
+
+  allCats: gql `query categories{
+    categories{
+      id
+      name
+      slug
     }
   }`,
 
