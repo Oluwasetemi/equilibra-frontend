@@ -110,6 +110,8 @@ export default {
             image
           }
           report
+          likes
+          liked
           createdAt
           image
         }
@@ -170,7 +172,7 @@ export default {
   `,
   reportComment: gql`
     mutation reportComment($reportType: report, $commentId: ID!) {
-      reportComment(commentId: $commentId) {
+      reportComment(reportType: $reportType, commentId: $commentId) {
         successMessage
       }
     }

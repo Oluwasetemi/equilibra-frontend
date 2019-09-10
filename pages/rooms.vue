@@ -11,7 +11,7 @@
                 <li class="header font-weight-bold p-3 border-bottom">Groups</li>
                 <div class="group-list">
                   <div class="text-center loader" v-if="loading">
-                    <div class="spinner-border text-light" role="status">
+                    <div class="spinner-border" role="status">
                       <span class="sr-only">Loading...</span>
                     </div>
                   </div>

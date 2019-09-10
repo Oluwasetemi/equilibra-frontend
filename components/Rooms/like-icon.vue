@@ -8,7 +8,7 @@
   >
     <img src="~/assets/icons/like-icon-outline.svg" alt v-if="!liked" />
     <img src="~/assets/icons/like-icon-red-filled.svg" alt v-else />
-    <span class="px-1">{{likes}}</span>
+    <span class="px-1" style="position: relative;top: 1px;" v-if="!hideCount">{{likes}}</span>
   </a>
 </template>
 
@@ -16,7 +16,19 @@
 <script>
 import { mapActions } from "vuex";
 export default {
-  props: ["commentId", "liked", "likes"],
+  props: ["commentId", "liked", "likes", "hideCount", "toggleLike"],
+  computed: {
+    toggleLike_(val) {
+      return this.toggleLike;
+    }
+  },
+  watch: {
+    "toggleLike_.count"(val) {
+      if (val && this.toggleLike.id == this.commentId) {
+        this.liked ? this.UnlikeComment() : this.LikeComment();
+      }
+    }
+  },
   methods: {
     ...mapActions("comment", ["likeComment", "unLikeComment"]),
     LikeComment() {
@@ -26,7 +38,6 @@ export default {
             this.$toast.error(data.graphQLErrors[0].message);
             return;
           }
-        //   this.$eventBus("reRender");
         })
         .catch(err => {});
     },
@@ -37,7 +48,6 @@ export default {
             this.$toast.error(data.graphQLErrors[0].message);
             return;
           }
-        //   this.$eventBus.$emit("reRender");
         })
         .catch(err => {});
     }
