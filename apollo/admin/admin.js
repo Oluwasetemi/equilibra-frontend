@@ -18,6 +18,25 @@ export default {
     }
   }`,
 
+  allGovernments: gql `query allGovernmentBasedOnCategory($slug: categoryEnum!){
+    allGovernmentBasedOnCategory(slug: $slug){
+      id
+      name
+      slogan
+      description
+      leader
+      cjn
+      senatePresident
+      speaker
+      totalLg
+      population
+      totalConstituency
+      infantMortalityRate
+      literacyRate
+      unemploymentRat
+    }
+  }`,
+
   allReports: gql `query fetchReportedComments{
     fetchReportedComments{
       comment
@@ -44,13 +63,17 @@ export default {
     }
   }`,
 
-  allTopics: gql `query fetchTopics($limit: Int, $skip: Int){
-    fetchTopics(limit: $limit, skip: $skip){
+  allTopics: gql `query fetchTopics($query: topicFilter, $limit: Int, $skip: Int){
+    fetchTopics(query: $query, limit: $limit, skip: $skip){
       edges {
         _id
         title
         closeDate
         startDate
+        description
+        rooms {
+          _id
+        }
         isClosed
         createdBy {
           fullName
@@ -62,6 +85,8 @@ export default {
       }
     }
   }`,
+
+
 
   allRooms: gql `query fetchRooms($cursor: String, $limit: Int, $skip: Int){
     fetchRooms(cursor: $cursor, limit: $limit, skip: $skip){
@@ -78,10 +103,27 @@ export default {
     }
   }`,
 
-  createTopic: gql `mutation createTopic($topic: topicInputType!) {
-    createTopic(topic: $topic) {
+  createTopic: gql `mutation scheduleTopic($topic: topicInputType!) {
+    scheduleTopic(topic: $topic) {
       _id
       title
+      rooms {
+        _id
+      }
+      description
+      isClosed
+      startDate
+      createdBy {
+        _id
+      }
+    }
+  }`,
+
+  updateTopic: gql `mutation updateTopic($topic: topicInputType!, $topicId: darangiGraphId!) {
+    updateTopic(topic: $topic, topicId: $topicId) {
+      _id
+      title
+      rooms
       closeDate
       startDate
       isClosed
@@ -89,6 +131,12 @@ export default {
         _id
       }
     }
+  }`,
+
+  deleteTopic: gql `mutation deleteTopic($topicId: darangiGraphId!) {
+	  deleteTopic(topicId: $topicId) {
+      successMessage
+	  }
   }`,
 
   create: gql `mutation createAdmin($adminInput: createAdmin!) {
@@ -142,6 +190,7 @@ export default {
         author{
          fullName
           username
+          image
           _id
         }
       }
