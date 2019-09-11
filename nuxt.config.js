@@ -57,7 +57,7 @@ export default {
   env: {
     googleClientID:
       '832023611491-25tvnsvouh2a5rsghbmsuo39f09r7pae.apps.googleusercontent.com',
-    facebookAppID: '2310649132486818'
+    facebookAppID: '2419999161601918'
   },
   /*
    ** Customize the progress-bar color
