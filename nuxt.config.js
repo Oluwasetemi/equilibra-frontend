@@ -51,7 +51,7 @@ export default {
       {
         src: 'https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js',
         type: 'text/javascript'
-      }
+      },
     ]
   },
   env: {
@@ -72,7 +72,7 @@ export default {
    */
   plugins: [
     '~/plugins/',
-    { src: '~/plugins/fb-sdk.js', mode: 'client' },
+    // { src: '~/plugins/fb-sdk.js', mode: 'client' },
     { src: '~/plugins/vuex-persist', mode: 'client' },
     { src: '~/plugins/apollo.config.js', mode: 'client' },
     { src: '~/plugins/apollo-overrides.js', mode: 'client' },
@@ -88,7 +88,8 @@ export default {
     'bootstrap-vue/nuxt',
     '@nuxtjs/apollo',
     '@nuxtjs/toast',
-    '@nuxtjs/moment'
+    '@nuxtjs/moment',
+    '@nuxtjs/auth'
   ],
 
   axios: {
@@ -98,6 +99,15 @@ export default {
   bootstrapVue: {
     bootstrapCSS: true,
     bootstrapVueCSS: false
+  },
+  auth: {
+    strategies: {
+      facebook: {
+        client_id: '2419999161601918',
+        userinfo_endpoint: 'https://graph.facebook.com/v2.12/me?fields=about,name,picture{url},email,birthday',
+        scope: ['public_profile', 'email', 'user_birthday']
+      },
+    }
   },
   /*
    ** Build configuration

@@ -25,10 +25,11 @@ vue_fb.install = function install(Vue, options) {
 import Vue from 'vue';
 // if (process.client) {
 Vue.use(vue_fb, {
-  appId: '2310649132486818',
+  appId: '2419999161601918',
+  // 2310649132486818
   autoLogAppEvents: true,
   xfbml: true,
-  version: 'v2.9'
+  version: 'v4.0'
 });
 
 export default ({ app }, inject) => {
