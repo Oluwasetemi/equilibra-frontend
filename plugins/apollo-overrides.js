@@ -2,7 +2,7 @@
 export default ({ app }, inject) => {
     app.apolloProvider.defaultOptions = {
       $query: {
-        fetchPolicy: 'no-cache'
+        fetchPolicy: 'cache-and-network'
       }
     }
   }
