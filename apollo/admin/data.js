@@ -37,6 +37,12 @@ export default {
     }
   }`,
 
+  createGovt: gql `mutation updateGovernment($id: ID!, $governmentInput: governmentInput!) {
+    updateGovernment(id: $id, governmentInput: $governmentInput) {
+     id
+    }
+  }`,
+
   
 
   suspend: gql `mutation suspendAdmin($adminId: ID!) {

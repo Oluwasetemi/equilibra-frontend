@@ -56,6 +56,27 @@ const state = () => ({
         });
     },
 
+    createGovt({ commit, state, rootState }, payload){
+      let id = payload.id;
+      delete payload.id;
+      return this.app.apolloProvider.defaultClient
+      .mutate({
+        mutation: gql.Data.createGovt,
+        variables: {id: id, governmentInput: payload},
+        context: {
+          headers: {
+            Authorization: `Bearer ${rootState.admin.sub.token}`
+          }
+        }
+      })
+      .then(({ data }) => {      
+          return data.createGovernment;
+        })
+        .catch(err => {
+          return err;
+        });
+    },
+
     getAllHOA({ commit, state, rootState }, payload){
       return this.app.apolloProvider.defaultClient
       .query({
