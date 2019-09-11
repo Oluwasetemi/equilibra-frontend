@@ -2,8 +2,8 @@ import gql from 'graphql-tag';
 
 export default {
   governments: gql`
-    query allGovernmentBasedOnCategory($slug: categoryEnum!) {
-      allGovernmentBasedOnCategory(slug: $slug) {
+    query allGovernmentBasedOnCategory($slug: categoryEnum!, $first: Int, $start: Int) {
+      allGovernmentBasedOnCategory(slug: $slug, first: $first, start: $start) {
         id
         name
         category
