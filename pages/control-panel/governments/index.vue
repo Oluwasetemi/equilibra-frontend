@@ -37,9 +37,6 @@
                     <img src="~/assets/images/total-insurance-icon.svg" alt />
                     <div class="title ml-3 pt-4 font-weight-bold">Created Governments</div>
                   </div>
-                  <button class="add-btn" @click="openNewTopic()">
-                    <i class="ft-plus"></i>
-                  </button>
                 </figure>
                 <figure class="d-flex justify-content-between position-relative">
                   <div class="d-flex position-relative">
@@ -62,25 +59,16 @@
                 >
                   <div class="d-flex position-relative">
                     <img src="~/assets/images/total-insurance-icon.svg" alt />
-                    <div>
+                    <div style="text-transform: capitalize;">
                       <div class="title ml-3 pt-4">{{govt.name}}</div>
-                      <small class="ml-3">{{govt.description}}</small>
+                      <small class="ml-3">{{govt.leader}}</small>
                     </div>
                   </div>
                   <div>
-                    <button class="add-btn" @click="delete_admin(govt.id)" :disabled="loading">
-                      <i class="ft-trash-2" v-if="!loading"></i>
+                    <button class="add-btn active" @click="edit_govt(govt)" :disabled="loading">
+                      <i class="el-icon-edit" v-if="!loading"></i>
                       <span v-else class="spinner-grow"></span>
                     </button>
-                    <!-- <button
-                      class="add-btn"
-                      :class="admin.isSuspended?'suspended':'active'"
-                      @click="suspend_admin(admin._id, admin.isSuspended)"
-                      :disabled="loading"
-                    >
-                      <i :class="!admin.isSuspended?'ft-user-x':'ft-user-check'" v-if="!loading"></i>
-                      <span v-else class="spinner-grow"></span>
-                    </button> -->
                   </div>
                 </figure>
                 <div class="text-center">
@@ -99,48 +87,157 @@
         </div>
 
         <!-- d-flex justify-content-between position-relative -->
-        <div class="col-md-7 row ml-lg-3" style="padding-right: 0px !important;" v-if="isNewActive">
+        <div class="col-md-7 row ml-lg-3" style="padding-right: 0px !important;" v-if="isUpdate">
           <div class="col-12 col-md-12" style="padding-right: 0px !important;">
             <div class="position-relative card-with-shadow pb-4">
               <div class="card text-left p-3 card4">
                 <figure class="d-flex justify-content-between position-relative">
                   <div class="d-flex position-relative">
                     <img src="~/assets/images/total-insurance-icon.svg" alt />
-                    <div class="title ml-3 pt-4">Create New Government</div>
+                    <div class="title ml-3 pt-4">Modify Government</div>
                   </div>
                   <button class="add-btn" @click="closeNewTopic()">
                     <i class="ft-x"></i>
                   </button>
                 </figure>
 
-                <form @submit.prevent="submitNewAdmin">
-                  <div class="form-group pt-3">
-                    <label for="title">Government Category</label>
-                    <input
-                      type="text"
-                      @focus="errorMessage=''"
-                      id="title"
-                      :class="{invalid: $v.govtPayload.categoryID.$error || errorMessage}"
-                      @blur="$v.govtPayload.categoryID.$touch()"
-                      class="form-control"
-                      v-model="govtPayload.categoryID"
-                      placeholder="Admin First Name"
-                    />
-                    <template v-if="$v.govtPayload.categoryID.$dirty">
-                      <p
-                        v-if="!$v.govtPayload.categoryID.required"
-                        class="invalid"
-                      >This field is required</p>
-                      <p
-                        v-else-if="!$v.govtPayload.categoryID.minLength"
-                        class="invalid"
-                      >Full Name should not be less than 5 characters</p>
-                    </template>
-                    <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
-                  </div>
+                <form @submit.prevent="submitGovt" v-if="isUpdate">
+                  <div class="row">
+                    <div class="col-12">
+                      <p><b>Basic Information</b></p>
+                      <hr>
+                    </div>
+                    <div class="form-group pt-3 col-12 col-md-6">
+                      <label for="title">Government Name</label>
+                      <el-input class="w-100" v-model="govtPayload.name">
+                      </el-input>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+                    <div class="form-group pt-3 col-12 col-md-6">
+                      <label for="title">Government Category</label>
+                      <el-select style="text-transform: capitalize;" class="w-100" v-model="govtPayload.category" @change="changedCategory">
+                        <el-option style="text-transform: capitalize;" v-for="(item, i) in categories" :value="item.id" :key="i" :label="item.name.toUpperCase()">
+                        </el-option>
+                      </el-select>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+                    <div class="form-group pt-3 col-12 col-md-6">
+                      <label for="title">Government Slogan</label>
+                      <el-input class="w-100" v-model="govtPayload.slogan">
+                      </el-input>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+                    <div class="form-group pt-3 col-12 col-md-6" v-if="viewStateGovt">
+                      <label for="title">State Government</label>
+                      <el-select class="w-100" v-model="govtPayload.stateGovernment">
+                        <el-option v-for="(govt, i) in stateGovts" :key="i" :label="govt.name" :value="govt.id">
 
+                        </el-option>
+                      </el-select>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+                    <div class="form-group pt-3 col-12 col-md-12">
+                      <label for="title">Government Description</label>
+                      <el-input type="textarea" rows="7" class="w-100"  v-model="govtPayload.description">
+                      </el-input>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+
+                  </div>
                   <div class="form-group pt-3">
-                    <button type="submit">Save</button>
+                    <el-button :loading="loading" native-type="submit">Next</el-button>
+                  </div>
+                </form>
+
+
+
+                <!-- step two -->
+
+                <form v-if="isUpdateStep2"  @submit.prevent="updateGovt">
+                  <div class="row">
+                    <div class="col-12 mt-3">
+                      <p><b>Leaders Information</b></p>
+                      <hr>
+                    </div>
+
+                    <div class="form-group pt-3 col-12 col-md-4">
+                      <label for="title">Leader's Office</label>
+                      <el-input class="w-100">
+                      </el-input>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+                    <div class="form-group pt-3 col-12 col-md-4">
+                      <label for="title">Leader's Name</label>
+                      <el-input class="w-100">
+                      </el-input>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+                    <div class="form-group pt-3 col-12 col-md-4">
+                      <label for="title">Leader's Photo</label>
+                      <el-input class="w-100">
+                      </el-input>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+
+
+                    <div class="form-group pt-3 col-12 col-md-4">
+                      <label for="title">Leader's Office</label>
+                      <el-input class="w-100">
+                      </el-input>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+                    <div class="form-group pt-3 col-12 col-md-4">
+                      <label for="title">Leader's Name</label>
+                      <el-input class="w-100">
+                      </el-input>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+                    <div class="form-group pt-3 col-12 col-md-4">
+                      <label for="title">Leader's Photo</label>
+                      <el-input class="w-100">
+                      </el-input>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+
+
+                    <div class="form-group pt-3 col-12 col-md-4">
+                      <label for="title">Leader's Office</label>
+                      <el-input class="w-100">
+                      </el-input>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+                    <div class="form-group pt-3 col-12 col-md-4">
+                      <label for="title">Leader's Name</label>
+                      <el-input class="w-100">
+                      </el-input>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+                    <div class="form-group pt-3 col-12 col-md-4">
+                      <label for="title">Leader's Photo</label>
+                      <el-input class="w-100">
+                      </el-input>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+
+
+                    <div class="form-group pt-3 col-12 col-md-4">
+                      <label for="title">Leader's Office</label>
+                      <el-input class="w-100">
+                      </el-input>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+                    <div class="form-group pt-3 col-12 col-md-4">
+                      <label for="title">Leader's Name</label>
+                      <el-input class="w-100">
+                      </el-input>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+                    <div class="form-group pt-3 col-12 col-md-4">
+                      <label for="title">Leader's Photo</label>
+                      <el-input class="w-100">
+                      </el-input>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
                   </div>
                 </form>
               </div>
@@ -162,10 +259,10 @@ export default {
       skip: 0,
       limit: 5,
       total: 1000,
-      filter: "FG",
+      filter: "SG",
       filters: [{value: 'FG', label: 'Federal Govts'},{value: 'SG', label: 'State Govts'},{value: 'LG', label: 'Loccal Govts'}],
       govtPayload: {
-        categoryID: "",
+        category: "",
         name: "",
         slogan: "",
         description: "",
@@ -183,17 +280,14 @@ export default {
       
       dateRangeValue: "",
       errorMessage: "",
-      options: [
-        { name: "Vue.js", code: "vu" },
-        { name: "Javascript", code: "js" },
-        { name: "Open Source", code: "os" }
-      ],
-      loading: false
+      loading: false,
+      viewStateGovt: false,
+      stateGovts: [],
     };
   },
   validations: {
     govtPayload: {
-      categoryID: {
+      category: {
         required,
         minLength: minLength(5)
       },
@@ -229,21 +323,43 @@ export default {
     }
   },
   computed: {
-    ...mapGetters("admin/data", ["governments"]),
-    isNewActive() {
-      return this.$route.query.new;
-    },
+    ...mapGetters("admin/data", ["governments", "categories"]),
     hasNext() {
-      return this.skip < this.total - this.limit;
+      return this.limit == this.governments.length;
     },
     hasPrevious() {
       return this.skip >= this.limit;
+    },
+    isUpdate(){
+      return this.$route.query.update;
+    },
+    isUpdateStep2(){  
+      return this.$route.query.update&&this.$route.query.step==2;
+    },
+    isUpdateStep3(){
+      return this.$route.query.update&&this.$route.query.step==3;
     }
   },
   methods: {
     ...mapActions("admin/data", [
-      "getAllGovts"
+      "getAllGovts",
+      "getCats",
+      "getStateGovts",
+      "createGovt"
     ]),
+    edit_govt(govt){
+      this.govtPayload = {...govt};
+      this.$router.push({query: {update: govt.id}});
+    },
+    async changedCategory(){
+      let catLg = this.categories.find(e=>e.slug=='LG');
+      if(this.govtPayload.categoryID==catLg.id){
+        this.stateGovts = await this.getAllGovts({skip: 0, limit: 37, slug: 'SG'});
+        this.viewStateGovt = true;
+      }else{
+        this.viewStateGovt = false;
+      }
+    },
     nextPage() {
       this.skip += this.limit;
       this.getGovts();
@@ -252,20 +368,15 @@ export default {
       this.skip -= this.limit;
       this.getGovts();
     },
-    openNewTopic() {
-      this.$router.push({ query: { new: true } });
-    },
-    disabledDate(date) {
-      console.log(date);
-      return date.getTime() > Date.now();
-    },
     closeNewTopic() {
       this.$router.push({ query: {} });
     },
-    submitNewAdmin() {
+    submitGovt() {
+      delete this.govtPayload.__typename;
+      delete this.govtPayload.categoryID;
       var ds = this;
       ds.loading = true;
-      ds.createAdmin(ds.adminPayload).then(data => {
+      ds.createGovt(ds.govtPayload).then(data => {
         this.loading = false;
         if (data.graphQLErrors) {
           this.$toast.error(data.graphQLErrors[0].message);
@@ -274,52 +385,7 @@ export default {
         this.$toast.error(data.successMessage);
       });
     },
-    suspend_admin(id, suspended) {
-      var message = !suspended
-        ? "This will permanently suspend this admin. Continue?"
-        : "This will reactivate this admin. Continue?";
-      var ds = this;
-      this.$confirm(message, "Warning", {
-        confirmButtonText: "OK",
-        cancelButtonText: "Cancel",
-        type: "warning"
-      }).then(() => {
-        ds.loading = true;
-        return this.suspendAdmin({ suspended, adminId: id })
-          .then(data => {
-            this.loading = false;
-            if (data.graphQLErrors) {
-              this.$toast.error(data.graphQLErrors[0].message);
-              return;
-            }
-            this.$toast.error(data.successMessage);
-            this.getAdmins();
-          })
-          .catch(err => {
-            return (this.loading = false);
-          });
-      });
-    },
-
-    delete_admin(id) {
-      var message = "This will permanently delete this admin. Continue?";
-      var ds = this;
-      this.$confirm(message, "Warning", {
-        confirmButtonText: "OK",
-        cancelButtonText: "Cancel",
-        type: "warning"
-      }).then(async () => {
-        ds.loading = true;
-        ds.deleteAdmin({ adminId: id }).then(data => {
-          this.loading = false;
-          if (data.graphQLErrors) {
-            this.$toast.error(data.graphQLErrors[0].message);
-            return;
-          }
-          this.$toast.error(data.successMessage);
-        });
-      });
-    },
+    
     getGovts() {
       this.loading = true;
       let self = this;
@@ -334,10 +400,31 @@ export default {
         .catch(err => {
           this.loading = false;
         });
+    },
+    getCategories(){
+      this.loading = true;
+      let self = this;
+      this.getCats()
+        .then(data => {
+          this.loading = false;
+          if (data.graphQLErrors) {
+            this.$toast.error(data.graphQLErrors[0].message);
+            return;
+          }
+          this.govtPayload.categoryID = this.categories[0].id;
+        })
+        .catch(err => {
+          this.loading = false;
+        });
     }
   },
   created() {
+    if(this.$route.query.update){
+      let id = this.$route.query.update;
+      this.govtPayload = {...this.governments.find(e=>e.id===id)};
+    }
     this.getGovts();
+    this.getCategories();
   }
 };
 </script>
@@ -455,7 +542,6 @@ button.active {
   background: #f58634 !important;
   color: #fff !important;
 }
-
 button:focus {
   outline: 0;
   box-shadow: none;
@@ -466,6 +552,7 @@ button.add-btn {
   width: 60px;
   height: 60px;
   font-size: 18px;
+  line-height: 60px;
   border: solid 1px #f58634;
 }
 button.add-btn:hover,

@@ -431,11 +431,13 @@ export default {
     }
   },
   created() {
-    this.getTopics();
-    this.getAllRooms();
+    
   },
-  mounted(){
+  async mounted(){
     this.resetFields();
+    await this.getTopics();
+    await this.getAllRooms();
+    console.log(this.rooms);
   }
 };
 </script>

@@ -404,6 +404,7 @@ export default {
   },
   methods: {
     ...mapActions("auth", ["logout"]),
+    ...mapActions('govt', ['getSGs']),
     logoutUser() {
       this.logout();
     }

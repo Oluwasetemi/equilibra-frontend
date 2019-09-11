@@ -22,11 +22,12 @@ export default function(context) {
     httpEndpoint: 'https://api.equilibra.test.natterbase.com',
     persisting: false,
     httpLinkOptions: {
-      credentials: 'same-origin'
+      credentials: 'same-origin',
       // getAuth: () => `Bearer ${context.store.getters['auth/getToken']}`
       // headers: {
       //   Authorization: `Bearer ${context.store.getters['auth/getToken']}`
       // }
-    }
+      connectToDevTools: true
+    },
   };
 }

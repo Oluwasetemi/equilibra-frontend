@@ -38,10 +38,9 @@ export default {
           return this.app.apolloProvider.defaultClient
             .query({
               query: gql.governments,
-              variables: { slug: 'SG' }
+              variables: { slug: 'SG', first: 37, start: 0 }
             })
             .then(({ data }) => {
-              
               commit('setGovernments', data.allGovernmentBasedOnCategory);
             })
             .catch(err => {
