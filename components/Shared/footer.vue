@@ -48,7 +48,7 @@
                   <h6>COMPANY</h6>
                   <ul class="py-2 px-0">
                     <li>
-                      <nuxt-link to="/">Home</nuxt-link>
+                      <nuxt-link to="/" class="footer-link">Home</nuxt-link>
                     </li>
                     <li>
                        <nuxt-link to="/contact-us" class="footer-link">Partner With Us</nuxt-link>

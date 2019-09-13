@@ -165,8 +165,10 @@
                   />
                 </div>
                 <div class="card-content p-4">
-                  <h3 class="pt-3"> <span v-if="item.title == 'LGA'">{{localGovtResisdence | formatStateName}}</span>
-                  <span v-else>{{item.title}}</span></h3>
+                  <h3 class="pt-3">
+                    <span v-if="item.title == 'LGA'">{{localGovtResisdence | formatStateName}}</span>
+                    <span v-else>{{item.title}}</span>
+                  </h3>
                   <p>
                     We are positively minded Nigerians, committed to unity and to
                     encouraging fairness, just and equitable lifee.
@@ -176,9 +178,10 @@
                     class="border-0 p-3 w-100"
                     :to="{path: item.link, query: {state:true, isOrigin:false}}"
                     style="background: #26B14F;"
-                  >Join 
-                  <span v-if="item.title == 'LGA'">{{localGovtResisdence | formatStateName}}</span>
-                  <span v-else>{{item.title}}</span>
+                  >
+                    Join
+                    <span v-if="item.title == 'LGA'">{{localGovtResisdence | formatStateName}}</span>
+                    <span v-else>{{item.title}}</span>
                   </nuxt-link>
                 </div>
               </div>
@@ -186,8 +189,10 @@
           </div>
         </div>
       </template>
-      {{getUser}} state of Residence<br>
-      {{getUser.localGovtOrigin}} state of Origin<br>
+      <!-- {{getUser}} state of Residence
+      <br />
+      {{getUser.localGovtOrigin}} state of Origin
+      <br /> -->
 
       <template v-if="isAuthenticated">
         <div class="row">
@@ -212,8 +217,10 @@
                   />
                 </div>
                 <div class="card-content p-4">
-                  <h3 class="pt-3"><span v-if="item.title == 'LGA'">{{localGovtOrigin | formatStateName}}</span>
-                  <span v-else>{{item.title}}</span></h3>
+                  <h3 class="pt-3">
+                    <span v-if="item.title == 'LGA'">{{localGovtOrigin | formatStateName}}</span>
+                    <span v-else>{{item.title}}</span>
+                  </h3>
                   <p>
                     We are positively minded Nigerians, committed to unity and to
                     encouraging fairness, just and equitable lifee.
@@ -223,8 +230,11 @@
                     class="border-0 p-3 w-100"
                     :to="{path: item.link, query: {state:true, isOrigin:true }}"
                     style="background: #26B14F;"
-                  >Join <span v-if="item.title == 'LGA'">{{localGovtOrigin | formatStateName}}</span>
-                  <span v-else>{{item.title}}</span></nuxt-link>
+                  >
+                    Join
+                    <span v-if="item.title == 'LGA'">{{localGovtOrigin | formatStateName}}</span>
+                    <span v-else>{{item.title}}</span>
+                  </nuxt-link>
                 </div>
               </div>
             </div>
@@ -415,8 +425,10 @@ export default {
     }
   },
   mounted() {
-    this.fetchLGAs(this.getUser.stateOfResidence, "localGovtResisdence");
-    this.fetchLGAs(this.getUser.stateOfOrigin, "localGovtOrigin");
+    if (this.isAuthenticated) {
+      this.fetchLGAs(this.getUser.stateOfResidence, "localGovtResisdence");
+      this.fetchLGAs(this.getUser.stateOfOrigin, "localGovtOrigin");
+    }
   }
 };
 </script>
