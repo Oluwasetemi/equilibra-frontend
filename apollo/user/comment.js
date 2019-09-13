@@ -24,14 +24,14 @@ export default {
             username
             image
           }
-          reporter {
-            _id
-            fullName
-            image
-            username
-            image
-          }
-          report
+          # reporter {
+          #   _id
+          #   fullName
+          #   image
+          #   username
+          #   image
+          # }
+          # report
           replies {
             _id
             comment
@@ -42,23 +42,23 @@ export default {
               username
               image
             }
-            reporter {
-              _id
-              fullName
-              image
-              username
-              image
-            }
-            report
+            # reporter {
+            #   _id
+            #   fullName
+            #   image
+            #   username
+            #   image
+            # }
+            # report
             createdAt
             image
           }
-          reports
+          # reports
           reply
           likes
           liked
           edited
-          reported
+          # reported
           image
           createdAt
           updatedAt
@@ -84,14 +84,14 @@ export default {
           username
           image
         }
-        reporter {
-          _id
-          fullName
-          image
-          username
-          image
-        }
-        report
+        # reporter {
+        #   _id
+        #   fullName
+        #   image
+        #   username
+        #   image
+        # }
+        # report
         replies {
           _id
           comment
@@ -102,25 +102,25 @@ export default {
             username
             image
           }
-          reporter {
-            _id
-            fullName
-            image
-            username
-            image
-          }
-          report
+          # reporter {
+          #   _id
+          #   fullName
+          #   image
+          #   username
+          #   image
+          # }
+          # report
           likes
           liked
           createdAt
           image
         }
-        reports
+        # reports
         reply
         likes
         liked
         edited
-        reported
+        # reported
         image
         createdAt
         updatedAt
