@@ -41,7 +41,12 @@
                 data-target="#imageModal"
                 @click="imageModalSrc = $event.target.src"
               >
-                <img :src="comment.image" alt="photo content" class="photo-content" style="cursor: pointer"/>
+                <img
+                  :src="comment.image"
+                  alt="photo content"
+                  class="photo-content"
+                  style="cursor: pointer"
+                />
               </a>
             </div>
             <div class="actions mr-2">
@@ -124,9 +129,16 @@ export default {
   filters: {
     formatDate(val, moment) {
       val = new Date(Number(val)).toISOString();
-      return moment(val)
-        .startOf("day")
-        .fromNow();
+      const now = new Date();
+      let duration = moment.duration(moment(now).diff(moment(val)));
+      if (duration.asDays() > 9) {
+        console.log(duration.asDays());
+        return moment(val).format("Do MMMM YYYY, h:mm:ss a");
+      }
+      if (duration.asHours() >= 24) {
+        return moment(val).fromNow() + "\xa0\xa0" + moment(val).format("h:mm:ss a");
+      }
+      return moment(val).fromNow()
     }
   },
   watch: {
