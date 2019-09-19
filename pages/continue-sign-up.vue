@@ -438,7 +438,7 @@ export default {
         {
           obj: residence,
           oldKey: "LGA",
-          newKey: "localGovtResisdence"
+          newKey: "localGovtResidence"
         },
         {
           obj: residence,
