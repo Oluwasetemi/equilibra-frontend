@@ -73,9 +73,9 @@
                         name="lga"
                         id="lga"
                         class="form-control mt-0"
-                        @blur="$v.payload.localGovtResisdence.$touch()"
-                        :class="{invalid: $v.payload.localGovtResisdence.$error}"
-                        v-model="payload.localGovtResisdence"
+                        @blur="$v.payload.localGovtResidence.$touch()"
+                        :class="{invalid: $v.payload.localGovtResidence.$error}"
+                        v-model="payload.localGovtResidence"
                         :disabled="loading"
                       >
                         <option value></option>
@@ -90,9 +90,9 @@
                         alt
                         class="position-absolute down-arrow"
                       />
-                      <template v-if="$v.payload.localGovtResisdence.$dirty">
+                      <template v-if="$v.payload.localGovtResidence.$dirty">
                         <p
-                          v-if="!$v.payload.localGovtResisdence.required"
+                          v-if="!$v.payload.localGovtResidence.required"
                           class="invalid"
                         >This field is required</p>
                       </template>
@@ -238,7 +238,7 @@ export default {
       stateConstituencies: [],
       senatorialDistricts: [],
       payload: {
-        localGovtResisdence: "",
+        localGovtResidence: "",
         stateOfResidence: "",
         residenceStateConstituency: "",
         residenceFederalConstituency: "",
@@ -248,7 +248,7 @@ export default {
   },
   validations: {
     payload: {
-      localGovtResisdence: {
+      localGovtResidence: {
         required
       },
       stateOfResidence: {
@@ -402,7 +402,7 @@ export default {
     },
     resetForm() {
       this.payload = {
-        localGovtResisdence: "",
+        localGovtResidence: "",
         stateOfResidence: "",
         stateOfResidenceConstituency: "",
         stateOfResidenceFedConstituency: "",

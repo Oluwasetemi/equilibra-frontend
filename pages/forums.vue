@@ -166,7 +166,7 @@
                 </div>
                 <div class="card-content p-4">
                   <h3 class="pt-3">
-                    <span v-if="item.title == 'LGA'">{{localGovtResisdence | formatStateName}}</span>
+                    <span v-if="item.title == 'LGA'">{{localGovtResidence | formatStateName}}</span>
                     <span v-else>{{item.title}}</span>
                   </h3>
                   <p>
@@ -180,7 +180,7 @@
                     style="background: #26B14F;"
                   >
                     Join
-                    <span v-if="item.title == 'LGA'">{{localGovtResisdence | formatStateName}}</span>
+                    <span v-if="item.title == 'LGA'">{{localGovtResidence | formatStateName}}</span>
                     <span v-else>{{item.title}}</span>
                   </nuxt-link>
                 </div>
@@ -276,7 +276,7 @@ export default {
   data() {
     return {
       avatar,
-      localGovtResisdence: "",
+      localGovtResidence: "",
       localGovtOrigin: "",
       cards: [
         {
@@ -426,7 +426,7 @@ export default {
   },
   mounted() {
     if (this.isAuthenticated) {
-      this.fetchLGAs(this.getUser.stateOfResidence, "localGovtResisdence");
+      this.fetchLGAs(this.getUser.stateOfResidence, "localGovtResidence");
       this.fetchLGAs(this.getUser.stateOfOrigin, "localGovtOrigin");
     }
   }

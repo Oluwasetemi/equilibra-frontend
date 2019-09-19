@@ -7,12 +7,14 @@ export default {
       $limit: Int
       $skip: Int
       $topicId: ID!
+      $roomId: ID!
     ) {
       fetchComments(
         cursor: $cursor
         limit: $limit
         skip: $skip
         topicId: $topicId
+        roomId: $roomId
       ) {
         edges {
           _id

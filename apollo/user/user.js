@@ -35,7 +35,7 @@ export default {
         stateOfOrigin
         stateOfResidence
         localGovtOrigin
-        localGovtResisdence
+        localGovtResidence
         stateConstituency
         stateOfResidenceConstituency
         stateFedConstituency
@@ -48,14 +48,14 @@ export default {
   `,
   updateResidence: gql`
     mutation updateResidence(
-      $localGovtResisdence: ID!
+      $localGovtResidence: ID!
       $residenceStateConstituency: ID!
       $residenceFederalConstituency: ID!
       $stateOfResidence: ID!
       $stateOfResidenceSenatorialDistrict: ID!
     ) {
       updateResidence(
-        localGovtResisdence: $localGovtResisdence
+        localGovtResidence: $localGovtResidence
         residenceStateConstituency: $residenceStateConstituency
         residenceFederalConstituency: $residenceFederalConstituency
         stateOfResidence: $stateOfResidence
@@ -78,7 +78,7 @@ export default {
         isSuspended
         stateOfOrigin
         stateOfResidence
-        localGovtResisdence
+        localGovtResidence
         localGovtOrigin
         stateConstituency
         stateOfResidenceConstituency

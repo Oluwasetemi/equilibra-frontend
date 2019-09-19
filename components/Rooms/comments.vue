@@ -186,7 +186,8 @@ export default {
         query: gql.fetchComments,
         variables: {
           limit: 10,
-          topicId: this.currentRoom.currentTopic._id
+          topicId: this.currentRoom.currentTopic._id,
+          roomId: this.currentRoom._id
         },
         context: {
           headers: {
