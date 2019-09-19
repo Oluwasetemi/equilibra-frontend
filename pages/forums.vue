@@ -417,7 +417,7 @@ export default {
         .catch(err => {});
     },
     getState(LGAS, id, key) {
-      let lga = LGAS.find(lga => this.getUser[key] == id);
+      let lga = LGAS.find(lga => lga.id == id);
       return lga ? lga.name : "";
     },
     logoutUser() {
