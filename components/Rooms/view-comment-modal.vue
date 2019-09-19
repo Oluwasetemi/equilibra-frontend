@@ -103,7 +103,7 @@
                       @click="toggleLike.id = reply._id, toggleLike.count += 1"
                     >
                       <span class="likes-icon"></span>
-                      <span class="px-1">{{reply.likes}}</span>
+                      <span class="position-relative" style="top: -1">{{reply.likes}}</span>
                     </a>
                   </div>
                 </div>
@@ -210,7 +210,7 @@ import shareLinkCard from "~/components/Rooms/share-link";
 import ReportCommentIcon from "~/components/Rooms/report-comment-icon";
 import DeleteCommentIcon from "~/components/Rooms/delete-comment-icon";
 export default {
-  props: ["commentId"],
+  props: ["commentId", "roomId"],
   // asyncData() {
 
   // }
@@ -294,6 +294,7 @@ export default {
     },
     postReply() {
       this.payload.commentId = this.comment._id;
+      this.payload.room = this.roomId;
       if (this.file) this.payload.file = this.file;
       this.loading = true;
       this.replyComment(this.payload)

@@ -45,7 +45,7 @@
           </div>
         </div>
         <div class="col-lg-5">
-          <form @submit.prevent>
+          <form @submit.prevent="submitForm()">
             <div class="form-input">
               <label for="firstName">First Name</label>
               <input
@@ -124,6 +124,7 @@
               <button
                 class="d-flex align-items-center justify-content-center green-btn"
                 type="submit"
+                :disabled="loading"
               >
                 <div class="spinner-grow" v-if="loading"></div>
                 <span>Submit</span>
@@ -144,7 +145,9 @@ import {
   email,
   sameAs
 } from "vuelidate/lib/validators";
+import gql from "~/apollo/user/contact";
 import transparentNavBar from "~/components/Shared/transparentNavBar";
+import { mapActions } from "vuex";
 export default {
   layout: "footerOnly",
   components: {
@@ -181,8 +184,35 @@ export default {
     }
   },
   methods: {
+    ...mapActions("contact", ["sendContactUs"]),
     submitForm() {
-      $v.payload.$touch();
+      this.$v.payload.$touch();
+      if (this.$v.$error === true) {
+        return;
+      }
+      this.loading = true;
+      this.sendContactUs(this.payload)
+        .then(data => {
+          this.loading = false;
+          if (data.graphQLErrors) {
+            this.errorMessage = user.graphQLErrors[0].message;
+            return;
+          }
+          this.resetForm();
+          this.$toast.success("Your message has been sent!");
+        })
+        .catch(err => {
+          this.loading = false;
+        });
+    },
+    resetForm() {
+      this.payload = {
+        firstName: "",
+        lastName: "",
+        email: "",
+        message: ""
+      };
+      this.$v.$reset();
     }
   }
 };

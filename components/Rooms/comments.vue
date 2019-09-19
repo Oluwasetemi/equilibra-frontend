@@ -2,6 +2,7 @@
   <div>
     <CommentModal
       :commentId="activeComment ? activeComment._id : null"
+      :roomId="currentRoom._id"
       v-if="openModal"
       @closeModal="openModal = false"
     />
@@ -176,11 +177,6 @@ export default {
     }
   },
   methods: {
-    // imageModalSrc(val) {
-    //   val
-    //   debugger
-    //   // = $event.target.childNode.src
-    // },
     fetchRoomComments() {
       this.$apollo.addSmartQuery("fetchComments", {
         query: gql.fetchComments,

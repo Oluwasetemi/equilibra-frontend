@@ -131,15 +131,15 @@ export default {
     }
   `,
   createComment: gql`
-    mutation createComment($comment: String!, $topic: ID!, $file: Upload) {
-      createComment(comment: $comment, topic: $topic, file: $file) {
+    mutation createComment($comment: String!, $topic: ID!, $file: Upload, $room: ID!) {
+      createComment(comment: $comment, topic: $topic, file: $file, room: $room) {
         successMessage
       }
     }
   `,
   editComment: gql`
-    mutation createComment($comment: String!, $topic: ID!, $file: Upload) {
-      createComment(comment: $comment, topic: $topic, file: $file) {
+    mutation createComment($comment: String!, $topic: ID!, $file: Upload, $room: ID!) {
+      createComment(comment: $comment, topic: $topic, file: $file, room: $room) {
         successMessage
       }
     }
@@ -152,8 +152,8 @@ export default {
     }
   `,
   replyComment: gql`
-    mutation replyComment($comment: String!, $commentId: ID!, $file: Upload) {
-      replyComment(comment: $comment, commentId: $commentId, file: $file) {
+    mutation replyComment($comment: String!, $commentId: ID!, $file: Upload, $room: ID!) {
+      replyComment(comment: $comment, commentId: $commentId, file: $file, room: $room) {
         successMessage
       }
     }
