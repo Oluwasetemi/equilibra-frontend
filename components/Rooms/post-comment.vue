@@ -117,6 +117,8 @@ export default {
         return;
       }
       this.payload.topic = this.currentRoom.currentTopic._id;
+      this.payload.room = this.currentRoom._id
+
       if (this.file) this.payload.file = this.file;
       this.loading = true;
       this.createComment(this.payload)

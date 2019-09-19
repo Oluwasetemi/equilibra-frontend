@@ -99,9 +99,9 @@ export default {
       self.loading = true;
       this.loginWIthFacebook({ accessToken: token })
         .then(user => {
+          this.loading = false;
           if (user.graphQLErrors) {
             this.errorMessage = user.graphQLErrors[0].message;
-            this.loading = false;
             return;
           }
           self.checkUser(user);
