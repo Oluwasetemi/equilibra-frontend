@@ -1,9 +1,9 @@
 <template>
-  <span class="text-center dropdown">
+  <span class="text-center dropdown report">
     <a
       href="#"
       id="reportComment"
-      class="report text-center"
+      class="report text-center dropdown-toggle"
       data-toggle="dropdown"
       aria-haspopup="true"
       aria-expanded="false"
@@ -12,6 +12,7 @@
       aria-labelledby="reportComment"
       @reportComment="reportComment_"
       :loading="loading"
+      :reported = reported
     />
   </span>
 </template>
@@ -24,7 +25,8 @@ export default {
   props: ["commentId"],
   data() {
     return {
-      loading: false
+      loading: false,
+      reported: false
     };
   },
   components: {
@@ -34,6 +36,7 @@ export default {
     ...mapActions("comment", ["reportComment"]),
     reportComment_(val) {
       this.loading = true;
+      this.reported = false;
       this.reportComment({ reportType: val, commentId: this.commentId })
         .then(data => {
           this.loading = false;
@@ -41,10 +44,12 @@ export default {
             this.$toast.error(data.graphQLErrors[0].message);
             return;
           }
-          $(".dropdown-menu")
-            .parent()
-            .removeClass("show");
-          this.$toast.success("This comment has been reported as " + val.toLowerCase());
+          $('[data-toggle="dropdown"]').parent().removeClass('show');
+          $('.report-comment-dropdown').removeClass('show');
+          this.reported = true
+          this.$toast.success(
+            "This comment has been reported as " + val.toLowerCase()
+          );
         })
         .catch(err => {
           this.loading = false;
