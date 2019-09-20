@@ -43,7 +43,7 @@
 
               <span class="replies ml-2">
                 <span
-                  class="text-center dropdown share-comment"
+                  class="text-center dropdown share-comment position-relative"
                   data-toggle="tooltip"
                   title="Share"
                 >
@@ -58,7 +58,7 @@
                     <span>Share</span>
                     <img src="~/assets/icons/share.svg" alt />
                   </a>
-                  <shareLinkCard class="dropdown-menu" aria-labelledby="shareLink" />
+                  <shareLinkCard class="dropdown-menu share-link" aria-labelledby="shareLink" dat/>
                 </span>
               </span>
             </div>
@@ -131,10 +131,10 @@
                   >
                     <img src="~/assets/icons/share.svg" alt />
                   </a>
-                  <shareLinkCard class="dropdown-menu" aria-labelledby="shareLink" />
+                  <shareLinkCard class="dropdown-menu share-link-2" aria-labelledby="shareLink" />
                 </div>
               </div>
-              <ReportCommentIcon :commentId="activeReply" v-if="reply.author._id != getUser._id" />
+              <ReportCommentIcon :commentId="activeReply" v-if="reply.author._id != getUser._id" class="report-card"/>
             </div>
           </div>
         </div>
@@ -374,16 +374,16 @@ div.scrollable {
   border-color: #e7e7e7 !important;
 }
 
-.dropdown-menu {
-  left: unset !important;
-  right: 0;
+.dropdown-menu:not(.share-link) {
+  /* left: unset !important;
+  right: 0; */
   border: none;
 }
 
 .share-link {
   z-index: 10;
-  right: 30px;
-  top: 15px;
+  top: -10px !important;
+    left: 100% !important;
 }
 
 .new-comment,

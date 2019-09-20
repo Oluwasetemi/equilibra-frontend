@@ -1,5 +1,5 @@
 <template>
-  <div class="dropdown-menu p-4">
+  <div class="dropdown-menu p-4 report-comment-dropdown">
     <h5 class="mb-3 text-center">Choose a reason for reporting tHIs post</h5>
     <form @submit.prevent="reportComment()">
       <div
@@ -75,11 +75,23 @@
 
 <script>
 export default {
-  props: ["loading"],
+  props: ["loading", "reported"],
   data() {
     return {
       selected: null
     };
+  },
+  computed: {
+    wasReported() {
+      return this.reported
+    }
+  },
+  watch: {
+    wasReported(status) {
+      if(status) {
+        this.selected = null
+      }
+    }
   },
   methods: {
     reportComment() {
