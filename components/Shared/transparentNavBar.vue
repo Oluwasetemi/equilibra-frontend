@@ -29,7 +29,7 @@
             <nuxt-link to="/forums" class="nav-link">Forums</nuxt-link>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Blog</a>
+            <a class="nav-link" href="http://www.theequilibra.com/blog/" target="_blank">Blog</a>
           </li>
           <li class="nav-item">
             <nuxt-link to="/contact-us" class="nav-link">Contact Us</nuxt-link>
@@ -117,14 +117,14 @@ nav {
 }
 
 li .nuxt-link-exact-active::after {
-    content: '';
-    bottom: 6px;
-    left: 50%;
-    position: absolute;
-    width: 5px;
-    height: 5px;
-    background: black;
-    border-radius: 50%;
+  content: "";
+  bottom: 6px;
+  left: 50%;
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  background: black;
+  border-radius: 50%;
 }
 @media (min-width: 1200px) {
   .container {
@@ -132,4 +132,3 @@ li .nuxt-link-exact-active::after {
   }
 }
 </style>
-

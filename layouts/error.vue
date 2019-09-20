@@ -32,7 +32,7 @@
                 <nuxt-link to="/forums" class="nav-link">Forums</nuxt-link>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Blog</a>
+                <a class="nav-link" href="http://www.theequilibra.com/blog/" target="_blank">Blog</a>
               </li>
               <li class="nav-item">
                 <nuxt-link to="/contact-us" class="nav-link">Contact Us</nuxt-link>
@@ -47,7 +47,7 @@
                     aria-haspopup="true"
                     aria-expanded="false"
                   >
-                    <img :src="getUser.image || avatar"  alt height="38px" class="mr-1 avatar" />
+                    <img :src="getUser.image || avatar" alt height="38px" class="mr-1 avatar" />
                     <div
                       class="inline-block px-2 user-name"
                       style="color: black"
@@ -98,7 +98,7 @@ export default {
   data() {
     return {
       avatar
-    }
+    };
   },
   computed: {
     ...mapGetters("auth", ["isAuthenticated"]),
