@@ -2,7 +2,8 @@
   <div class="card-container pt-1">
     <div class="card border-0 mt-5">
       <div class="header border-bottom px-4 pt-3">
-        <h4 class="px-3">Tell us where you are from ({{origin ? 'Origin' : 'Residence'}})</h4>
+        <h4 class="px-3" v-if="origin">Tell us where you are from (Origin)</h4>
+        <h4 class="px-3" v-else>Tell us where you live (Residence)</h4>
         <!-- <transition>
            <h4 class="px-3" v-if="">Tell us where you are from ({{origin ? 'Origin' : 'Residence'}})</h4>
         </transition>-->
@@ -23,7 +24,8 @@
                     v-model="userDetails.state"
                     :disabled="loading"
                   >
-                    <option value>What state are you from?</option>
+                    <option value v-if="origin">What state are you from?</option>
+                    <option value v-else>What state do you live in?</option>
                     <option
                       v-for="(govt, i) in governments"
                       :key="i"
@@ -55,7 +57,8 @@
                     :class="{invalid: $v.userDetails.LGA.$error}"
                     :disabled="loading"
                   >
-                    <option value>What LGA are you from?</option>
+                    <option value v-if="origin">What LGA are you from?</option>
+                    <option value v-else>What LGA do you live in?</option>
                     <option
                       v-for="(govt, i) in localGovernments"
                       :key="i"
