@@ -217,6 +217,9 @@ export default {
     setTempUserDetails({ commit }, payload) {
       commit('setTempUserDetails', payload);
     },
+    resetTempUserDetails({ commit }, payload) {
+      commit('resetTempUser', payload);
+    },
 
     logout({ commit }) {
       commit('user/removeUser', null, { root: true });
