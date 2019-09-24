@@ -10,7 +10,7 @@
         <p class="instructions px-3">Let’s get you all setup.</p>
       </div>
       <div class="p-4">
-        <form class="px-3" @submit.prevent="continueSignUp">
+        <form class="px-3" @submit.prevent="origin ? completeUserSignUp(): continueSignUp()">
           <div class="form-input">
             <div class="row">
               <div class="col-12">
@@ -22,7 +22,6 @@
                     @blur="$v.userDetails.state.$touch()"
                     :class="{invalid: $v.userDetails.state.$error}"
                     v-model="userDetails.state"
-                    :disabled="loading"
                   >
                     <option value v-if="origin">What state are you from?</option>
                     <option value v-else>What state do you live in?</option>
@@ -55,7 +54,6 @@
                     v-model="userDetails.LGA"
                     @blur="$v.userDetails.LGA.$touch()"
                     :class="{invalid: $v.userDetails.LGA.$error}"
-                    :disabled="loading"
                   >
                     <option value v-if="origin">What LGA are you from?</option>
                     <option value v-else>What LGA do you live in?</option>
@@ -88,7 +86,6 @@
                     @blur="$v.userDetails.stateFedConstituency.$touch()"
                     :class="{invalid: $v.userDetails.stateFedConstituency.$error}"
                     v-model="userDetails.stateFedConstituency"
-                    :disabled="loading"
                   >
                     <option value>Federal Constituency?</option>
                     <option
@@ -123,7 +120,6 @@
                     @blur="$v.userDetails.senatorialDistrict.$touch()"
                     :class="{invalid: $v.userDetails.senatorialDistrict.$error}"
                     v-model="userDetails.senatorialDistrict"
-                    :disabled="loading"
                   >
                     <option value>Senatorial District?</option>
                     <option
@@ -158,7 +154,6 @@
                     @blur="$v.userDetails.stateConstituency.$touch()"
                     :class="{invalid: $v.userDetails.stateConstituency.$error}"
                     v-model="userDetails.stateConstituency"
-                    :disabled="loading"
                   >
                     <option value>State Constituency?</option>
                     <option
@@ -183,36 +178,30 @@
             </div>
           </div>
           <div class="row" v-if="origin">
-              <div class="col-4">
-                <button
-                  class="white-btn w-100 mt-2 auth"
-                  @click="origin = false"
-                  type="submit"
-                  :disabled="loading"
-                >BACK</button>
-              </div>
-              <div class="col-8">
-                <button
-                  class="sign-up w-100 mt-2 auth d-flex align-items-center justify-content-center"
-                  @click="completeUserSignUp()"
-                  type="button"
-                  :disabled="loading"
-                >
-                  <div class="spinner-grow text-success" role="status" v-if="loading">
-                    <span class="sr-only">Loading...</span>
-                  </div>
-                  <span>SAVE</span>
-                </button>
-              </div>
+            <div class="col-4">
+              <a
+                href="#"
+                class="white-btn w-100 mt-2 auth d-inline-flex align-items-center justify-content-center"
+                @click="origin = false"
+                :disabled="loading"
+              ><span>BACK</span></a>
+            </div>
+            <div class="col-8">
+              <button
+                class="sign-up w-100 mt-2 auth d-flex align-items-center justify-content-center"
+                type="submit"
+                :disabled="loading"
+              >
+                <div class="spinner-grow text-success" role="status" v-if="loading">
+                  <span class="sr-only">Loading...</span>
+                </div>
+                <span>SAVE</span>
+              </button>
+            </div>
           </div>
           <div class="row" v-else>
-            <div class="col-12" >
-              <button
-                class="sign-up w-100 mt-2 auth"
-                @click="continueSignUp()"
-                type="button"
-                :disabled="loading"
-              >CONTINUE</button>
+            <div class="col-12">
+              <button class="sign-up w-100 mt-2 auth" type="submit" :disabled="loading">CONTINUE</button>
             </div>
           </div>
         </form>
@@ -301,6 +290,7 @@ export default {
     }
   },
   mounted() {
+    this.resetTempUserDetails();
     if (this.userDetails.state) {
       this.fetchLGAs();
       this.fetchFedConstituencies();
@@ -329,7 +319,11 @@ export default {
     }
   },
   methods: {
-    ...mapActions("auth", ["setTempUserDetails", "completeSignup"]),
+    ...mapActions("auth", [
+      "setTempUserDetails",
+      "completeSignup",
+      "resetTempUserDetails"
+    ]),
     fetchFedConstituencies() {
       const self = this;
       this.$store
@@ -416,10 +410,14 @@ export default {
         type: "residence",
         payload: this.userDetails
       });
-      this.$v.userDetails.$reset();
       this.origin = true;
+      this.$v.userDetails.$reset();
     },
     completeUserSignUp() {
+      this.$v.userDetails.$touch();
+      if (this.$v.userDetails.$error) {
+        return;
+      }
       this.setTempUserDetails({
         type: "origin",
         payload: this.userDetails
@@ -585,6 +583,7 @@ button.auth {
   font-weight: 600;
   font-size: 11px;
   letter-spacing: 0.8px;
+  text-decoration: none;
 }
 
 p.invalid {
