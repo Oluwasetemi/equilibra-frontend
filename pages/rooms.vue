@@ -11,7 +11,7 @@
                 <li class="header font-weight-bold p-3 border-bottom">Groups</li>
                 <div class="group-list">
                   <div class="text-center loader" v-if="loading">
-                    <div class="spinner-border" role="status">
+                    <div class="spinner-border text-secondary" role="status">
                       <span class="sr-only">Loading...</span>
                     </div>
                   </div>
@@ -101,8 +101,16 @@ export default {
       "getFederalRooms",
       "getStateRooms",
       "joinRoom",
-      "leaveRoom"
+      "leaveRoom",
     ]),
+    // subscribeToVote() {
+    //   this.$apollo.addSmartSubscription("vote", {
+    //     subscription: gql.vote,
+    //     result({ data }) {
+    //       console.log(data.vote);
+    //     }
+    //   });
+    // },
     checkRoomStatus(room) {
       this.isMyRoom(room)
         ? this.leaveRoomForum(room)
@@ -147,12 +155,11 @@ export default {
       let self = this;
       const payload = {
         roomType: this.roomType[self.$route.params.id],
-        isOrigin: this.$route.query.state
+        isOrigin: this.$route.query.state == "true" ? true : false
       };
-      this.getStateRooms(this.roomType[self.$route.params.id])
+      this.getStateRooms(payload)
         .then(data => {
           this.loading = false;
-          console.log(data)
           if (data.graphQLErrors) {
             this.$toast.error(data.graphQLErrors[0].message);
             return;
@@ -181,6 +188,7 @@ export default {
             return;
           }
           this.$toast.success("You have now joined this conversation!");
+          // this.subscribeToVote();
         })
         .catch(err => {});
     },

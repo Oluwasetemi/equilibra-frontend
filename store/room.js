@@ -51,8 +51,9 @@ export default {
     getStateRooms({ commit, rootState }, payload) {
       return this.app.apolloProvider.defaultClient
         .query({
+          fetchPolicy: 'no-cache',
           query: gql.getStateRooms,
-          variables: { roomType: payload },
+          variables: payload,
           context: {
             headers: {
               Authorization: `Bearer ${rootState.auth.token}`
@@ -62,7 +63,7 @@ export default {
         .then(({ data }) => {
           commit('setStateRooms', {
             data: data.getStateRooms,
-            roomType: payload
+            roomType: payload.roomType
           });
           return data.getStateRooms;
         })
