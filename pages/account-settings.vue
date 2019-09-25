@@ -95,8 +95,9 @@ input.form-control:disabled {
   border-radius: 4px;
 }
 
-@media (min-width: 1200px){
-.container {
+@media (min-width: 1200px) {
+  .container {
     max-width: 1250px;
-}}
+  }
+}
 </style>

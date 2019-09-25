@@ -6,13 +6,15 @@ import ApolloCacheUpdater from "apollo-cache-updater";
 const state = () => ({
   sub: {
     governments: [],
-    categories: []
+    categories: [],
+    rooms: []
   }
 });
 
 const getters = {
   governments: state => state.sub.governments,
-  categories: state => state.sub.categories
+  categories: state => state.sub.categories,
+  rooms: state => state.sub.rooms
 };
 
 const actions = {
@@ -82,11 +84,15 @@ const actions = {
       });
   },
 
-  getAllHOA({ commit, state, rootState }, payload) {
+  getRooms({ commit, state, rootState }, payload) {
     return this.app.apolloProvider.defaultClient
       .query({
         query: gql.Data.allRooms,
-        variables: { roomType: payload.roomType, start: payload.skip },
+        variables: {
+          roomType: payload.roomType,
+          skip: payload.skip,
+          limit: payload.limit
+        },
         context: {
           headers: {
             Authorization: `Bearer ${rootState.admin.sub.token}`
@@ -94,8 +100,65 @@ const actions = {
         }
       })
       .then(({ data }) => {
-        commit("setGovts", data.governments);
-        return data.governments;
+        commit("setRooms", data.fetchAllConstituencyAdmin);
+        return data.fetchAllConstituencyAdmin;
+      })
+      .catch(err => {
+        return err;
+      });
+  },
+
+  updateRoom({ commit, state, rootState }, payload) {
+    return this.app.apolloProvider.defaultClient
+      .mutate({
+        mutation: gql.Data.updateRoom,
+        variables: payload,
+        context: {
+          headers: {
+            Authorization: `Bearer ${rootState.admin.sub.token}`
+          }
+        }
+      })
+      .then(({ data }) => {
+        return data.updateRoom;
+      })
+      .catch(err => {
+        return err;
+      });
+  },
+
+  createRoom({ commit, state, rootState }, payload) {
+    return this.app.apolloProvider.defaultClient
+      .mutate({
+        mutation: gql.Data.createRoom,
+        variables: payload,
+        context: {
+          headers: {
+            Authorization: `Bearer ${rootState.admin.sub.token}`
+          }
+        }
+      })
+      .then(({ data }) => {
+        return data.createRoom;
+      })
+      .catch(err => {
+        return err;
+      });
+  },
+
+  deleteRoom({ commit, state, rootState }, payload) {
+    return this.app.apolloProvider.defaultClient
+      .mutate({
+        mutation: gql.Data.deleteRoom,
+        variables: payload,
+        context: {
+          headers: {
+            Authorization: `Bearer ${rootState.admin.sub.token}`
+          }
+        }
+      })
+      .then(({ data }) => {
+        return data.deleteRoom;
       })
       .catch(err => {
         return err;
@@ -148,6 +211,9 @@ const actions = {
 const mutations = {
   setGovts(state, payload) {
     state.sub.governments = payload;
+  },
+  setRooms(state, payload) {
+    state.sub.rooms = payload;
   },
   setCategories(state, payload) {
     state.sub.categories = payload;

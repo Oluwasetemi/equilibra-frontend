@@ -165,11 +165,12 @@
                   </div>
                   <div class="form-group pt-3">
                     <el-button :loading="loading" native-type="submit">Next</el-button>
+                    <el-button :loading="loading" @click="goTo2" native-type="button">Skip</el-button>
                   </div>
                 </form>
 
                 <!-- step two -->
-                <form v-if="isUpdateStep2" @submit.prevent="updateGovt">
+                <form v-if="isUpdateStep2" @submit.prevent="submitGovt">
                   <div class="row">
                     <div class="col-12 mt-3">
                       <p>
@@ -180,7 +181,9 @@
 
                     <div class="form-group pt-3 col-12 col-md-4">
                       <label for="title">Leader's Office</label>
-                      <el-input class="w-100"></el-input>
+                      <el-select class="w-100">
+                        <el-option></el-option>
+                      </el-select>
                       <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
                     </div>
                     <div class="form-group pt-3 col-12 col-md-4">
@@ -243,90 +246,140 @@
                     </div>
 
                     <div class="form-group pt-3 pl-3">
-                      <el-button :loading="loading" native-type="button">Back</el-button>
-                      <el-button :loading="loading" native-type="button">Skip</el-button>
+                      <el-button :loading="loading" @click="goTo1" native-type="button">Back</el-button>
+                      <el-button :loading="loading" @click="goTo3" native-type="button">Skip</el-button>
                       <el-button :loading="loading" native-type="submit">Next</el-button>
                     </div>
                   </div>
                 </form>
 
                 <!-- step two -->
-                <form v-if="isUpdateStep2" @submit.prevent="updateGovt">
+                <form v-if="isUpdateStep3" @submit.prevent="submitGovt">
                   <div class="row">
                     <div class="col-12 mt-3">
                       <p>
-                        <b>Leaders Information</b>
+                        <b>Government Area Information</b>
                       </p>
                       <hr />
                     </div>
 
-                    <div class="form-group pt-3 col-12 col-md-4">
-                      <label for="title">Leader's Office</label>
-                      <el-input class="w-100"></el-input>
+                    <div class="form-group pt-3 col-6 col-md-3">
+                      <label for="title">Population</label>
+                      <el-input type="number" v-model="govtPayload.population" class="w-100"></el-input>
                       <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
                     </div>
-                    <div class="form-group pt-3 col-12 col-md-4">
-                      <label for="title">Leader's Name</label>
-                      <el-input class="w-100"></el-input>
+                    <div class="form-group pt-3 col-6 col-md-3">
+                      <label for="title">Total LGAs</label>
+                      <el-input type="number" v-model="govtPayload.totalLg" class="w-100"></el-input>
                       <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
                     </div>
-                    <div class="form-group pt-3 col-12 col-md-4">
-                      <label for="title">Leader's Photo</label>
-                      <el-input class="w-100"></el-input>
+                    <div class="form-group pt-3 col-6 col-md-3">
+                      <label for="title">Ruling Party</label>
+                      <el-input class="w-100" v-model="govtPayload.rulingParty"></el-input>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+
+                    <div class="form-group pt-3 col-6 col-md-3">
+                      <label for="title">State Constituencies</label>
+                      <el-input
+                        type="number"
+                        class="w-100"
+                        v-model="govtPayload.totalStateConstituency"
+                      ></el-input>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+                    <div class="form-group pt-3 col-6 col-md-3">
+                      <label for="title">GDP per Head</label>
+                      <el-input class="w-100" v-model="govtPayload.gdpPerHead"></el-input>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+                    <div class="form-group pt-3 col-6 col-md-3">
+                      <label for="title">Unemployment Rate</label>
+                      <el-input type="number" class="w-100" v-model="govtPayload.unemploymentRate"></el-input>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+
+                    <div class="form-group pt-3 col-6 col-md-3">
+                      <label for="title">Literacy Rate</label>
+                      <el-input type="number" class="w-100" v-model="govtPayload.literacyRate"></el-input>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+                    <div class="form-group pt-3 col-6 col-md-3">
+                      <label for="title">Crime Rate</label>
+                      <el-input type="number" class="w-100" v-model="govtPayload.crimeRate"></el-input>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+                    <div class="form-group pt-3 col-6 col-md-3">
+                      <label for="title">Inflation Rate</label>
+                      <el-input type="number" class="w-100" v-model="govtPayload.inflationRate"></el-input>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+
+                    <div class="form-group pt-3 col-6 col-md-3">
+                      <label for="title">Infant Mortality</label>
+                      <el-input
+                        type="number"
+                        class="w-100"
+                        v-model="govtPayload.infantMortalityRate"
+                      ></el-input>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+                    <div class="form-group pt-3 col-6 col-md-3">
+                      <label for="title">Foreign Reserve</label>
+                      <el-input type="number" class="w-100" v-model="govtPayload.foreignReserve"></el-input>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+                    <div class="form-group pt-3 col-6 col-md-3">
+                      <label for="title">Power Generated</label>
+                      <el-input type="number" class="w-100" v-model="govtPayload.powerGenerated"></el-input>
                       <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
                     </div>
 
                     <div class="form-group pt-3 col-12 col-md-4">
-                      <label for="title">Leader's Office</label>
-                      <el-input class="w-100"></el-input>
-                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
-                    </div>
-                    <div class="form-group pt-3 col-12 col-md-4">
-                      <label for="title">Leader's Name</label>
-                      <el-input class="w-100"></el-input>
-                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
-                    </div>
-                    <div class="form-group pt-3 col-12 col-md-4">
-                      <label for="title">Leader's Photo</label>
-                      <el-input class="w-100"></el-input>
+                      <label for="title">Budget Pass Rate</label>
+                      <el-input type="number" class="w-100" v-model="govtPayload.budgetPassDate"></el-input>
                       <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
                     </div>
 
                     <div class="form-group pt-3 col-12 col-md-4">
-                      <label for="title">Leader's Office</label>
-                      <el-input class="w-100"></el-input>
+                      <label for="title">Budget Performance Rate</label>
+                      <el-input
+                        type="number"
+                        class="w-100"
+                        v-model="govtPayload.budgetPerformanceRate"
+                      ></el-input>
                       <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
                     </div>
                     <div class="form-group pt-3 col-12 col-md-4">
-                      <label for="title">Leader's Name</label>
-                      <el-input class="w-100"></el-input>
+                      <label for="title">Budget Submission Rate</label>
+                      <el-input
+                        type="number"
+                        class="w-100"
+                        v-model="govtPayload.budgetSubmissionDate"
+                      ></el-input>
                       <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
                     </div>
                     <div class="form-group pt-3 col-12 col-md-4">
-                      <label for="title">Leader's Photo</label>
-                      <el-input class="w-100"></el-input>
+                      <label for="title">Plenary Attendance Rate</label>
+                      <el-input
+                        type="number"
+                        class="w-100"
+                        v-model="govtPayload.plenaryAttendanceRate"
+                      ></el-input>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+                    <div class="form-group pt-3 col-12 col-md-4">
+                      <label for="title">Non-oil Contribution</label>
+                      <el-input
+                        type="number"
+                        class="w-100"
+                        v-model="govtPayload.nonOilSectorContributionToGDP"
+                      ></el-input>
                       <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
                     </div>
 
-                    <div class="form-group pt-3 col-12 col-md-4">
-                      <label for="title">Leader's Office</label>
-                      <el-input class="w-100"></el-input>
-                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
-                    </div>
-                    <div class="form-group pt-3 col-12 col-md-4">
-                      <label for="title">Leader's Name</label>
-                      <el-input class="w-100"></el-input>
-                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
-                    </div>
-                    <div class="form-group pt-3 col-12 col-md-4">
-                      <label for="title">Leader's Photo</label>
-                      <el-input class="w-100"></el-input>
-                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
-                    </div>
-
-                    <div class="form-group pt-3 pl-3">
-                      <el-button :loading="loading" native-type="button">Back</el-button>
-                      <el-button :loading="loading" native-type="button">Skip</el-button>
+                    <div class="form-group pt-3 pl-3 col-12">
+                      <el-button :loading="loading" @click="goTo2" native-type="button">Back</el-button>
                       <el-button :loading="loading" native-type="submit">Next</el-button>
                     </div>
                   </div>
@@ -351,6 +404,13 @@ export default {
       limit: 5,
       total: 1000,
       filter: "SG",
+      offices: [
+        { label: "President", slug: "president" },
+        { label: "Governor", slug: "governor" },
+        { label: "Senate President", slug: "senate-president" },
+        { label: "Speaker", slug: "speaker" },
+        { label: "Chief Justice", slug: "chief-justice" }
+      ],
       filters: [
         { value: "FG", label: "Federal Govts" },
         { value: "SG", label: "State Govts" },
@@ -365,12 +425,13 @@ export default {
         cjn: "",
         senatePresident: "",
         speaker: "",
-        totalLg: "",
-        population: "",
-        totalConstituency: "",
-        infantMortalityRate: "",
-        literacyRate: "",
-        unemploymentRate: ""
+        totalLg: 0,
+        population: 0,
+        totalConstituency: 0,
+        infantMortalityRate: 0,
+        literacyRate: 0,
+        unemploymentRate: 0,
+        crimeRate: 0
       },
 
       dateRangeValue: "",
@@ -471,6 +532,22 @@ export default {
       this.skip -= this.limit;
       this.getGovts();
     },
+    goTo1() {
+      this.$router.push({
+        query: { update: this.$route.query.update, stage: 1 }
+      });
+    },
+    goTo2() {
+      this.$router.push({
+        query: { update: this.$route.query.update, stage: 2 }
+      });
+    },
+    goTo3() {
+      this.$router.push({
+        query: { update: this.$route.query.update, stage: 3 }
+      });
+    },
+
     closeNewTopic() {
       this.$router.push({ query: {} });
     },

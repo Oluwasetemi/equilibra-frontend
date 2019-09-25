@@ -17,7 +17,7 @@
                 <img src="~/assets/images/total-insurance-icon.svg" alt />
               </figure>
               <div class="value">{{rooms.pageInfo?rooms.pageInfo.totalCount:0}}</div>
-              <div class="title mt-2">Total Existing Constituencies</div>
+              <div class="title mt-2">Total Existing Senatorial DIstricts</div>
             </div>
           </div>
         </div>
@@ -66,6 +66,15 @@
                       <i class="ft-trash" v-if="!loading"></i>
                       <span v-else class="spinner-grow"></span>
                     </button>
+                    <!-- <button
+                      class="add-btn"
+                      :class="admin.isSuspended?'suspended':'active'"
+                      @click="suspend_admin(admin._id, admin.isSuspended)"
+                      :disabled="loading"
+                    >
+                      <i :class="!admin.isSuspended?'ft-user-x':'ft-user-check'" v-if="!loading"></i>
+                      <span v-else class="spinner-grow"></span>
+                    </button>-->
                   </div>
                 </figure>
                 <div class="text-center">
@@ -106,7 +115,7 @@
 
                 <form @submit.prevent="submit">
                   <div class="form-group pt-3">
-                    <label for="title">Constituency Name</label>
+                    <label for="title">District Name</label>
                     <input
                       type="text"
                       @focus="errorMessage=''"
@@ -115,7 +124,7 @@
                       @blur="$v.payload.name.$touch()"
                       class="form-control"
                       v-model="payload.name"
-                      placeholder="Constituency Name"
+                      placeholder="District Name"
                     />
                     <template v-if="$v.payload.name.$dirty">
                       <p v-if="!$v.payload.name.required" class="invalid">This field is required</p>
@@ -294,7 +303,7 @@ export default {
             room: {
               name: ds.payload.name,
               government: ds.payload.government,
-              roomType: "HOUSE_OF_ASSEMBLY"
+              roomType: "SENATE"
             }
           }).then(async data => {
             this.loading = false;
@@ -323,7 +332,7 @@ export default {
       this.loading = true;
       let self = this;
       this.getRooms({
-        roomType: "HOUSE_OF_ASSEMBLY",
+        roomType: "SENATE",
         limit: self.limit,
         skip: self.skip
       })
