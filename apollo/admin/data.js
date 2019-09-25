@@ -28,8 +28,52 @@ export default {
   `,
 
   allRooms: gql`
-    query fetchConstituency($roomType: fetchConstituency!) {
-      fetchConstituency(roomType: $roomType) {
+    query fetchAllConstituencyAdmin(
+      $limit: Int
+      $skip: Int
+      $roomType: fetchConstituency
+    ) {
+      fetchAllConstituencyAdmin(
+        limit: $limit
+        skip: $skip
+        roomType: $roomType
+      ) {
+        edges {
+          name
+          _id
+          government
+        }
+        pageInfo {
+          totalCount
+          hasNextPage
+        }
+      }
+    }
+  `,
+
+  updateRoom: gql`
+    mutation updateRoom($room: UpdateRoomInputType, $roomId: darangiGraphId) {
+      updateRoom(room: $room, roomId: $roomId) {
+        _id
+        name
+        government
+      }
+    }
+  `,
+
+  createRoom: gql`
+    mutation createRoom($room: RoomInputType!) {
+      createRoom(room: $room) {
+        _id
+        name
+        government
+      }
+    }
+  `,
+
+  deleteRoom: gql`
+    mutation deleteRoom($roomId: darangiGraphId) {
+      deleteRoom(roomId: $roomId) {
         _id
         name
       }
