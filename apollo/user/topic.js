@@ -6,8 +6,6 @@ export default {
       requestTopicChange(topic: $topic) {
         _id
         title
-        closeDate
-        startDate
         votes
         isClosed
       }
@@ -18,11 +16,26 @@ export default {
       suggestTopic(title: $title, description: $description) {
         _id
         title
-        closeDate
-        startDate
         votes
         isClosed
       }
     }
-  `
+  `,
+  vote: gql`
+    mutation vote($voteInput: VoteInputType!) {
+      vote(voteInput: $voteInput) {
+        successMessage
+      }
+    }
+  `,
+  closeRequestTopicChangeVoting: gql`
+    mutation closeRequestTopicChangeVoting($voteId: ID!) {
+      closeRequestTopicChangeVoting(voteId: $voteId) {
+        successMessage
+        upVotes
+        downVotes
+      }
+    }
+  `,
+  
 };

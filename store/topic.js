@@ -49,6 +49,43 @@ export default {
         .catch(err => {
           return err;
         });
-    }
+    },
+    vote({ commit, rootState }, payload) {
+      return this.app.apolloProvider.defaultClient
+        .mutate({
+          mutation: gql.vote,
+          variables: {voteInput: payload},
+          context: {
+            headers: {
+              Authorization: `Bearer ${rootState.auth.token}`
+            }
+          }
+        })
+        .then(({ data }) => {
+          return data.vote;
+        })
+        .catch(err => {
+          return err;
+        });
+    },
+    closeRequestTopicChangeVoting({ commit, rootState }, payload) {
+      return this.app.apolloProvider.defaultClient
+        .mutate({
+          mutation: gql.closeRequestTopicChangeVoting,
+          variables: payload,
+          context: {
+            headers: {
+              Authorization: `Bearer ${rootState.auth.token}`
+            }
+          }
+        })
+        .then(({ data }) => {
+          return data.closeRequestTopicChangeVoting;
+        })
+        .catch(err => {
+          return err;
+        });
+    },
+
   }
 };

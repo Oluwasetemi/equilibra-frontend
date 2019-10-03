@@ -20,14 +20,12 @@ export default function(context) {
   return {
     onError: errorLink,
     httpEndpoint: 'https://api.equilibra.test.natterbase.com',
+    wsEndpoint: 'ws://api.equilibra.test.natterbase.com:5500/subscriptions',
     persisting: false,
+    websocketsOnly: false,
     httpLinkOptions: {
       credentials: 'same-origin',
-      // getAuth: () => `Bearer ${context.store.getters['auth/getToken']}`
-      // headers: {
-      //   Authorization: `Bearer ${context.store.getters['auth/getToken']}`
-      // }
       connectToDevTools: true
-    },
+    }
   };
 }

@@ -1,7 +1,7 @@
 <template>
-
   <div class="px-md-3 pl-0 forum-container py-4 scrollable" ref="comments">
     <div class="border border-bottom-0">
+      <TopicChangePopup v-if="showTopicChangePopup" :voteId ="voteId"/>
       <RoomHeader :currentRoom="currentRoom" />
       <PostComment :currentRoom="currentRoom" :isMyRoom="isMyRoom" />
       <Comments :currentRoom="currentRoom" :fetchMore="fetchMore" @fetchedMore="fetchMore = false" />
@@ -10,8 +10,10 @@
 </template>
 
 <script>
+import Timer from '~/components/Rooms/timer'
 import { mapGetters, mapActions } from "vuex";
 import RoomHeader from "~/components/Rooms/header";
+import TopicChangePopup from "~/components/Rooms/vote-topic-change";
 import Comments from "~/components/Rooms/comments";
 import PostComment from "~/components/Rooms/post-comment";
 export default {
@@ -19,13 +21,17 @@ export default {
   props: ["currentRoom", "isMyRoom"],
   data() {
     return {
-      fetchMore: false
+      fetchMore: false,
+      showTopicChangePopup: false,
+      voteId: null
     };
   },
   components: {
     RoomHeader,
     PostComment,
-    Comments
+    Comments,
+    TopicChangePopup,
+    Timer
   },
   methods: {
     fetchMoreComments({ target }) {
@@ -36,6 +42,10 @@ export default {
   },
   mounted() {
     this.$refs.comments.addEventListener("scroll", this.fetchMoreComments);
+    this.$eventBus.$on("showPopup", (voteId) => {
+      this.showTopicChangePopup = true;
+      this.voteId = voteId
+    });
   },
   beforeDestroy() {
     this.$refs.comments.removeEventListener("scroll", this.fetchMoreComments);

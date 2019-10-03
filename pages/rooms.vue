@@ -101,13 +101,13 @@ export default {
       "getFederalRooms",
       "getStateRooms",
       "joinRoom",
-      "leaveRoom",
+      "leaveRoom"
     ]),
-    // subscribeToVote() {
-    //   this.$apollo.addSmartSubscription("vote", {
-    //     subscription: gql.vote,
-    //     result({ data }) {
-    //       console.log(data.vote);
+    // subscribeToComments() {
+    //   this.$apollo.addSmartSubscription("comments", {
+    //     subscription: gql.subscribeToComments,
+    //     result(data) {
+    //       console.log(data);
     //     }
     //   });
     // },
@@ -187,6 +187,7 @@ export default {
             this.$toast.error(data.graphQLErrors[0].message);
             return;
           }
+          // this.subscribeToComments();
           this.$toast.success("You have now joined this conversation!");
           // this.subscribeToVote();
         })
@@ -212,6 +213,7 @@ export default {
     }
   },
   mounted() {
+    // this.subscribeToComments()
     if (this.isAuthenticated) {
       this.getAllMyRooms();
     }

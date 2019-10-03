@@ -1,65 +1,123 @@
 <template>
   <section>
-    <nav class="navbar navbar-light navbar-expand-lg d-flex justify-content-md-between align-items-center px-md-5 mb-0">
+    <nav
+      class="navbar navbar-light navbar-expand-lg d-flex justify-content-md-between align-items-center px-md-5 mb-0"
+    >
       <div style="width: 190px">
         <nuxt-link to="/" class="navbar-brand">
           <!-- <img src="~assets/images/myinshora-logo.svg" alt height="50px" /> -->
         </nuxt-link>
       </div>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarText"
+        aria-controls="navbarText"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse d-lg-flex justify-content-md-end" id="navbarText">
         <ul class="navbar-nav" v-if="isAuthenticated">
-          <nuxt-link tag="li" to="/control-panel/dash" class="nav-item d-flex flex-column align-items-lg-center justify-content-lg-center mx-2 py-lg-0 py-2">
+          <nuxt-link
+            tag="li"
+            to="/control-panel/dash"
+            class="nav-item d-flex flex-column align-items-lg-center justify-content-lg-center mx-2 py-lg-0 py-2"
+          >
             <a class="nav-link py-0" href="#">
               Dashboard
               <span class="sr-only">(current)</span>
             </a>
             <div class="underline"></div>
           </nuxt-link>
-          <nuxt-link tag="li" to="/control-panel/topics" class="nav-item d-flex flex-column align-items-lg-center justify-content-lg-center mx-2 py-lg-0 py-2">
+          <nuxt-link
+            tag="li"
+            to="/control-panel/topics"
+            class="nav-item d-flex flex-column align-items-lg-center justify-content-lg-center mx-2 py-lg-0 py-2"
+          >
             <a class="nav-link py-0" href="#">
               Topics
               <span class="sr-only">(current)</span>
             </a>
             <div class="underline"></div>
           </nuxt-link>
-          <nuxt-link tag="li" to="/control-panel/admins" class="nav-item d-flex flex-column align-items-lg-center justify-content-lg-center mx-2 py-lg-0 py-2">
+          <nuxt-link
+            tag="li"
+            to="/control-panel/admins"
+            class="nav-item d-flex flex-column align-items-lg-center justify-content-lg-center mx-2 py-lg-0 py-2"
+          >
             <a class="nav-link py-0" href="#">
-                Admins
-                <span class="sr-only">(current)</span>
+              Admins
+              <span class="sr-only">(current)</span>
             </a>
             <div class="underline"></div>
           </nuxt-link>
-          <nuxt-link tag="li" to="/control-panel/reports" class="nav-item d-flex flex-column align-items-lg-center justify-content-lg-center mx-2 py-lg-0 py-2">
+          <nuxt-link
+            tag="li"
+            to="/control-panel/reports"
+            class="nav-item d-flex flex-column align-items-lg-center justify-content-lg-center mx-2 py-lg-0 py-2"
+          >
             <a class="nav-link py-0" href="#">
-                Reports
-                <span class="sr-only">(current)</span>
+              Reports
+              <span class="sr-only">(current)</span>
             </a>
             <div class="underline"></div>
           </nuxt-link>
           <li class="nav-item dropdown d-flex flex-column align-items-lg-center mx-2 py-lg-2 py-2">
-            <a class="nav-link py-0 dropdown-toggle d-flex align-items-center justify-content-center" 
-            href="#" id="navbarDropdown" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown">
+            <a
+              class="nav-link py-0 dropdown-toggle d-flex align-items-center justify-content-center"
+              href="#"
+              id="navbarDropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+              data-toggle="dropdown"
+            >
               <div class="inline-block d-flex align-items-center mr-2 justify-content-center">
                 <span>Other Data</span>
               </div>
               <span></span>
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <nuxt-link :to="'/control-panel/governments'" class="dropdown-item" href="#">Government Data</nuxt-link>
-              <nuxt-link :to="'/control-panel/hoas'" class="dropdown-item" href="#">House of Assembly</nuxt-link>
-              <nuxt-link :to="'/control-panel/hors'" class="dropdown-item" href="#">House of Representatives</nuxt-link>
-              <nuxt-link :to="'/control-panel/ministries'" class="dropdown-item" href="#">Ministries Data</nuxt-link>
+              <nuxt-link
+                :to="'/control-panel/governments'"
+                class="dropdown-item"
+                href="#"
+              >Government Data</nuxt-link>
+              <nuxt-link
+                :to="'/control-panel/hoas'"
+                class="dropdown-item"
+                href="#"
+              >House of Assembly</nuxt-link>
+              <nuxt-link
+                :to="'/control-panel/hors'"
+                class="dropdown-item"
+                href="#"
+              >House of Representatives</nuxt-link>
+              <nuxt-link
+                :to="'/control-panel/ministries'"
+                class="dropdown-item"
+                href="#"
+              >Ministries Data</nuxt-link>
               <nuxt-link :to="'/control-panel/courts'" class="dropdown-item" href="#">Courts Data</nuxt-link>
             </div>
           </li>
-          <li class="nav-item dropdown d-flex flex-column align-items-lg-center mx-2 py-lg-0 py-2"
-          v-if="isAuthenticated">
-            <a class="nav-link py-0 dropdown-toggle d-flex align-items-center justify-content-center" 
-            href="#" id="navbarDropdown" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown">
-              <div class="inline-block avatar-wrapper d-flex align-items-center mr-2 justify-content-center">
+          <li
+            class="nav-item dropdown d-flex flex-column align-items-lg-center mx-2 py-lg-0 py-2"
+            v-if="isAuthenticated"
+          >
+            <a
+              class="nav-link py-0 dropdown-toggle d-flex align-items-center justify-content-center"
+              href="#"
+              id="navbarDropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+              data-toggle="dropdown"
+            >
+              <div
+                class="inline-block avatar-wrapper d-flex align-items-center mr-2 justify-content-center"
+              >
                 <span>Admin</span>
               </div>
               <span></span>
@@ -75,32 +133,31 @@
   </section>
 </template>
 <script>
-import { mapMutations, mapGetters, mapActions } from 'vuex';
+import { mapMutations, mapGetters, mapActions } from "vuex";
 export default {
   data() {
     return {
-      show: false,
-    }
+      show: false
+    };
   },
   methods: {
-    ...mapMutations('admin', ['logout','resetState']),
+    ...mapMutations("admin", ["logout", "resetState"]),
     away: function() {
       this.show = false;
     },
     logout_user() {
       this.logout();
       this.resetState();
-      this.$router.push('/control-panel');
+      this.$router.push("/control-panel");
     }
   },
   computed: {
-    ...mapGetters('admin', ['user', 'isAuthenticated','token']),
+    ...mapGetters("admin", ["user", "isAuthenticated", "token"]),
     current() {
       return this.$route.name;
-    },
+    }
   }
-}
-
+};
 </script>
 <style scoped>
 .avatar-wrapper {
@@ -147,7 +204,7 @@ div.underline {
   visibility: visible;
 }
 
-.nav-item div .nuxt-link-exact-active~.nav-item div.underline {
+.nav-item div .nuxt-link-exact-active ~ .nav-item div.underline {
   visibility: visible;
 }
 
@@ -194,5 +251,4 @@ input:focus {
 .dropdown-item:active {
   background-color: unset;
 }
-
 </style>

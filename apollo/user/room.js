@@ -9,13 +9,11 @@ export default {
         currentTopic {
           _id
           title
-          closeDate
-          startDate
+     
           votes
           isClosed
         }
         slug
-        government
       }
     }
   `,
@@ -27,13 +25,11 @@ export default {
         currentTopic {
           _id
           title
-          closeDate
-          startDate
           votes
           isClosed
         }
         slug
-        government
+        # government
       }
     }
   `,
@@ -45,13 +41,11 @@ export default {
         currentTopic {
           _id
           title
-          closeDate
-          startDate
           votes
           isClosed
         }
         slug
-        government
+        # government
       }
     }
   `,
@@ -70,14 +64,14 @@ export default {
         currentTopic {
           _id
           title
-          closeDate
-          startDate
+          # closeDate
+          # startDate
           votes
           isClosed
         }
         slug
-        government
-        roomType
+        # government
+        # roomType
       }
     }
   `,
@@ -89,14 +83,29 @@ export default {
         currentTopic {
           _id
           title
-          closeDate
-          startDate
+          # closeDate
+          # startDate
           votes
           isClosed
         }
         slug
-        government
-        roomType
+        # government
+        # roomType
+      }
+    }
+  `,
+    vote: gql`
+    subscription {
+      vote {
+        _id
+        title
+        voteId
+        # closeDate
+        # startDate
+        votes
+        isClosed
+        description
+        # createdBy
       }
     }
   `

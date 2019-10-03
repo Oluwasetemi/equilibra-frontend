@@ -6,3 +6,13 @@ export const roomType = {
   HOA: 'HOUSE_OF_ASSEMBLY',
   LGA: 'LGA'
 };
+
+export const voteType = {
+  poor: 'poorVotes',
+  notAcceptable: 'notAcceptableVotes',
+  upVote: 'upVotes',
+  downVote: 'downVotes',
+  challenges: 'challengesVotes',
+  commendable: 'commendableVotes',
+  excellent: 'excellentVotes'
+};
