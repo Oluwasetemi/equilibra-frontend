@@ -86,6 +86,11 @@
                 href="#"
               >Government Data</nuxt-link>
               <nuxt-link
+                :to="'/control-panel/senate'"
+                class="dropdown-item"
+                href="#"
+              >Senatorial Districts</nuxt-link>
+              <nuxt-link
                 :to="'/control-panel/hoas'"
                 class="dropdown-item"
                 href="#"
