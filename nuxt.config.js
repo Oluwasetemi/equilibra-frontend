@@ -122,8 +122,8 @@ export default {
   },
   apollo: {
     clientConfigs: {
-      default: "~/plugins/apollo.config.js"
-    }
+      default: '~/plugins/apollo.config.js',
+    },
   },
   toast: {
     position: "top-center",

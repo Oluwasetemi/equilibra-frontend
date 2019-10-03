@@ -63,6 +63,7 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import gql from "~/apollo/user/room";
 import { required, minLength } from "vuelidate/lib/validators";
 export default {
   props: ["currentRoom", "hasTopic"],
@@ -87,6 +88,9 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapGetters("auth", [ "getToken"]),
+  },
   methods: {
     ...mapActions("topic", ["requestTopicChange"]),
     changeRoomTopic() {
@@ -104,12 +108,27 @@ export default {
             this.$toast.error(data.graphQLErrors[0].message);
             return;
           }
-          this.$toast.success("Topic change bla bla");
         })
         .catch(err => {
           this.loading = false;
         });
+    },
+    initiateVoteSubscription() {
+      this.$apollo.addSmartSubscription("vote", {
+        query: gql.vote,
+        context: {
+          headers: {
+            Authorization: `Bearer ${this.getToken}`
+          }
+        },
+        result({data}) {
+          this.$eventBus.$emit('showPopup', data.vote.voteId)
+        }
+      });
     }
+  },
+  mounted() {
+    this.initiateVoteSubscription()
   }
 };
 </script>

@@ -128,6 +128,7 @@ export default {
   },
   filters: {
     formatDate(val, moment) {
+      // debugger
       val = new Date(Number(val)).toISOString();
       const now = new Date();
       let duration = moment.duration(moment(now).diff(moment(val)));
@@ -136,9 +137,11 @@ export default {
         return moment(val).format("Do MMMM YYYY, h:mm:ss a");
       }
       if (duration.asHours() >= 24) {
-        return moment(val).fromNow() + "\xa0\xa0" + moment(val).format("h:mm:ss a");
+        return (
+          moment(val).fromNow() + "\xa0\xa0" + moment(val).format("h:mm:ss a")
+        );
       }
-      return moment(val).fromNow()
+      return moment(val).fromNow();
     }
   },
   watch: {
@@ -202,6 +205,21 @@ export default {
             Authorization: `Bearer ${this.getToken}`
           }
         },
+        subscribeToMore: [
+          {
+            document: gql.subscribeToComments,
+            updateQuery: (previous, { subscriptionData }) => {
+              if (!subscriptionData.data.comments) return;
+              subscriptionData.data.comments.createdAt = Date.parse(subscriptionData.data.comments.createdAt)
+              subscriptionData.data.comments.updatedAt = Date.parse(subscriptionData.data.comments.updatedAt)
+              previous.fetchComments.edges = [
+                subscriptionData.data.comments,
+                ...previous.fetchComments.edges
+              ];
+              return previous;
+            }
+          }
+        ],
         watchLoading(isLoading, countModifier) {
           isLoading
             ? (this.loadingComments = true)

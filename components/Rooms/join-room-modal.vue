@@ -35,6 +35,7 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
+import gql from '~/apollo/user/topic'
 export default {
   props: ["roomId"],
   data() {
@@ -59,6 +60,8 @@ export default {
             return;
           }
           this.$emit('joinedRoom')
+          //subscribe to vote
+
           this.$toast.success("You have now joined this conversation!");
         })
         .catch(err => {

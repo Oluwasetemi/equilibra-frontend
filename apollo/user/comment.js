@@ -26,14 +26,6 @@ export default {
             username
             image
           }
-          # reporter {
-          #   _id
-          #   fullName
-          #   image
-          #   username
-          #   image
-          # }
-          # report
           replies {
             _id
             comment
@@ -44,23 +36,13 @@ export default {
               username
               image
             }
-            # reporter {
-            #   _id
-            #   fullName
-            #   image
-            #   username
-            #   image
-            # }
-            # report
             createdAt
             image
           }
-          # reports
           reply
           likes
           liked
           edited
-          # reported
           image
           createdAt
           updatedAt
@@ -74,6 +56,7 @@ export default {
       }
     }
   `,
+
   fetchComment: gql`
     query fetchComment($commentId: ID!) {
       fetchComment(commentId: $commentId) {
@@ -131,15 +114,35 @@ export default {
     }
   `,
   createComment: gql`
-    mutation createComment($comment: String!, $topic: ID!, $file: Upload, $room: ID!) {
-      createComment(comment: $comment, topic: $topic, file: $file, room: $room) {
+    mutation createComment(
+      $comment: String!
+      $topic: ID!
+      $file: Upload
+      $room: ID!
+    ) {
+      createComment(
+        comment: $comment
+        topic: $topic
+        file: $file
+        room: $room
+      ) {
         successMessage
       }
     }
   `,
   editComment: gql`
-    mutation createComment($comment: String!, $topic: ID!, $file: Upload, $room: ID!) {
-      createComment(comment: $comment, topic: $topic, file: $file, room: $room) {
+    mutation createComment(
+      $comment: String!
+      $topic: ID!
+      $file: Upload
+      $room: ID!
+    ) {
+      createComment(
+        comment: $comment
+        topic: $topic
+        file: $file
+        room: $room
+      ) {
         successMessage
       }
     }
@@ -152,8 +155,18 @@ export default {
     }
   `,
   replyComment: gql`
-    mutation replyComment($comment: String!, $commentId: ID!, $file: Upload, $room: ID!) {
-      replyComment(comment: $comment, commentId: $commentId, file: $file, room: $room) {
+    mutation replyComment(
+      $comment: String!
+      $commentId: ID!
+      $file: Upload
+      $room: ID!
+    ) {
+      replyComment(
+        comment: $comment
+        commentId: $commentId
+        file: $file
+        room: $room
+      ) {
         successMessage
       }
     }
@@ -176,6 +189,42 @@ export default {
     mutation reportComment($reportType: report, $commentId: ID!) {
       reportComment(reportType: $reportType, commentId: $commentId) {
         successMessage
+      }
+    }
+  `,
+  subscribeToComments: gql`
+    subscription {
+      comments {
+        _id
+          comment
+          author {
+            _id
+            fullName
+            image
+            username
+            image
+          }
+          replies {
+            _id
+            comment
+            author {
+              _id
+              fullName
+              image
+              username
+              image
+            }
+            createdAt
+            image
+          }
+          reply
+          likes
+          liked
+          edited
+          image
+          createdAt
+          updatedAt
+          successMessage
       }
     }
   `

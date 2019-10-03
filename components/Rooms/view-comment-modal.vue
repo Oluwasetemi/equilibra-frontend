@@ -15,7 +15,7 @@
           <div class="user-details d-flex px-3 py-2 border-bottom">
             <figure class="m-0 pr-1 d-inline-block">
               <img
-                :src="getUser.image || avatar"
+                :src="comment.author.image || avatar"
                 alt
                 class="rounded-circle"
                 height="40px"

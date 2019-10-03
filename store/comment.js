@@ -25,7 +25,7 @@ export default {
               Authorization: `Bearer ${rootState.auth.token}`
             }
           },
-          refetchQueries: ['fetchComments']
+          // refetchQueries: ['fetchComments']
         })
         .then(({ data }) => {
           return data.createComment;
@@ -146,6 +146,23 @@ export default {
         .catch(err => {
           return err;
         });
-    }
+    },
+    subscribeToComments({ commit, rootState }, payload) {
+      return this.app.apolloProvider.defaultClient
+        .subscribe({
+          subscription: gql.subscribeToComments,
+          context: {
+            headers: {
+              Authorization: `Bearer ${rootState.auth.token}`
+            }
+          }
+        })
+        .then(({ data }) => {
+        })
+        .catch(err => {
+          return err;
+        });
+    },
+
   }
 };

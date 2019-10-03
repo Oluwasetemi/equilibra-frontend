@@ -1,7 +1,7 @@
 <template>
   <div class="dropdown-menu p-3">
     <label for="sharable-link" class="m-0">Share Link</label>
-    <div class="form-input ">
+    <div class="form-input">
       <input
         ref="link"
         type="text"
@@ -13,8 +13,13 @@
     <div class="footer d-flex justify-content-between pt-1">
       <div class="socials">
         <img src="~/assets/icons/facebook (2).svg" alt class="mr-3" />
-        <img src="~/assets/icons/twitter (1).svg" alt class="mr-3" />
-        <img src="~/assets/icons/whatsapp.svg" alt />
+        <a class="twitter-share-button" href="https://twitter.com/intent/tweet">
+          <img src="~/assets/icons/twitter (1).svg" alt class="mr-3" />
+        </a>
+
+        <a href="whatsapp://send?text=Hello%20World!">
+          <img src="~/assets/icons/whatsapp.svg" alt />
+        </a>
       </div>
       <button class="close">
         <span aria-hidden="true">&times;</span>
@@ -26,10 +31,10 @@
 
 <script>
 export default {
-  mounted(){
+  mounted() {
     this.$refs.link.select();
   }
-}
+};
 </script>
 
 
