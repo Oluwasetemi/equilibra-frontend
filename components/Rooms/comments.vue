@@ -128,12 +128,10 @@ export default {
   },
   filters: {
     formatDate(val, moment) {
-      // debugger
       val = new Date(Number(val)).toISOString();
       const now = new Date();
       let duration = moment.duration(moment(now).diff(moment(val)));
       if (duration.asDays() > 9) {
-        console.log(duration.asDays());
         return moment(val).format("Do MMMM YYYY, h:mm:ss a");
       }
       if (duration.asHours() >= 24) {

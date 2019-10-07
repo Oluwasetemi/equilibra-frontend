@@ -6,12 +6,14 @@ export default {
       getFederalRooms(roomType: $roomType) {
         _id
         name
+        voteId
         currentTopic {
           _id
           title
-     
+          description
           votes
           isClosed
+          voteId
         }
         slug
       }
@@ -22,11 +24,14 @@ export default {
       getStateRooms(roomType: $roomType, isOrigin: $isOrigin) {
         _id
         name
+        voteId
         currentTopic {
           _id
           title
+          description
           votes
           isClosed
+          voteId
         }
         slug
         # government
@@ -38,11 +43,14 @@ export default {
       getRoomById(roomId: $roomId) {
         _id
         name
+        voteId
         currentTopic {
           _id
           title
+          description
           votes
           isClosed
+          voteId
         }
         slug
         # government
@@ -61,8 +69,10 @@ export default {
       joinRoom(roomId: $roomId) {
         _id
         name
+        voteId
         currentTopic {
           _id
+          description
           title
           # closeDate
           # startDate
@@ -80,9 +90,11 @@ export default {
       leaveRoom(roomId: $roomId) {
         _id
         name
+        voteId
         currentTopic {
           _id
           title
+          description
           # closeDate
           # startDate
           votes
@@ -100,6 +112,7 @@ export default {
         _id
         title
         voteId
+        description
         # closeDate
         # startDate
         votes

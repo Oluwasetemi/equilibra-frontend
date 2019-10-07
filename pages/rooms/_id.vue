@@ -1,7 +1,17 @@
 <template>
   <div class="px-md-3 pl-0 forum-container py-4 scrollable" ref="comments">
     <div class="border border-bottom-0">
-      <TopicChangePopup v-if="showTopicChangePopup" :voteId ="voteId"/>
+      <DiscussionVoteResults :voteId="currentRoom.voteId" :topic="currentRoom.currentTopic" />
+      <VoteDiscussion :voteId="currentRoom.voteId" />
+      <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut" appear>
+        <TopicChangePopup
+          v-if="showTopicChangePopup"
+          @closeTopicChangePopup="showTopicChangePopup = false"
+          :voteId="voteId"
+          :topicDescription="topicDescription"
+          :topicTitle="topicTitle"
+        />
+      </transition>
       <RoomHeader :currentRoom="currentRoom" />
       <PostComment :currentRoom="currentRoom" :isMyRoom="isMyRoom" />
       <Comments :currentRoom="currentRoom" :fetchMore="fetchMore" @fetchedMore="fetchMore = false" />
@@ -10,10 +20,12 @@
 </template>
 
 <script>
-import Timer from '~/components/Rooms/timer'
+import Timer from "~/components/Rooms/timer";
 import { mapGetters, mapActions } from "vuex";
 import RoomHeader from "~/components/Rooms/header";
 import TopicChangePopup from "~/components/Rooms/vote-topic-change";
+import VoteDiscussion from "~/components/Rooms/vote-discussion";
+import DiscussionVoteResults from "~/components/Rooms/poll-results";
 import Comments from "~/components/Rooms/comments";
 import PostComment from "~/components/Rooms/post-comment";
 export default {
@@ -23,7 +35,17 @@ export default {
     return {
       fetchMore: false,
       showTopicChangePopup: false,
-      voteId: null
+      voteId: null,
+      topicTitle: "",
+      topicDescription: "",
+      fetchResults: false,
+      closeDiscussionInterval: null,
+      votingResultsInterval: null,
+      voteCloseDate: {
+        day: 1,
+        hour: 13,
+        minutes: 30
+      }
     };
   },
   components: {
@@ -31,21 +53,67 @@ export default {
     PostComment,
     Comments,
     TopicChangePopup,
-    Timer
+    Timer,
+    VoteDiscussion,
+    DiscussionVoteResults
   },
   methods: {
     fetchMoreComments({ target }) {
       if (target.scrollTop + target.clientHeight == target.scrollHeight) {
         this.fetchMore = true;
       }
+    },
+    showModal(val) {
+      $(val).modal("show");
+    },
+    checkToCloseDiscussion() {
+      if (
+        new Date().getDay() == this.voteCloseDate.day &&
+        new Date().getMinutes() == this.voteCloseDate.minutes &&
+        new Date().getHours() == this.voteCloseDate.hour
+      ) {
+        debugger;
+        if (
+          this.currentRoom.currentTopic &&
+          this.currentRoom.currentTopic.title
+        )
+          debugger;
+        this.showModal("#voteDiscussionModal");
+        clearInterval(this.closeDiscussionInterval);
+      }
+    },
+    showVotingResults() {
+      if (
+        new Date().getDay() == this.voteCloseDate.day &&
+        new Date().getMinutes() == this.voteCloseDate.minutes + 3 &&
+        new Date().getHours() == this.voteCloseDate.hour
+      ) {
+        if (
+          this.currentRoom.currentTopic &&
+          this.currentRoom.currentTopic.title
+        )
+          this.$eventBus.$emit("fetchDiscussionResults");
+        this.showModal("#voteResults");
+        clearInterval(this.votingResultsInterval);
+      }
     }
   },
   mounted() {
-    this.$refs.comments.addEventListener("scroll", this.fetchMoreComments);
-    this.$eventBus.$on("showPopup", (voteId) => {
+    this.$eventBus.$on("showPopup", ({ voteId, title, description }) => {
       this.showTopicChangePopup = true;
-      this.voteId = voteId
+      this.voteId = voteId;
+      this.topicTitle = title;
+      this.topicDescription = description;
     });
+    const self = this;
+    this.closeDiscussionInterval = setInterval(function() {
+      self.checkToCloseDiscussion();
+    }, 1000);
+    this.votingResultsInterval = setInterval(function() {
+      self.showVotingResults();
+    }, 1000);
+    // }
+    this.$refs.comments.addEventListener("scroll", this.fetchMoreComments);
   },
   beforeDestroy() {
     this.$refs.comments.removeEventListener("scroll", this.fetchMoreComments);
