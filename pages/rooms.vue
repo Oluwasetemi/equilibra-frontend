@@ -4,7 +4,12 @@
     <div class="px-md-3 px-0">
       <div class="row no-gutters flex-row flex-lg-nowrap justify-content-between">
         <div class="px-3 card-container d-lg-block d-none py-4 scrollable">
-          <Card :imageURL="imageUrl2.imageUrl" :title="$route.params.id" link />
+          <Card
+            :imageURL="imageUrl2.imageUrl"
+            :title="$route.params.id"
+            link
+            :localGovt="localGovt"
+          />
           <aside class="pt-5">
             <div class="groups border border-bottom-0">
               <ul class="p-0 m-o">
@@ -70,7 +75,8 @@ export default {
       roomType,
       loading: true,
       getMyRooms: [],
-      currentRoom: { slug: "Vent-The-Steam", currentTopic: null }
+      currentRoom: { slug: "Vent-The-Steam", currentTopic: null },
+      localGovt: ""
     };
   },
   components: {
@@ -80,6 +86,7 @@ export default {
   computed: {
     ...mapGetters("room", ["federalRooms", "stateRooms"]),
     ...mapGetters("auth", ["isAuthenticated", "getToken"]),
+    ...mapGetters("user", ["getUser"]),
     rooms() {
       return this.$route.query.state
         ? this.stateRooms[this.roomType[this.$route.params.id]]
@@ -103,14 +110,6 @@ export default {
       "joinRoom",
       "leaveRoom"
     ]),
-    // subscribeToComments() {
-    //   this.$apollo.addSmartSubscription("comments", {
-    //     subscription: gql.subscribeToComments,
-    //     result(data) {
-    //       console.log(data);
-    //     }
-    //   });
-    // },
     checkRoomStatus(room) {
       this.isMyRoom(room)
         ? this.leaveRoomForum(room)
@@ -155,7 +154,10 @@ export default {
       let self = this;
       const payload = {
         roomType: this.roomType[self.$route.params.id],
-        isOrigin: this.$route.query.state == "true" ? true : false
+        isOrigin:
+          this.$route.query.isOrigin == true || this.$route.query.isOrigin == "true"
+            ? true
+            : false
       };
       this.getStateRooms(payload)
         .then(data => {
@@ -210,18 +212,51 @@ export default {
         return false;
       }
       return this.getMyRooms.some(myRoom => myRoom._id == room._id);
+    },
+    initializeRooms() {
+      if (this.isAuthenticated) {
+        this.getAllMyRooms();
+      }
+      if (this.$route.query.state) {
+        this.getStateRooms_();
+        return;
+      }
+      this.getFedRooms();
+    },
+    fetchLGAs(stateID) {
+      const self = this;
+      this.$store
+        .dispatch("localGovernments", {
+          stateGovernmentID: stateID
+        })
+        .then(data => {
+          if (data.graphQLErrors) {
+            this.$toast.error(data.graphQLErrors[0].message);
+            this.loadingLGA = false;
+            return;
+          }
+          this.localGovt = this.getState(data, this.$route.query.id);
+        })
+        .catch(err => {});
+    },
+    getState(LGAS, id) {
+      let lga = LGAS.find(lga => {
+        return lga.id == id;
+      });
+      return lga ? lga.name : "";
     }
   },
   mounted() {
-    // this.subscribeToComments()
-    if (this.isAuthenticated) {
-      this.getAllMyRooms();
+    this.$eventBus.$on("topicChanged", () => {
+      this.initializeRooms();
+    });
+    if (this.$route.params.id == "LGA" && this.$route.query.id) {
+      const stateID = this.$route.query.isOrigin
+        ? this.getUser.stateOfOrigin
+        : this.getUser.stateOfResidence;
+      this.fetchLGAs(stateID);
     }
-    if (this.$route.query.state) {
-      this.getStateRooms_();
-      return;
-    }
-    this.getFedRooms();
+    this.initializeRooms();
   }
 };
 </script>

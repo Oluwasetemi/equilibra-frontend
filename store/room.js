@@ -35,7 +35,8 @@ export default {
       return this.app.apolloProvider.defaultClient
         .query({
           query: gql.getFederalRooms,
-          variables: { roomType: payload }
+          variables: { roomType: payload },
+          fetchPolicy: 'network-only'
         })
         .then(({ data }) => {
           commit('setFederalRooms', {
@@ -54,6 +55,7 @@ export default {
           fetchPolicy: 'no-cache',
           query: gql.getStateRooms,
           variables: payload,
+          fetchPolicy: 'network-only',
           context: {
             headers: {
               Authorization: `Bearer ${rootState.auth.token}`

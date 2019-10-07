@@ -15,7 +15,7 @@
           <h4 class="text-center py-3 m-0">CHANGE TOPIC</h4>
         </div>
         <div class="p-4">
-          <p class="current-topic text-center" v-if="!hasTopic">
+          <p class="current-topic text-center" v-if="!currentRoom.currentTopic || !currentRoom.currentTopic._id">
             This room has no topic.
             <br />Create a new topic to begin a conversation
           </p>
@@ -89,7 +89,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters("auth", [ "getToken"]),
+    ...mapGetters("auth", ["getToken"])
   },
   methods: {
     ...mapActions("topic", ["requestTopicChange"]),
@@ -121,21 +121,21 @@ export default {
             Authorization: `Bearer ${this.getToken}`
           }
         },
-        result({data}) {
-          this.$eventBus.$emit('showPopup', data.vote.voteId)
+        result({ data }) {
+          this.$eventBus.$emit("showPopup", data.vote);
         }
       });
     }
   },
   mounted() {
-    this.initiateVoteSubscription()
+    this.initiateVoteSubscription();
   }
 };
 </script>
 
 <style scoped>
-.modal-content {
-  max-width: 482px;
+.modal-dialog {
+  max-width: 482px !important;
   width: 100%;
 }
 

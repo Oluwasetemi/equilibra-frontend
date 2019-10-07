@@ -34,8 +34,29 @@ export default {
         successMessage
         upVotes
         downVotes
+        topicChange
+        room {
+          currentTopic {
+            voteId
+          }
+        }
       }
     }
   `,
-  
+  closeTopicDiscussionVoting: gql`
+    mutation closeTopicDiscussionVoting($voteId: ID!) {
+      closeTopicDiscussionVoting(voteId: $voteId) {
+        successMessage
+        poorVotes
+        notAcceptableVotes
+        challengesVotes
+        commendableVotes
+        excellentVotes
+        voters
+        room {
+          voteId
+        }
+      }
+    }
+  `
 };

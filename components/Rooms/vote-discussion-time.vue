@@ -12,20 +12,11 @@
         @click="$emit('closeTopicChangePopup')"
         v-if="votingClosed"
       >×</a>
-      <h4 class="mb-3">{{votingClosed ? "Voting Closed" : "Voting for New Topic in progress"}}</h4>
+      <h4 class="mb-3">Voting for discussion in progress</h4>
       <p class="suggested">Suggested topic:</p>
       <p>{{topicTitle}}</p>
       <p>{{topicDescription}}</p>
       <p v-if="voteRegistered && !votingClosed">Your vote has been registered!</p>
-      <div class="d-flex justify-content-between" v-else-if="!voteRegistered && !votingClosed">
-        <a href="#" class="decline py-2" @click="voteTopic(false)">Decline topic</a>
-        <button class="accept py-2 px-3" @click="voteTopic(true)">Accept topic</button>
-      </div>
-      <div v-if="votingClosed" class="d-flex justify-content-between">
-        <span class="vote-count" style="color: green">Up Votes: {{totalUpvotes}}%</span>
-        <span class="vote-count" style="color: red">Down Votes: {{totalDownVotes}}%</span>
-      </div>
-      <p v-if="votingClosed">{{topicChanged ? 'Topic Approved' : 'Topic Declined'}}</p>
     </div>
   </div>
 </template>
@@ -74,12 +65,8 @@ export default {
           }
           this.$toast.success("Voting closed!");
           const totalVotes = data.upVotes + data.downVotes;
-          this.totalUpvotes =
-            data.upVotes < 1 ? 0 : this.getPercentage(data.upVotes, totalVotes);
-          this.totalDownVotes =
-            data.downVotes < 1
-              ? 0
-              : this.getPercentage(data.downVotes, totalVotes);
+          this.totalUpvotes = this.getPercentage(data.upVotes, totalVotes);
+          this.totalDownVotes = this.getPercentage(data.downVotes, totalVotes);
           this.topicChanged = data.topicChange;
           if (this.topicChanged) {
             this.$eventBus.$emit("topicChanged");

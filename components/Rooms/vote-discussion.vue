@@ -2,31 +2,31 @@
 <template>
   <div
     class="modal fade"
-    id="changeTopic"
+    id="voteDiscussionModal"
     role="dialog"
-    aria-labelledby="changeTopicLabel"
+    aria-labelledby="voteDiscussionLabel"
     aria-hidden="true"
   >
     <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content p-5">
+      <div class="modal-content">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-          <div class="title border-bottom">
-            <h5 class="my-3 text-center">Vote</h5>
-          </div>
-
+        <div class="title border-bottom">
+          <h5 class="my-3 text-center font-weight-bold">Vote</h5>
+        </div>
+        <div class="px-5 pt-3 pb-5">
           <p class="topic text-center my-4">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit,
             is sed do eiusmod tempor inci did is unt ut labore et dolore magna aliqua um dolor sit ame.
           </p>
-          <form action>
+          <form @submit.prevent="voteDiscussion()">
             <label for="poor" class="form-check my-4" :class="{selected: selected == 'poor'}">
               <input
                 type="radio"
                 name="poor"
                 id="poor"
-                value="poor"
+                :value="voteType.poor"
                 class="form-check-input"
                 hidden
                 v-model="selected"
@@ -45,7 +45,7 @@
                 type="radio"
                 name="not-acceptable"
                 id="not-acceptable"
-                value="not-acceptable"
+                :value="voteType.notAcceptable"
                 class="form-check-input"
                 hidden
                 v-model="selected"
@@ -67,7 +67,7 @@
                 type="radio"
                 name="report"
                 id="challenges"
-                value="challenges"
+                :value="voteType.challenges"
                 class="form-check-input"
                 hidden
                 v-model="selected"
@@ -86,7 +86,7 @@
                 type="radio"
                 name="report"
                 id="commendable"
-                value="commendable"
+                :value="voteType.commendable"
                 class="form-check-input"
                 hidden
                 v-model="selected"
@@ -105,7 +105,7 @@
                 type="radio"
                 name="report"
                 id="excellent"
-                value="excellent"
+                :value="voteType.excellent"
                 class="form-check-input"
                 hidden
                 v-model="selected"
@@ -116,22 +116,84 @@
               <label for="excellent" class="mb-0 ml-3">Excellent or Outstanding - Service Level</label>
             </label>
           </form>
-          <div class="footer d-flex justify-content-between pt-1 mt-3">
+          <div class="footer d-flex justify-content-between pt-1 mt-3" v-if="!voteRegistered">
             <button
               class="d-flex green-btn justify-content-between align-items-center w-100 px-4 mt-4"
+              type="submit"
+              :disabled="loading"
+              @click="voteDiscussion()"
             >
-              <span>Change Topic</span>
+              <div class="spinner-grow text-success" role="status" v-if="loading">
+                <span class="sr-only">Loading...</span>
+              </div>
+              <span>Vote</span>
               <img src="~/assets/icons/vote-button-icon.svg" alt height="40px" />
             </button>
           </div>
+          <p v-else>Your vote has been registered!</p>
         </div>
       </div>
+    </div>
   </div>
 </template>
 
 
-<style scoped>
+<script>
+import { mapGetters, mapActions } from "vuex";
+import { voteType } from "~/static/js/constants";
+import gql from "~/apollo/user/room";
+export default {
+  props: ["voteId"],
+  data() {
+    return {
+      selected: null,
+      voteType,
+      voteRegistered: false,
+      loading: false
+    };
+  },
+  computed: {
+    ...mapGetters("auth", ["getToken"])
+  },
+  methods: {
+    ...mapActions("topic", ["vote", "closeRequestTopicChangeVoting"]),
+    voteDiscussion() {
+      this.loading = true;
+      this.vote({ vote: this.selected, voteId: this.voteId })
+        .then(data => {
+          this.loading - false;
+          if (data.graphQLErrors) {
+            this.$toast.error(data.grapLErrors[0].message);
+            return;
+          }
+          this.$toast.success("Your vote has been registered!");
+          this.voteRegistered = true;
+          $("voteDiscussionModal").modal("hide");
+        })
+        .catch(err => {
+          this.loading = false;
+        });
+    },
+    initiateVoteSubscription() {
+      this.$apollo.addSmartSubscription("vote", {
+        query: gql.vote,
+        context: {
+          headers: {
+            Authorization: `Bearer ${this.getToken}`
+          }
+        },
+        result({ data }) {
+        }
+      });
+    }
+  },
+  mounted() {
+    this.initiateVoteSubscription();
+  }
+};
+</script>
 
+<style scoped>
 button.close {
   position: absolute;
   right: 0;
@@ -145,7 +207,7 @@ button.close {
   color: #07834e;
   font-weight: 100;
 }
-.modal-content {
+.modal-dialog {
   width: 100%;
   max-width: 710px;
   background: #ffffff;
@@ -169,10 +231,10 @@ h5 {
 .radio-btn {
   height: 36px;
   width: 36px;
-  border: 1px solid #dadada;
+  border: 2px solid #dadada;
 }
 
-img {
+.radio-btn img {
   display: none;
   position: relative;
   top: 5px;
@@ -209,7 +271,6 @@ input:checked ~ .radio-btn img {
   box-shadow: 0px 3px 11px rgba(0, 0, 0, 0.07);
   border-radius: 2px;
 }
-
 
 .green-btn {
   background: #07834e;
