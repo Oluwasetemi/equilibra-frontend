@@ -14,9 +14,12 @@
       >×</a>
       <h4 class="mb-3">{{votingClosed ? "Voting Closed" : "Voting for New Topic in progress"}}</h4>
       <p class="suggested">Suggested topic:</p>
-      <p>{{topicTitle}}</p>
+      <p style="font-weight: 400" class="m-0">{{topicTitle}}</p>
       <p>{{topicDescription}}</p>
-      <p v-if="voteRegistered && !votingClosed">Your vote has been registered!</p>
+      <p
+        v-if="voteRegistered && !votingClosed"
+        style="color: green;font-weight: 400;"
+      >✓ Your vote has been registered!</p>
       <div class="d-flex justify-content-between" v-else-if="!voteRegistered && !votingClosed">
         <a href="#" class="decline py-2" @click="voteTopic(false)">Decline topic</a>
         <button class="accept py-2 px-3" @click="voteTopic(true)">Accept topic</button>

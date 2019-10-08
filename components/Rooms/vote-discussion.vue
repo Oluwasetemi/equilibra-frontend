@@ -130,7 +130,7 @@
               <img src="~/assets/icons/vote-button-icon.svg" alt height="40px" />
             </button>
           </div>
-          <p v-else>Your vote has been registered!</p>
+          <p v-else style="color: green;font-weight: 400;">✓ Your vote has been registered!</p>
         </div>
       </div>
     </div>
@@ -182,8 +182,7 @@ export default {
             Authorization: `Bearer ${this.getToken}`
           }
         },
-        result({ data }) {
-        }
+        result({ data }) {}
       });
     }
   },

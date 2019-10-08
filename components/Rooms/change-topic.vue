@@ -23,8 +23,8 @@
             <br />Create a new topic to begin a conversation
           </p>
           <p class="current-topic text-center" v-else>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-            is sed do eiusmod tempor inci did is unt ut labore et dolore magna aliqua um dolor sit ame.
+            Current Topic:
+            <span style="font-weight: 600">{{currentRoom.currentTopic.title}}</span>
           </p>
           <form class="new-topic" @submit.prevent="changeRoomTopic()">
             <div class="form-input">
