@@ -15,7 +15,10 @@
           <h4 class="text-center py-3 m-0">CHANGE TOPIC</h4>
         </div>
         <div class="p-4">
-          <p class="current-topic text-center" v-if="!currentRoom.currentTopic || !currentRoom.currentTopic._id">
+          <p
+            class="current-topic text-center"
+            v-if="!currentRoom.currentTopic || !currentRoom.currentTopic._id"
+          >
             This room has no topic.
             <br />Create a new topic to begin a conversation
           </p>
@@ -122,7 +125,10 @@ export default {
           }
         },
         result({ data }) {
-          this.$eventBus.$emit("showPopup", data.vote);
+          this.$eventBus.$emit("showPopup", {
+            data: data.vote,
+            roomId: this.currentRoom._id
+          });
         }
       });
     }
