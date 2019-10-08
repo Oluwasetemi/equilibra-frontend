@@ -15,13 +15,16 @@
           <h4 class="text-center py-3 m-0">CHANGE TOPIC</h4>
         </div>
         <div class="p-4">
-          <p class="current-topic text-center" v-if="!currentRoom.currentTopic || !currentRoom.currentTopic._id">
+          <p
+            class="current-topic text-center"
+            v-if="!currentRoom.currentTopic || !currentRoom.currentTopic._id"
+          >
             This room has no topic.
             <br />Create a new topic to begin a conversation
           </p>
           <p class="current-topic text-center" v-else>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-            is sed do eiusmod tempor inci did is unt ut labore et dolore magna aliqua um dolor sit ame.
+            Current Topic:
+            <span style="font-weight: 600">{{currentRoom.currentTopic.title}}</span>
           </p>
           <form class="new-topic" @submit.prevent="changeRoomTopic()">
             <div class="form-input">
@@ -122,7 +125,10 @@ export default {
           }
         },
         result({ data }) {
-          this.$eventBus.$emit("showPopup", data.vote);
+          this.$eventBus.$emit("showPopup", {
+            data: data.vote,
+            roomId: this.currentRoom._id
+          });
         }
       });
     }

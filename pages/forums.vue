@@ -223,7 +223,6 @@
                     We are positively minded Nigerians, committed to unity and to
                     encouraging fairness, just and equitable lifee.
                   </p>
-                  {{item.link}}
                   <nuxt-link
                     tag="button"
                     class="border-0 p-3 w-100"

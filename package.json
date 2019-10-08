@@ -28,6 +28,7 @@
     "nuxt": "^2.0.0",
     "nuxt-vuex-localstorage": "^1.2.6",
     "vue-multiselect": "^2.1.6",
+    "vue-scrollto": "^2.17.1",
     "vue2-editor": "^2.10.2",
     "vuelidate": "^0.7.4",
     "vuex-persist": "^2.0.1",

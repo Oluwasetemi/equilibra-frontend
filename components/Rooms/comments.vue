@@ -163,6 +163,7 @@ export default {
           variables: {
             cursor
           },
+          fetchPolicy: 'cache-and-network',
           context: {
             headers: {
               Authorization: `Bearer ${self.getToken}`
@@ -198,6 +199,7 @@ export default {
           topicId: this.currentRoom.currentTopic._id,
           roomId: this.currentRoom._id
         },
+        fetchPolicy: 'cache-and-network',
         context: {
           headers: {
             Authorization: `Bearer ${this.getToken}`

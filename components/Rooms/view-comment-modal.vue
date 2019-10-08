@@ -7,8 +7,8 @@
     aria-hidden="true"
   >
     <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content" v-if="!loading && Object.keys(comment).length > 0">
-        <div class="scrollable">
+      <div class="modal-content" v-if="Object.keys(comment).length > 0">
+        <div class="scrollable" ref="scrollableContainer">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -35,7 +35,6 @@
           </div>
           <div class="grey-wrapper px-3 py-2">
             <div class="time d-inline-block mr-4">
-              <span>{{comment.createdAt | formatTime($moment)}}</span> -
               <span>{{comment.createdAt | formatDate($moment)}}</span>
             </div>
             <div class="actions d-inline-block mr-2">
@@ -58,7 +57,7 @@
                     <span>Share</span>
                     <img src="~/assets/icons/share.svg" alt />
                   </a>
-                  <shareLinkCard class="dropdown-menu share-link" aria-labelledby="shareLink" dat/>
+                  <shareLinkCard class="dropdown-menu share-link" aria-labelledby="shareLink" dat />
                 </span>
               </span>
             </div>
@@ -134,7 +133,11 @@
                   <shareLinkCard class="dropdown-menu share-link-2" aria-labelledby="shareLink" />
                 </div>
               </div>
-              <ReportCommentIcon :commentId="activeReply" v-if="reply.author._id != getUser._id" class="report-card"/>
+              <ReportCommentIcon
+                :commentId="activeReply"
+                v-if="reply.author._id != getUser._id"
+                class="report-card"
+              />
             </div>
           </div>
         </div>
@@ -194,9 +197,9 @@
           </div>
         </form>
       </div>
-      <div class="py-4 text-center w-100" v-else>
+      <!-- <div class="py-4 text-center w-100" v-else>
         <div class="spinner-border"></div>
-      </div>
+      </div>-->
     </div>
   </div>
 </template>
@@ -229,7 +232,8 @@ export default {
         comment: ""
       },
       fetchComment: {},
-      loading: false
+      loading: false,
+      newReplyPosted: false
     };
   },
   components: {
@@ -247,12 +251,18 @@ export default {
   },
   filters: {
     formatDate(val, moment) {
-      return moment("2019-09-04T03:50:04.428Z")
-        .startOf("day")
-        .fromNow();
-    },
-    formatTime(val, moment) {
-      return moment("2019-09-04T03:50:04.428Z").format("h:mm:ss a");
+      val = new Date(Number(val)).toISOString();
+      const now = new Date();
+      let duration = moment.duration(moment(now).diff(moment(val)));
+      if (duration.asDays() > 9) {
+        return moment(val).format("Do MMMM YYYY, h:mm:ss a");
+      }
+      if (duration.asHours() >= 24) {
+        return (
+          moment(val).fromNow() + "\xa0\xa0" + moment(val).format("h:mm:ss a")
+        );
+      }
+      return moment(val).fromNow();
     }
   },
   methods: {
@@ -278,8 +288,16 @@ export default {
         watchLoading(isLoading, countModifier) {
           isLoading ? (this.loading = true) : (this.loading = false);
         },
-        result() {
-          this.loading = false;
+        result({ data }) {
+          debugger
+          this.$scrollTo
+          if (this.newReplyPosted) {
+            const container = this.$refs.scrollableContainer;
+            container.scrollTop =
+              container.scrollHeight - container.clientHeight + 115;
+            this.newReplyPosted = false;
+            this.loading = false;
+          }
         }
       });
     },
@@ -306,7 +324,7 @@ export default {
             this.$toast.error(data.graphQLErrors[0].message);
             return;
           }
-
+          this.newReplyPosted = true;
           this.$toast.success("Your reply has been posted");
         })
         .catch(err => {
@@ -383,7 +401,7 @@ div.scrollable {
 .share-link {
   z-index: 10;
   top: -10px !important;
-    left: 100% !important;
+  left: 100% !important;
 }
 
 .new-comment,

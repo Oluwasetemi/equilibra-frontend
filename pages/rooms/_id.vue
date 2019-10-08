@@ -99,11 +99,13 @@ export default {
     }
   },
   mounted() {
-    this.$eventBus.$on("showPopup", ({ voteId, title, description }) => {
-      this.showTopicChangePopup = true;
-      this.voteId = voteId;
-      this.topicTitle = title;
-      this.topicDescription = description;
+    this.$eventBus.$on("showPopup", ({ data, roomId }) => {
+      if (roomId == this.currentRoom._id) {
+        this.showTopicChangePopup = true;
+        this.voteId = data.voteId;
+        this.topicTitle = data.title;
+        this.topicDescription = data.description;
+      }
     });
     const self = this;
     this.closeDiscussionInterval = setInterval(function() {
