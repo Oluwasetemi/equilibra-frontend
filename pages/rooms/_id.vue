@@ -58,6 +58,7 @@ export default {
     DiscussionVoteResults
   },
   methods: {
+    ...mapActions("room", ["getRoomById"]),
     fetchMoreComments({ target }) {
       if (target.scrollTop + target.clientHeight == target.scrollHeight) {
         this.fetchMore = true;
@@ -72,12 +73,10 @@ export default {
         new Date().getMinutes() == this.voteCloseDate.minutes &&
         new Date().getHours() == this.voteCloseDate.hour
       ) {
-        debugger;
         if (
           this.currentRoom.currentTopic &&
           this.currentRoom.currentTopic.title
         )
-          debugger;
         this.showModal("#voteDiscussionModal");
         clearInterval(this.closeDiscussionInterval);
       }
@@ -96,6 +95,16 @@ export default {
         this.showModal("#voteResults");
         clearInterval(this.votingResultsInterval);
       }
+    },
+    getRoom() {
+      this.getRoomById(this.$route.query.id)
+        .then(data => {
+          if (data.graphQLErrors) {
+            this.$toast.error(data.graphQLErrors[0].message);
+            return;
+          }
+        })
+        .catch(err => {});
     }
   },
   mounted() {
@@ -107,6 +116,7 @@ export default {
         this.topicDescription = data.description;
       }
     });
+    this.getRoom();
     const self = this;
     this.closeDiscussionInterval = setInterval(function() {
       self.checkToCloseDiscussion();

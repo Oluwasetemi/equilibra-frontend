@@ -30,8 +30,12 @@
           <div class="comment-content p-3">
             <p class="text-left m-0">{{comment.comment}}</p>
           </div>
-          <div class="comment-image pb-3" v-if="comment.image">
-            <img :src="comment.image" alt="photo content" class="photo-content" />
+          <div class="comment-image pb-3 px-3" v-if="comment.images && comment.images.length > 0">
+            <div class="row">
+              <div class="col-md-2" v-for="(image, i) in comment.images" :key="i">
+                <img :src="image" alt="photo content" class="img-fluid" />
+              </div>
+            </div>
           </div>
           <div class="grey-wrapper px-3 py-2">
             <div class="time d-inline-block mr-4">
@@ -91,8 +95,15 @@
                   <div class="comment-content pr-3">
                     <p class="text-left m-0">{{reply.comment}}</p>
                   </div>
-                  <div class="comment-image pb-3" v-if="reply.image">
-                    <img :src="reply.image" alt="photo content" class="photo-reply mt-3" />
+                  <div
+                    class="comment-image py-3 px-3"
+                    v-if="reply.images && reply.images.length > 0"
+                  >
+                    <div class="row">
+                      <div class="col-md-2" v-for="(image, i) in reply.images" :key="i">
+                        <img :src="image" alt="photo content" class="img-fluid" />
+                      </div>
+                    </div>
                   </div>
                   <div class="actions mr-2 pt-2">
                     <a
@@ -155,7 +166,8 @@
                 type="file"
                 name="replyPhoto"
                 id="replyPhoto"
-                accept="image/*"
+                accept="image/x-png, image/gif, image/jpeg"
+                multiple
                 @change="previewReplyImage()"
                 hidden
               />
@@ -169,20 +181,15 @@
                 class="d-inline-block border-0 px-4 w-100"
                 placeholder="Type a message..."
               />
-              <div class="text-center" :class="{'position-absolute': !imageContent}">
-                <figure class="position-relative d-inline-block">
-                  <a href="#" class="close" @click="removeReplyImage()" v-if="imageContent">
-                    <span>&times;</span>
-                  </a>
-                  <img
-                    ref="replyimageContent"
-                    src
-                    alt
-                    height="340px"
-                    class="pb-4"
-                    style="max-width: 80%"
-                  />
-                </figure>
+              <div class="px-lg-5">
+                <div class="row" :class="{'position-absolute': !imageContent}">
+                  <figure class="position-relative col-md-2" v-for="(src, i) in filesSrc" :key="i">
+                    <a href="#" class="close" @click="removeReplyImage(i)">
+                      <span>&times;</span>
+                    </a>
+                    <img ref="replyimageContent" :src="src" alt class="img-fluid" />
+                  </figure>
+                </div>
               </div>
             </div>
 
@@ -222,7 +229,8 @@ export default {
       avatar,
       showLink: false,
       liked: false,
-      file: "",
+      files: "",
+      filesSrc: [],
       formActive: false,
       imageContent: false,
       setClass: false,
@@ -267,11 +275,15 @@ export default {
   },
   methods: {
     ...mapActions("comment", ["replyComment", "reportComment"]),
-    removeReplyImage() {
-      this.imageContent = false;
-      this.file = "";
-
-      this.$refs.replyimageContent.src = "";
+    removeReplyImage(i) {
+      if (this.filesSrc.length == 0) {
+        this.imageContent = false;
+      }
+      if (this.filesSrc.length == 1) {
+        this.filesSrc = [];
+        return;
+      }
+      this.filesSrc.splice(i, 1);
     },
     fetchCommentByID() {
       this.loading = true;
@@ -289,8 +301,7 @@ export default {
           isLoading ? (this.loading = true) : (this.loading = false);
         },
         result({ data }) {
-          debugger
-          this.$scrollTo
+          this.$scrollTo;
           if (this.newReplyPosted) {
             const container = this.$refs.scrollableContainer;
             container.scrollTop =
@@ -302,18 +313,25 @@ export default {
       });
     },
     previewReplyImage() {
-      this.file = event.target.files[0];
-      const reader = new FileReader();
-      reader.readAsDataURL(this.file);
-      reader.onload = e => {
-        this.imageContent = true;
-        this.$refs.replyimageContent.src = e.target.result;
-      };
+      this.files = Array.from(event.target.files);
+      if (this.files.length > 10) {
+        this.$toast.error("You can only upload a maximum of 10 at a time");
+        this.files = [];
+        return;
+      }
+      this.files.forEach(file => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = e => {
+          this.imageContent = true;
+          this.filesSrc.push(e.target.result);
+        };
+      });
     },
     postReply() {
       this.payload.commentId = this.comment._id;
       this.payload.room = this.roomId;
-      if (this.file) this.payload.file = this.file;
+      if (this.files) this.payload.file = this.files;
       this.loading = true;
       this.replyComment(this.payload)
         .then(data => {
@@ -325,6 +343,8 @@ export default {
             return;
           }
           this.newReplyPosted = true;
+          this.files = [];
+          this.filesSrc = [];
           this.$toast.success("Your reply has been posted");
         })
         .catch(err => {
@@ -355,13 +375,12 @@ export default {
 }
 
 a.close {
-  border: solid 2px #07834e;
   border-radius: 50%;
   height: 25px;
   width: 27px;
   font-weight: 200;
-  position: absolute;
-  right: -10px;
+  right: -6px;
+  top: -21px;
 }
 .spinner-border {
   height: 4rem;

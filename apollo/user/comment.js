@@ -22,7 +22,6 @@ export default {
           author {
             _id
             fullName
-            image
             username
             image
           }
@@ -32,18 +31,17 @@ export default {
             author {
               _id
               fullName
-              image
               username
               image
             }
             createdAt
-            image
+            images
           }
           reply
           likes
           liked
           edited
-          image
+          images
           createdAt
           updatedAt
           successMessage
@@ -65,7 +63,6 @@ export default {
         author {
           _id
           fullName
-          image
           username
           image
         }
@@ -83,7 +80,6 @@ export default {
           author {
             _id
             fullName
-            image
             username
             image
           }
@@ -98,7 +94,7 @@ export default {
           likes
           liked
           createdAt
-          image
+          images
         }
         # reports
         reply
@@ -106,7 +102,7 @@ export default {
         liked
         edited
         # reported
-        image
+        images
         createdAt
         updatedAt
         successMessage
@@ -117,7 +113,7 @@ export default {
     mutation createComment(
       $comment: String!
       $topic: ID!
-      $file: Upload
+      $file: [Upload]
       $room: ID!
     ) {
       createComment(
@@ -134,7 +130,7 @@ export default {
     mutation createComment(
       $comment: String!
       $topic: ID!
-      $file: Upload
+      $file: [Upload]
       $room: ID!
     ) {
       createComment(
@@ -158,7 +154,7 @@ export default {
     mutation replyComment(
       $comment: String!
       $commentId: ID!
-      $file: Upload
+      $file: [Upload]
       $room: ID!
     ) {
       replyComment(
@@ -200,7 +196,6 @@ export default {
           author {
             _id
             fullName
-            image
             username
             image
           }
@@ -210,18 +205,17 @@ export default {
             author {
               _id
               fullName
-              image
               username
               image
             }
             createdAt
-            image
+            images
           }
           reply
           likes
           liked
           edited
-          image
+          images
           createdAt
           updatedAt
           successMessage
