@@ -26,8 +26,9 @@
               type="file"
               name="photo"
               id="photo"
-              accept="image/*"
+              accept="image/x-png,image/gif,image/jpeg"
               @change="previewImage()"
+              multiple
               hidden
             />
           </label>
@@ -38,22 +39,22 @@
             type="submit"
             :disabled="(!payload.comment && !imageContent) || loading"
           >
-            <div
-              class="spinner-grow"
-              style="color: green !important;"
-              v-if="loading"
-            ></div>
+            <div class="spinner-grow" style="color: green !important;" v-if="loading"></div>
             <span>Post</span>
           </button>
         </div>
       </form>
     </div>
-    <div class="text-center" :class="{'position-absolute': !imageContent}">
-      <figure class="position-relative d-inline-block mx-5 my-3">
-        <a href="#" class="close" @click="removeImage()" v-if="imageContent">
+    <div class="row px-4" :class="{'position-absolute': !imageContent}">
+      <figure
+        class="position-relative col-md-2 d-inline-block my-3"
+        v-for="(src, i) in filesSrc"
+        :key="i"
+      >
+        <a href="#" class="close" @click="removeImage(i)">
           <span>&times;</span>
         </a>
-        <img ref="imageContent" src alt height="340px" class="pb-4" style="max-width: 90%" />
+        <img ref="imageContent" :src="src" alt class="pb-4 img-fluid"/>
       </figure>
     </div>
   </div>
@@ -75,8 +76,9 @@ export default {
       payload: {
         comment: ""
       },
-      file: "",
-      imageContent: false
+      files: [],
+      imageContent: false,
+      filesSrc: []
     };
   },
   computed: {
@@ -89,19 +91,31 @@ export default {
   },
   methods: {
     ...mapActions("comment", ["createComment"]),
-    removeImage() {
-      this.imageContent = false;
-      this.file = "";
-      this.$refs.imageContent.src = "";
+    removeImage(i) {
+      if (this.filesSrc.length == 0) {
+        this.imageContent = false;
+      }
+      if (this.filesSrc.length == 1) {
+        this.filesSrc = [];
+        return;
+      }
+      this.filesSrc.splice(i, 1);
     },
     previewImage() {
-      this.file = event.target.files[0];
-      const reader = new FileReader();
-      reader.readAsDataURL(this.file);
-      reader.onload = e => {
-        this.imageContent = true;
-        this.$refs.imageContent.src = e.target.result;
-      };
+      this.files = Array.from(event.target.files);
+      if (this.files.length > 10) {
+        this.$toast.error("You can only upload a maximum of 10 at a time");
+        this.files = [];
+        return;
+      }
+      this.files.forEach(file => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = e => {
+          this.imageContent = true;
+          this.filesSrc.push(e.target.result);
+        };
+      });
     },
     postComment(joinedRoom = false) {
       if (!this.isAuthenticated) {
@@ -117,9 +131,9 @@ export default {
         return;
       }
       this.payload.topic = this.currentRoom.currentTopic._id;
-      this.payload.room = this.currentRoom._id
+      this.payload.room = this.currentRoom._id;
 
-      if (this.file) this.payload.file = this.file;
+      if (this.files.length > 0) this.payload.file = this.files;
       this.loading = true;
       this.createComment(this.payload)
         .then(data => {
@@ -128,12 +142,14 @@ export default {
             this.$toast.error(data.graphQLErrors[0].message);
             return;
           }
+          this.files = []
+          this.filesSrc = []
           this.payload.comment = "";
           this.removeImage();
           this.$toast.success("Your comment has been posted");
         })
         .catch(err => {
-          this.loading = true;
+          this.loading = false;
         });
     }
   }
@@ -147,7 +163,6 @@ a.close {
   height: 25px;
   width: 27px;
   font-weight: 200;
-  position: absolute;
   right: -10px;
 }
 

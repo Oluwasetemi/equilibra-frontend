@@ -58,6 +58,7 @@
 import { mapGetters, mapActions } from "vuex";
 import { roomType } from "~/static/js/constants";
 import gql from "~/apollo/user/room";
+import gqlTopic from "~/apollo/user/topic";
 import imageUrl from "~/assets/images/judiciary_BG.svg";
 import Card from "~/components/Forums/forum-card";
 import loginModal from "~/components/Authentication/sign-up";
@@ -117,7 +118,7 @@ export default {
     },
     setRoom(room) {
       this.currentRoom = room;
-      this.$router.push({ query: { group: room.slug } });
+      this.$router.push({ query: { group: room.slug, id: room._id } });
     },
     getAllMyRooms() {
       this.$apollo.addSmartQuery("getMyRooms", {
@@ -155,7 +156,8 @@ export default {
       const payload = {
         roomType: this.roomType[self.$route.params.id],
         isOrigin:
-          this.$route.query.isOrigin == true || this.$route.query.isOrigin == "true"
+          this.$route.query.isOrigin == true ||
+          this.$route.query.isOrigin == "true"
             ? true
             : false
       };
@@ -244,12 +246,27 @@ export default {
         return lga.id == id;
       });
       return lga ? lga.name : "";
+    },
+    listenForTopicChange() {
+      this.$apollo.addSmartSubscription("topicChange", {
+        query: gqlTopic.topicChange,
+        context: {
+          headers: {
+            Authorization: `Bearer ${this.getToken}`
+          }
+        },
+        result({ data }) {
+          this.initializeRooms();
+        }
+      });
     }
   },
   mounted() {
     this.$eventBus.$on("topicChanged", () => {
       this.initializeRooms();
     });
+    this.listenForTopicChange();
+
     if (this.$route.params.id == "LGA" && this.$route.query.id) {
       const stateID = this.$route.query.isOrigin
         ? this.getUser.stateOfOrigin

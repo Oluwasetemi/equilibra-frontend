@@ -116,6 +116,12 @@
   </div>
 </template>
 
+<script>
+export default {
+ 
+}
+</script>
+
 <style scoped>
 .main-container {
   background: #fdfdfd;

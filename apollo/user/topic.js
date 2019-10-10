@@ -58,5 +58,23 @@ export default {
         }
       }
     }
+  `,
+  topicChange: gql`
+    subscription {
+      topicChange {
+        _id
+        voteId
+        voteCreatedAt
+        roomId
+        title
+        startedDate
+        votes
+        rooms {
+          _id
+        }
+        isClosed
+        description
+      }
+    }
   `
 };

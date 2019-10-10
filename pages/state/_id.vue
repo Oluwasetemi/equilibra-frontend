@@ -354,13 +354,6 @@
 import { setTimeout } from "timers";
 export default {
   layout: "whiteNavWithFooter",
-  // asyncData({ params, store }) {
-  //   store.dispatch("governmentByFilter", {
-  //     filterBy: "name",
-  //     payload: `${params.id.toLowerCase()} state`
-  //   });
-  //   return { government: store.getters["currentGovernment"] };
-  // },
   data() {
     return {
       pageLoaded: false,

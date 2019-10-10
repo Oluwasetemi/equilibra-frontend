@@ -35,19 +35,20 @@
             <div class="comment-content mt-2 pr-3">
               <p class="text-left">{{comment.comment}}</p>
             </div>
-            <div class="comment-image pb-3" v-if="comment.image">
-              <a
-                data-toggle="modal"
-                data-target="#imageModal"
-                @click="imageModalSrc = $event.target.src"
-              >
-                <img
-                  :src="comment.image"
-                  alt="photo content"
-                  class="photo-content"
-                  style="cursor: pointer"
-                />
-              </a>
+
+            <div class="comment-image pb-3" v-if="comment.images && comment.images.length > 0">
+              <div class="row">
+                <a
+                  class="col-md-2"
+                  v-for="(image, i) in comment.images"
+                  :key="i"
+                  data-toggle="modal"
+                  data-target="#imageModal"
+                  @click="imageModalSrc = $event.target.src"
+                >
+                  <img :src="image" alt="photo content" class="img-fluid" style="cursor: pointer" />
+                </a>
+              </div>
             </div>
             <div class="actions mr-2">
               <likeIcon :commentId="comment._id" :liked="comment.liked" :likes="comment.likes" />
@@ -163,7 +164,7 @@ export default {
           variables: {
             cursor
           },
-          fetchPolicy: 'cache-and-network',
+          fetchPolicy: "cache-and-network",
           context: {
             headers: {
               Authorization: `Bearer ${self.getToken}`
@@ -199,7 +200,7 @@ export default {
           topicId: this.currentRoom.currentTopic._id,
           roomId: this.currentRoom._id
         },
-        fetchPolicy: 'cache-and-network',
+        fetchPolicy: "cache-and-network",
         context: {
           headers: {
             Authorization: `Bearer ${this.getToken}`
@@ -210,8 +211,12 @@ export default {
             document: gql.subscribeToComments,
             updateQuery: (previous, { subscriptionData }) => {
               if (!subscriptionData.data.comments) return;
-              subscriptionData.data.comments.createdAt = Date.parse(subscriptionData.data.comments.createdAt)
-              subscriptionData.data.comments.updatedAt = Date.parse(subscriptionData.data.comments.updatedAt)
+              subscriptionData.data.comments.createdAt = Date.parse(
+                subscriptionData.data.comments.createdAt
+              );
+              subscriptionData.data.comments.updatedAt = Date.parse(
+                subscriptionData.data.comments.updatedAt
+              );
               previous.fetchComments.edges = [
                 subscriptionData.data.comments,
                 ...previous.fetchComments.edges
