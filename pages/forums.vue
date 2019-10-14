@@ -38,7 +38,7 @@
                 <li class="nav-item">
                   <nuxt-link to="/contact-us" class="nav-link">Contact Us</nuxt-link>
                 </li>
-                <li class="nav-item ml-4">
+                <!-- <li class="nav-item ml-4">
                   <transition
                     enter-active-class="animated zoomIn"
                     leave-active-class="animated fadeOut"
@@ -81,7 +81,7 @@
 
                     <nuxt-link to="/sign-up" tag="button" class="btn" v-else :key="2">Join Us</nuxt-link>
                   </transition>
-                </li>
+                </li> -->
               </ul>
             </div>
           </nav>
