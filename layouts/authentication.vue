@@ -21,7 +21,6 @@
 import WhiteNav from "~/components/Shared/whiteNavBar";
 import Footer from "~/components/Shared/footer";
 export default {
-  // middleware: ["check-auth","auth"],
   components: {
     Footer,
     WhiteNav

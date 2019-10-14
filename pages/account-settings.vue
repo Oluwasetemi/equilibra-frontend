@@ -17,7 +17,6 @@ import residenceInfo from "~/components/account-settings/residence-info";
 import originInfo from "~/components/account-settings/origin-info";
 export default {
   layout: "greenNavOnly",
-  // middleware: ["checkauth", "auth"],
   components: {
     personalInfo,
     residenceInfo,
