@@ -90,7 +90,7 @@ export default {
     '@nuxtjs/apollo',
     '@nuxtjs/toast',
     '@nuxtjs/moment',
-    '@nuxtjs/auth'
+    // '@nuxtjs/auth'
   ],
 
   axios: {
