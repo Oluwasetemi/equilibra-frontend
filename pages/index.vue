@@ -388,7 +388,7 @@ import { mapActions, mapGetters } from "vuex";
 import Map from "~/components/Map";
 import Footer from "~/components/Shared/footer";
 export default {
-  layout: "footerOnly",
+  // layout: "footerOnly",
   data() {
     return {
       avatar
