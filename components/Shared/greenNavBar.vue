@@ -36,7 +36,7 @@
           <li class="nav-item">
             <nuxt-link to="/contact-us" class="nav-link">Contact Us</nuxt-link>
           </li>
-          <!-- <li class="nav-item ml-lg-4">
+          <li class="nav-item ml-lg-4">
             <div class="dropdown" style="background: white;" v-if="isAuthenticated">
               <a
                 href="#"
@@ -66,7 +66,7 @@
               </div>
             </div>
             <button class="btn" data-toggle="modal" data-target="#signUpModal" v-else>Join Us</button>
-          </li> -->
+          </li>
         </ul>
       </div>
     </div>
