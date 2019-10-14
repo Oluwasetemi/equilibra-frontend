@@ -29,7 +29,6 @@ import DiscussionVoteResults from "~/components/Rooms/poll-results";
 import Comments from "~/components/Rooms/comments";
 import PostComment from "~/components/Rooms/post-comment";
 export default {
-  layout: "greenNavOnly",
   props: ["currentRoom", "isMyRoom"],
   data() {
     return {
