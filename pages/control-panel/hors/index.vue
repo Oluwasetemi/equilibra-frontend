@@ -147,7 +147,7 @@
                       <el-option
                         style="text-transform: capitalize;"
                         v-for="(item, i) in categories"
-                        v-if="item.slug!=='LG'"
+                        v-if="item.slug!=='LG'&&item.slug!=='FG'"
                         :value="item.slug"
                         :key="i"
                         :label="item.name.toUpperCase()"

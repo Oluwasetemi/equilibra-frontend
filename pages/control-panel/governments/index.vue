@@ -170,7 +170,7 @@
                 </form>
 
                 <!-- step two -->
-                <form v-if="isUpdateStep2" @submit.prevent="submitGovt">
+                <form v-if="isUpdateStep2" @submit.prevent="submitGovt()">
                   <div class="row">
                     <div class="col-12 mt-3">
                       <p>
@@ -181,9 +181,10 @@
 
                     <div class="form-group pt-3 col-12 col-md-4">
                       <label for="title">Leader's Office</label>
-                      <el-select class="w-100">
+                      <!-- <el-select class="w-100">
                         <el-option></el-option>
-                      </el-select>
+                      </el-select>-->
+                      <el-input class="w-100"></el-input>
                       <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
                     </div>
                     <div class="form-group pt-3 col-12 col-md-4">
@@ -280,12 +281,8 @@
                     </div>
 
                     <div class="form-group pt-3 col-6 col-md-3">
-                      <label for="title">State Constituencies</label>
-                      <el-input
-                        type="number"
-                        class="w-100"
-                        v-model="govtPayload.totalStateConstituency"
-                      ></el-input>
+                      <label for="title">Constituencies</label>
+                      <el-input type="number" class="w-100" v-model="govtPayload.totalConstituency"></el-input>
                       <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
                     </div>
                     <div class="form-group pt-3 col-6 col-md-3">
@@ -380,7 +377,11 @@
 
                     <div class="form-group pt-3 pl-3 col-12">
                       <el-button :loading="loading" @click="goTo2" native-type="button">Back</el-button>
-                      <el-button :loading="loading" native-type="submit">Next</el-button>
+                      <el-button
+                        :loading="loading"
+                        @click.prevent="submitGovt"
+                        native-type="button"
+                      >Save and Exit</el-button>
                     </div>
                   </div>
                 </form>
@@ -556,6 +557,7 @@ export default {
       console.log(eazzy);
       delete eazzy.__typename;
       delete eazzy.categoryID;
+      delete eazzy.totalStateConstituency;
       var ds = this;
       ds.loading = true;
       ds.createGovt(eazzy).then(data => {
@@ -574,6 +576,7 @@ export default {
         }
         if (this.isUpdateStep3) {
           // close editing pane
+          this.$router.push({ query: {} });
         }
       });
     },

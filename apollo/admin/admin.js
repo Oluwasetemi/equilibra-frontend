@@ -25,47 +25,38 @@ export default {
       allGovernmentBasedOnCategory(slug: $slug) {
         id
         name
-        slogan
+        category
+        stateGovernment
         description
-        leader
+        slogan
+        slug
         cjn
-        senatePresident
         speaker
+        leader
+        senatePresident
         totalLg
         population
         totalConstituency
         infantMortalityRate
+        foreignReserve
+        crimeRate
+        inflationRate
+        budgetPerformanceRate
+        budgetPassDate
+        budgetSubmissionDate
+        plenaryAttendanceRate
+        gdpPerHead
+        powerGenerated
         literacyRate
         unemploymentRate
-        category
-      }
-    }
-  `,
-
-  allReports: gql`
-    query fetchReportedComments {
-      fetchReportedComments {
-        comment
-        topic {
-          _id
-          title
-          createdBy {
-            fullName
-            image
-            _id
-          }
-        }
-        author {
-          fullName
-          image
-          _id
-        }
-        reporter {
-          fullName
-          image
-          _id
-        }
-        _id
+        nonOilSectorContributionToGDP
+        rulingParty
+        touristAttraction
+        agriculture
+        mineralResources
+        museumAndParks
+        createdAt
+        updatedAt
       }
     }
   `,
@@ -76,8 +67,6 @@ export default {
         edges {
           _id
           title
-          closeDate
-          startDate
           description
           rooms {
             _id
@@ -101,13 +90,59 @@ export default {
         edges {
           _id
           name
-          government
-          roomType
+        }
+      }
+    }
+  `,
+
+  allReports: gql`
+    query fetchReportedComments($limit: Int, $skip: Int) {
+      fetchReportedComments(limit: $limit, skip: $skip) {
+        edges {
+          comment
+          _id
+          reporter {
+            fullName
+            _id
+            image
+          }
+          author {
+            fullName
+            _id
+            image
+          }
+          reports {
+            report
+            reporter {
+              fullName
+              _id
+              image
+            }
+          }
+          likes
+          report
+          image
         }
         pageInfo {
-          totalCount
           hasNextPage
+          totalCount
         }
+      }
+    }
+  `,
+
+  removeComment: gql`
+    mutation deleteComment($commentId: ID!) {
+      deleteComment(commentId: $commentId) {
+        successMessage
+      }
+    }
+  `,
+
+  removeUser: gql`
+    mutation suspendUser($id: ID!) {
+      suspendUser(id: $id) {
+        successMessage
       }
     }
   `,

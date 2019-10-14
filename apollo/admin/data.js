@@ -10,19 +10,36 @@ export default {
       allGovernmentBasedOnCategory(start: $start, first: $first, slug: $slug) {
         id
         name
-        slogan
+        category
+        stateGovernment
         description
-        leader
+        slogan
+        slug
         cjn
-        senatePresident
         speaker
+        leader
+        senatePresident
         totalLg
         population
-        category
         totalConstituency
         infantMortalityRate
+        foreignReserve
+        crimeRate
+        inflationRate
+        budgetPerformanceRate
+        budgetPassDate
+        budgetSubmissionDate
+        plenaryAttendanceRate
+        gdpPerHead
+        powerGenerated
         literacyRate
         unemploymentRate
+        nonOilSectorContributionToGDP
+        rulingParty
+        touristAttraction
+        agriculture
+        mineralResources
+        museumAndParks
       }
     }
   `,
@@ -41,7 +58,9 @@ export default {
         edges {
           name
           _id
-          government
+          government {
+            id
+          }
         }
         pageInfo {
           totalCount
@@ -95,19 +114,36 @@ export default {
       updateGovernment(id: $id, governmentInput: $governmentInput) {
         id
         name
-        slogan
+        category
+        stateGovernment
         description
-        leader
+        slogan
+        slug
         cjn
-        senatePresident
         speaker
+        leader
+        senatePresident
         totalLg
         population
-        category
         totalConstituency
         infantMortalityRate
+        foreignReserve
+        crimeRate
+        inflationRate
+        budgetPerformanceRate
+        budgetPassDate
+        budgetSubmissionDate
+        plenaryAttendanceRate
+        gdpPerHead
+        powerGenerated
         literacyRate
         unemploymentRate
+        nonOilSectorContributionToGDP
+        rulingParty
+        touristAttraction
+        agriculture
+        mineralResources
+        museumAndParks
       }
     }
   `,
