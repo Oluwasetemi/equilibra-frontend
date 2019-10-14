@@ -30,6 +30,9 @@ import Comments from "~/components/Rooms/comments";
 import PostComment from "~/components/Rooms/post-comment";
 export default {
   props: ["currentRoom", "isMyRoom"],
+  validate(data) {
+    return data.params.id ? true : false;
+  },
   data() {
     return {
       fetchMore: false,

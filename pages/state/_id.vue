@@ -390,7 +390,7 @@ export default {
     };
   },
   validate(data) {
-    return data.params.id;
+    return data.params.id ? true : false;
   },
   computed: {
     government() {
