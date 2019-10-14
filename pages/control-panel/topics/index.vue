@@ -195,7 +195,7 @@
                       placeholder="Select"
                     >
                       <el-option
-                        v-for="(item, i) in rooms.edges"
+                        v-for="(item, i) in rooms"
                         :key="i"
                         :label="item.name"
                         :value="item._id"
@@ -386,14 +386,16 @@ export default {
       this.loading = true;
       let self = this;
       try {
-        let data = await this.getRooms({});
+        let data = await this.getRooms({ skip: 0, limit: 3000 });
         this.loading = false;
         if (data.graphQLErrors) {
           this.$toast.error(data.graphQLErrors[0].message);
           return;
         }
+        return;
       } catch (error) {
         this.loading = false;
+        return;
       }
     },
     submitTopic() {
@@ -449,7 +451,7 @@ export default {
       this.loading = true;
       let self = this;
       try {
-        let data = this.getAllTopics({
+        let data = await this.getAllTopics({
           query: { isVerified: self.filter },
           limit: self.limit,
           skip: self.skip
@@ -459,17 +461,17 @@ export default {
           this.$toast.error(data.graphQLErrors[0].message);
           return;
         }
+        return;
       } catch (error) {
         this.loading = false;
+        return;
       }
     }
   },
   created() {},
   async mounted() {
     this.resetFields();
-    await this.getTopics();
-    await this.getAllRooms();
-    console.log(this.rooms);
+    await Promise.all([this.getTopics(), this.getAllRooms()]);
   }
 };
 </script>
