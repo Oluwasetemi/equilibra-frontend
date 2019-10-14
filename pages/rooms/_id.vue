@@ -31,7 +31,9 @@ import PostComment from "~/components/Rooms/post-comment";
 export default {
   props: ["currentRoom", "isMyRoom"],
   validate(data) {
-    return data.params.id ? true : false;
+    if (data.params.id) {
+      return true;
+    }
   },
   data() {
     return {
@@ -79,7 +81,7 @@ export default {
           this.currentRoom.currentTopic &&
           this.currentRoom.currentTopic.title
         )
-        this.showModal("#voteDiscussionModal");
+          this.showModal("#voteDiscussionModal");
         clearInterval(this.closeDiscussionInterval);
       }
     },
