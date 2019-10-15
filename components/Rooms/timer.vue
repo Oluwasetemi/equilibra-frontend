@@ -1,23 +1,37 @@
 <template>
-  <span>{{ duration }}</span>
+  <span>{{duration }}</span>
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex";
 export default {
+  props: ["endTime", "votingClosed", "ongoingTimer"],
   data() {
     return {
-      duration: 1.0,
       interval: null,
-      timer: 10.0
+      timer: 0,
+      duration: "--"
     };
   },
   mounted() {
-    this.startTimer(this.duration);
+    this.startTimer();
   },
-
   methods: {
-    startTimer(duration) {
-      this.timer = duration * 60;
+    ...mapActions("room", ["setRoomVotingField"]),
+    startTimer() {
+      const date1 = this.$moment(new Date());
+      const date2 = this.$moment(this.endTime);
+      if (date2.diff(date1, "minutes") <= 0) {
+        this.duration = "0:00";
+        this.$emit("timerComplete");
+        this.stopTimer();
+        this.setRoomVotingField({
+          roomId: this.roomId,
+          data: { ongoingTimer: false }
+        });
+        return;
+      }
+      this.timer = date2.diff(date1, "seconds");
       let minutes = 0;
       let seconds = 0;
       const self = this;
@@ -31,9 +45,8 @@ export default {
 
         self.timer = self.timer - 1;
         if (self.timer < 0) {
-            self.$emit("timerComplete")
+          self.$emit("timerComplete");
           self.stopTimer();
-          
         }
       }, 1000);
     },

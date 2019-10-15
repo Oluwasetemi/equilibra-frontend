@@ -125,10 +125,12 @@ export default {
           }
         },
         result({ data }) {
-          this.$eventBus.$emit("showPopup", {
-            data: data.vote,
-            roomId: this.currentRoom._id
-          });
+          if (data.vote) {
+            this.$eventBus.$emit("showPopup", {
+              data: data.vote,
+              roomId: this.currentRoom._id
+            });
+          }
         }
       });
     }

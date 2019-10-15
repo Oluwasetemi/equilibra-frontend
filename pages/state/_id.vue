@@ -391,8 +391,10 @@ export default {
   },
   validate(data) {
     if (data.params.id) {
-      return true
+      console.log(data.params.id)
+      return true;
     }
+    return false;
   },
   computed: {
     government() {

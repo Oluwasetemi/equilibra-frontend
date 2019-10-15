@@ -3,6 +3,7 @@
     <a
       href="#"
       id="reportComment"
+      :class="{'main-thread': isMainThread}"
       class="report text-center dropdown-toggle"
       data-toggle="dropdown"
       aria-haspopup="true"
@@ -12,7 +13,7 @@
       aria-labelledby="reportComment"
       @reportComment="reportComment_"
       :loading="loading"
-      :reported = reported
+      :reported="reported"
     />
   </span>
 </template>
@@ -22,7 +23,7 @@
 import { mapActions } from "vuex";
 import reportCommentCard from "~/components/Rooms/report-comment";
 export default {
-  props: ["commentId"],
+  props: ["commentId", "isMainThread"],
   data() {
     return {
       loading: false,
@@ -44,9 +45,11 @@ export default {
             this.$toast.error(data.graphQLErrors[0].message);
             return;
           }
-          $('[data-toggle="dropdown"]').parent().removeClass('show');
-          $('.report-comment-dropdown').removeClass('show');
-          this.reported = true
+          $('[data-toggle="dropdown"]')
+            .parent()
+            .removeClass("show");
+          $(".report-comment-dropdown").removeClass("show");
+          this.reported = true;
           this.$toast.success(
             "This comment has been reported as " + val.toLowerCase()
           );
@@ -62,19 +65,27 @@ export default {
 <style scoped>
 a.report {
   width: 120px;
-  border: 1px solid #ebeced;
   border-radius: 2px;
-  position: absolute;
   right: 15px;
   padding: 4px;
   bottom: -10px;
   font-size: 11px;
   color: #000000;
-  background: white;
-  display: none;
 }
 
-.comment:hover .report {
+a.report:not(.main-thread) {
+  border: 1px solid #ebeced;
+  position: absolute;
+  display: none;
+  background: white;
+}
+a.report.main-thread {
+  text-decoration: underline;
+  float: right;
+  background: transparent;
+}
+
+.comment:hover a.report {
   display: inline-block;
   /* transition: all 600ms; */
 }

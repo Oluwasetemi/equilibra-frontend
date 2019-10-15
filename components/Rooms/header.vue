@@ -3,6 +3,7 @@
     <loginModal />
     <SuggestTopicModal :currentRoom="currentRoom" />
     <ChangeTopicModal :currentRoom="currentRoom" />
+    <joinRoomModal :roomId="currentRoom._id" :changeTopic="true" />
     <div class="forum-header px-4 py-2 d-flex align-items-center">
       <div class="header-content w-100">
         <div class="d-lg-flex justify-content-between">
@@ -55,16 +56,18 @@
 <script>
 import { mapGetters } from "vuex";
 import SuggestTopicModal from "~/components/Rooms/suggest-topic";
+import joinRoomModal from "~/components/Rooms/join-room-modal";
 import ChangeTopicModal from "~/components/Rooms/change-topic";
 import loginModal from "~/components/Authentication/sign-up";
 
 export default {
   layout: "greenNavOnly",
-  props: ["currentRoom"],
+  props: ["currentRoom", "isMyRoom"],
   components: {
     SuggestTopicModal,
     ChangeTopicModal,
-    loginModal
+    loginModal,
+    joinRoomModal
   },
   computed: {
     ...mapGetters("auth", ["isAuthenticated"])
@@ -73,6 +76,10 @@ export default {
     showModal(val) {
       if (!this.isAuthenticated) {
         $("#signUpModal").modal("show");
+        return;
+      }
+      if (!this.isMyRoom) {
+        $("#joinRoomModal").modal("show");
         return;
       }
       $(val).modal("show");

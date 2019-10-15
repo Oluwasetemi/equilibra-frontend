@@ -64,6 +64,19 @@
                   <span class="px-1">{{comment.replies.length}}</span>
                 </span>
               </a>
+              <DeleteCommentIcon
+                :commentId="comment._id"
+                v-if="comment.author._id == getUser._id"
+                :isMainThread="true"
+                class="d-inline border-0 no-shadow ml-2 position-relative"
+                style="top: 2px"
+              />
+              <ReportCommentIcon
+                :commentId="comment._id"
+                v-if="comment.author._id != getUser._id"
+                class=" ml-2"
+                :isMainThread="true"
+              />
             </div>
           </div>
         </div>
@@ -92,6 +105,8 @@ import { mapGetters, mapActions } from "vuex";
 import likeIcon from "~/components/Rooms/like-icon";
 import gql from "~/apollo/user/comment";
 import avatar from "~/assets/images/avatar.svg";
+import DeleteCommentIcon from "~/components/Rooms/delete-comment-icon";
+import ReportCommentIcon from "~/components/Rooms/report-comment-icon";
 import CommentModal from "~/components/Rooms/view-comment-modal";
 import ImageModal from "~/components/Rooms/image-modal";
 import imageUrl from "~/assets/images/judiciary_BG.svg";
@@ -117,6 +132,8 @@ export default {
   },
   components: {
     CommentModal,
+    DeleteCommentIcon,
+    ReportCommentIcon,
     likeIcon,
     ImageModal
   },
@@ -262,6 +279,9 @@ export default {
 </style>
 
 <style scoped>
+.no-shadow {
+  box-shadow: none !important;
+}
 .avatar {
   height: 40px;
   width: 40px;
