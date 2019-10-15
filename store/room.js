@@ -13,12 +13,15 @@ export default {
       COURT: [],
       MINISTRY: [],
       LGA: []
-    }
+    },
+    ongoingTopicChange: [],
+    count: 0
   }),
 
   getters: {
     federalRooms: state => state.federalRooms,
-    stateRooms: state => state.stateRooms
+    stateRooms: state => state.stateRooms,
+    ongoingTopicChange: state => state.ongoingTopicChange
   },
 
   mutations: {
@@ -27,6 +30,36 @@ export default {
     },
     setStateRooms(state, { roomType, data }) {
       state.stateRooms[roomType] = data;
+    },
+    setRoomVotingDetails(state, data) {
+      if (state.ongoingTopicChange.find(room => room.id == data.id)) return;
+      state.ongoingTopicChange.push(data);
+    },
+    toggleVotingStatus(state, roomId) {
+      state.ongoingTopicChange.forEach(room => {
+        if (room.id == roomId) {
+          room.voted = true;
+        }
+      });
+      // state.ongoingTopicChange[roomId].voted = true;
+    },
+    setRoomVotingFields(state, data) {
+      state.ongoingTopicChange.forEach(room => {
+        if (room.id == data.roomId) {
+          const keys = Object.keys(data.data);
+          for (let key of keys) {
+            room[key] = data.data[key];
+          }
+        }
+      });
+    },
+    deleteRoom(state, roomId) {
+      state.ongoingTopicChange.forEach((room, i) => {
+        if (room.id == roomId) {
+          state.ongoingTopicChange.splice(i, 1);
+        }
+      });
+      state.ongoingTopicChange;
     }
   },
 
@@ -128,6 +161,18 @@ export default {
         .catch(err => {
           return err;
         });
+    },
+    initiateRoomVoting({ commit }, payload) {
+      commit('setRoomVotingDetails', payload);
+    },
+    toggleVotingStatus({ commit }, payload) {
+      commit('toggleVotingStatus', payload);
+    },
+    setRoomVotingField({ commit }, payload) {
+      commit('setRoomVotingFields', payload);
+    },
+    closeTopicChange({ commit }, payload) {
+      commit('deleteRoom', payload);
     }
   }
 };

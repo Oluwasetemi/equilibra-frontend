@@ -8,7 +8,8 @@
       aria-haspopup="true"
       aria-expanded="false"
     >
-      <img src="~/assets/icons/delete-icon.svg" alt />
+      <span class="delete-icon reply-icon" v-if="isMainThread" title="Delete"></span>
+      <img src="~/assets/icons/delete-icon.svg" v-else alt title="Delete" />
     </a>
     <deleteCommentCard
       class="dropdown-menu"
@@ -23,7 +24,7 @@
 import { mapActions } from "vuex";
 import deleteCommentCard from "~/components/Rooms/delete-comment";
 export default {
-  props: ["commentId"],
+  props: ["commentId", "isMainThread"],
   data() {
     return {
       loading: false
@@ -53,3 +54,14 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.delete-icon {
+  mask: url("~assets/icons/delete-icon.svg");
+  mask-size: cover;
+  display: inline-block;
+  background-color: #787e7a;
+  width: 10px;
+  height: 12px;
+}
+</style>

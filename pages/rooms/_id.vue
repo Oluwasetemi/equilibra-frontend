@@ -5,14 +5,13 @@
       <VoteDiscussion :voteId="currentRoom.voteId" />
       <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut" appear>
         <TopicChangePopup
-          v-if="showTopicChangePopup"
-          @closeTopicChangePopup="showTopicChangePopup = false"
-          :voteId="voteId"
-          :topicDescription="topicDescription"
-          :topicTitle="topicTitle"
+          v-if="ongoingVoting"
+          :roomId="currentRoom._id"
+          @closeTopicChangePopup="closeTopicChange_"
+          :room="ongoingVoting"
         />
       </transition>
-      <RoomHeader :currentRoom="currentRoom" />
+      <RoomHeader :currentRoom="currentRoom" :isMyRoom="isMyRoom" />
       <PostComment :currentRoom="currentRoom" :isMyRoom="isMyRoom" />
       <Comments :currentRoom="currentRoom" :fetchMore="fetchMore" @fetchedMore="fetchMore = false" />
     </div>
@@ -59,10 +58,26 @@ export default {
     TopicChangePopup,
     Timer,
     VoteDiscussion,
+
     DiscussionVoteResults
   },
+  computed: {
+    ...mapGetters("room", ["ongoingTopicChange"]),
+    ongoingVoting() {
+      return this.ongoingTopicChange.find(
+        room => room.id == this.currentRoom._id
+      );
+    }
+  },
   methods: {
-    ...mapActions("room", ["getRoomById"]),
+    ...mapActions("room", [
+      "getRoomById",
+      "initiateRoomVoting",
+      "closeTopicChange"
+    ]),
+    closeTopicChange_() {
+      this.closeTopicChange(this.currentRoom._id);
+    },
     fetchMoreComments({ target }) {
       if (target.scrollTop + target.clientHeight == target.scrollHeight) {
         this.fetchMore = true;
@@ -113,11 +128,23 @@ export default {
   },
   mounted() {
     this.$eventBus.$on("showPopup", ({ data, roomId }) => {
-      if (roomId == this.currentRoom._id) {
-        this.showTopicChangePopup = true;
-        this.voteId = data.voteId;
-        this.topicTitle = data.title;
-        this.topicDescription = data.description;
+      if (roomId == this.currentRoom._id && this.isMyRoom) {
+        this.initiateRoomVoting({
+          id: this.currentRoom._id,
+          voteId: data.voteId,
+          topicTitle: data.title,
+          topicDescription: data.description,
+          voted: false,
+          votingClosed: false,
+          totalUpvotes: 0,
+          totalDownVotes: 0,
+          topicChanged: false,
+          ongoingTimer: false,
+          // startTime: this.$moment(new Date()),
+          endTime: this.$moment(new Date())
+            .add(2, "m")
+            .toDate()
+        });
       }
     });
     this.getRoom();
