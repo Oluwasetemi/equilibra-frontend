@@ -29,7 +29,7 @@
             <nuxt-link to="/forums" class="nav-link">Forums</nuxt-link>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="http://www.theequilibra.com/blog/" target="_blank">Blog</a>
+            <a class="nav-link" href="#">Blog</a>
           </li>
           <li class="nav-item">
             <nuxt-link to="/contact-us" class="nav-link">Contact Us</nuxt-link>
@@ -44,11 +44,8 @@
                 aria-haspopup="true"
                 aria-expanded="false"
               >
-                <img :src="getUser.image || avatar" alt height="38px" class="mr-1 avatar" />
-                <div
-                  class="inline-block px-2 user-name"
-                  style="color: black"
-                >{{ getUser.username || getUser.fullName}}</div>
+                <img :src="getUser.image || avatar"  alt height="38px" class="mr-1 avatar" />
+                <div class="inline-block px-2 user-name" style="color: black">{{ getUser.username || getUser.fullName}}</div>
                 <img
                   src="~assets/icons/thin-downward-arrow.svg"
                   alt
@@ -78,10 +75,10 @@ export default {
   data() {
     return {
       avatar
-    };
+    }
   },
   computed: {
-    ...mapGetters("auth", ["isAuthenticated", "user"]),
+    ...mapGetters("auth", ["isAuthenticated","user"]),
     ...mapGetters("user", ["getUser"])
   },
   methods: {
@@ -117,3 +114,4 @@ export default {
   }
 }
 </style>
+

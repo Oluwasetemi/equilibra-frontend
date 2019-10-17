@@ -32,7 +32,7 @@
                   <nuxt-link to="/forums" class="nav-link">Forums</nuxt-link>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="http://www.theequilibra.com/blog/" target="_blank">Blog</a>
+                  <a class="nav-link" href="#">Blog</a>
                 </li>
                 <li class="nav-item">
                   <nuxt-link to="/contact-us" class="nav-link">Contact Us</nuxt-link>
@@ -404,7 +404,7 @@ export default {
   },
   methods: {
     ...mapActions("auth", ["logout"]),
-    ...mapActions("govt", ["getSGs"]),
+    ...mapActions('govt', ['getSGs']),
     logoutUser() {
       this.logout();
     }
