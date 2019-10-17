@@ -22,46 +22,26 @@ export default {
           author {
             _id
             fullName
-            image
             username
             image
           }
-          # reporter {
-          #   _id
-          #   fullName
-          #   image
-          #   username
-          #   image
-          # }
-          # report
           replies {
             _id
             comment
             author {
               _id
               fullName
-              image
               username
               image
             }
-            # reporter {
-            #   _id
-            #   fullName
-            #   image
-            #   username
-            #   image
-            # }
-            # report
             createdAt
-            image
+            images
           }
-          # reports
           reply
           likes
           liked
           edited
-          # reported
-          image
+          images
           createdAt
           updatedAt
           successMessage
@@ -74,6 +54,7 @@ export default {
       }
     }
   `,
+
   fetchComment: gql`
     query fetchComment($commentId: ID!) {
       fetchComment(commentId: $commentId) {
@@ -82,7 +63,6 @@ export default {
         author {
           _id
           fullName
-          image
           username
           image
         }
@@ -100,7 +80,6 @@ export default {
           author {
             _id
             fullName
-            image
             username
             image
           }
@@ -115,7 +94,7 @@ export default {
           likes
           liked
           createdAt
-          image
+          images
         }
         # reports
         reply
@@ -123,7 +102,7 @@ export default {
         liked
         edited
         # reported
-        image
+        images
         createdAt
         updatedAt
         successMessage
@@ -131,15 +110,35 @@ export default {
     }
   `,
   createComment: gql`
-    mutation createComment($comment: String!, $topic: ID!, $file: Upload, $room: ID!) {
-      createComment(comment: $comment, topic: $topic, file: $file, room: $room) {
+    mutation createComment(
+      $comment: String!
+      $topic: ID!
+      $file: [Upload]
+      $room: ID!
+    ) {
+      createComment(
+        comment: $comment
+        topic: $topic
+        file: $file
+        room: $room
+      ) {
         successMessage
       }
     }
   `,
   editComment: gql`
-    mutation createComment($comment: String!, $topic: ID!, $file: Upload, $room: ID!) {
-      createComment(comment: $comment, topic: $topic, file: $file, room: $room) {
+    mutation createComment(
+      $comment: String!
+      $topic: ID!
+      $file: [Upload]
+      $room: ID!
+    ) {
+      createComment(
+        comment: $comment
+        topic: $topic
+        file: $file
+        room: $room
+      ) {
         successMessage
       }
     }
@@ -152,8 +151,18 @@ export default {
     }
   `,
   replyComment: gql`
-    mutation replyComment($comment: String!, $commentId: ID!, $file: Upload, $room: ID!) {
-      replyComment(comment: $comment, commentId: $commentId, file: $file, room: $room) {
+    mutation replyComment(
+      $comment: String!
+      $commentId: ID!
+      $file: [Upload]
+      $room: ID!
+    ) {
+      replyComment(
+        comment: $comment
+        commentId: $commentId
+        file: $file
+        room: $room
+      ) {
         successMessage
       }
     }
@@ -176,6 +185,40 @@ export default {
     mutation reportComment($reportType: report, $commentId: ID!) {
       reportComment(reportType: $reportType, commentId: $commentId) {
         successMessage
+      }
+    }
+  `,
+  subscribeToComments: gql`
+    subscription {
+      comments {
+        _id
+          comment
+          author {
+            _id
+            fullName
+            username
+            image
+          }
+          replies {
+            _id
+            comment
+            author {
+              _id
+              fullName
+              username
+              image
+            }
+            createdAt
+            images
+          }
+          reply
+          likes
+          liked
+          edited
+          images
+          createdAt
+          updatedAt
+          successMessage
       }
     }
   `

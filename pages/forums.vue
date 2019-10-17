@@ -166,7 +166,7 @@
                 </div>
                 <div class="card-content p-4">
                   <h3 class="pt-3">
-                    <span v-if="item.title == 'LGA'">{{localGovtResidence | formatStateName}}</span>
+                    <span v-if="item.title == 'LGA'">{{localGovtResidence.name | formatStateName}}</span>
                     <span v-else>{{item.title}}</span>
                   </h3>
                   <p>
@@ -176,11 +176,13 @@
                   <nuxt-link
                     tag="button"
                     class="border-0 p-3 w-100"
-                    :to="{path: item.link, query: {state:true, isOrigin:false}}"
+                    :to="{path: item.link, query: {state:true, isOrigin:false, id: localGovtResidence.id}}"
                     style="background: #26B14F;"
                   >
                     Join
-                    <span v-if="item.title == 'LGA'">{{localGovtResidence | formatStateName}}</span>
+                    <span
+                      v-if="item.title == 'LGA'"
+                    >{{localGovtResidence.name | formatStateName}}</span>
                     <span v-else>{{item.title}}</span>
                   </nuxt-link>
                 </div>
@@ -189,10 +191,6 @@
           </div>
         </div>
       </template>
-      <!-- {{getUser}} state of Residence
-      <br />
-      {{getUser.localGovtOrigin}} state of Origin
-      <br /> -->
 
       <template v-if="isAuthenticated">
         <div class="row">
@@ -218,7 +216,7 @@
                 </div>
                 <div class="card-content p-4">
                   <h3 class="pt-3">
-                    <span v-if="item.title == 'LGA'">{{localGovtOrigin | formatStateName}}</span>
+                    <span v-if="item.title == 'LGA'">{{localGovtOrigin.name | formatStateName}}</span>
                     <span v-else>{{item.title}}</span>
                   </h3>
                   <p>
@@ -228,11 +226,11 @@
                   <nuxt-link
                     tag="button"
                     class="border-0 p-3 w-100"
-                    :to="{path: item.link, query: {state:true, isOrigin:true }}"
+                    :to="{path: item.link, query: {state:true, isOrigin:true, id: localGovtOrigin.id}}"
                     style="background: #26B14F;"
                   >
                     Join
-                    <span v-if="item.title == 'LGA'">{{localGovtOrigin | formatStateName}}</span>
+                    <span v-if="item.title == 'LGA'">{{localGovtOrigin.name | formatStateName}}</span>
                     <span v-else>{{item.title}}</span>
                   </nuxt-link>
                 </div>
@@ -276,8 +274,8 @@ export default {
   data() {
     return {
       avatar,
-      localGovtResidence: "",
-      localGovtOrigin: "",
+      localGovtResidence: { name: "", id: "" },
+      localGovtOrigin: { name: "", id: "" },
       cards: [
         {
           title: "Judiciary",
@@ -307,8 +305,14 @@ export default {
           backgroundImage: repsImage,
           link: "/rooms/HOR?group=Vent-The-Steam"
         }
-      ],
-      originCards: [
+      ]
+    };
+  },
+  computed: {
+    ...mapGetters("auth", ["isAuthenticated"]),
+    ...mapGetters("user", ["getUser"]),
+    originCards() {
+      return [
         {
           title: "Judiciary",
           description:
@@ -335,10 +339,12 @@ export default {
           description:
             " We are positively minded Nigerians, committed to unity and to encouraging fairness, just and equitable life.",
           backgroundImage: originLGAImage,
-          link: "/rooms/LGA?group=Vent-The-Steam"
+          link: `/rooms/LGA?group=Vent-The-Steam`
         }
-      ],
-      residenceCards: [
+      ];
+    },
+    residenceCards() {
+      return [
         {
           title: "Judiciary",
           description:
@@ -365,14 +371,10 @@ export default {
           description:
             " We are positively minded Nigerians, committed to unity and to encouraging fairness, just and equitable life.",
           backgroundImage: residenceLGAImage,
-          link: "/rooms/LGA?group=Vent-The-Steam"
+          link: `/rooms/LGA?group=Vent-The-Steam`
         }
-      ]
-    };
-  },
-  computed: {
-    ...mapGetters("auth", ["isAuthenticated"]),
-    ...mapGetters("user", ["getUser"]),
+      ];
+    },
     stateOfOrigin() {
       const self = this;
       let govtw = this.$store.getters["governments"].find(
@@ -413,12 +415,14 @@ export default {
             return;
           }
           this[val] = this.getState(data, this.getUser[val], val);
+          console.log(this[val]);
         })
         .catch(err => {});
     },
     getState(LGAS, id, key) {
       let lga = LGAS.find(lga => lga.id == id);
-      return lga ? lga.name : "";
+      console.log(lga, key)
+      return lga ? { name: lga.name, id: lga.id } : {};
     },
     logoutUser() {
       this.logout();

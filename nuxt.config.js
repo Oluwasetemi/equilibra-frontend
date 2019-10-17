@@ -51,7 +51,7 @@ export default {
       {
         src: 'https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js',
         type: 'text/javascript'
-      },
+      }
     ]
   },
   env: {
@@ -76,6 +76,7 @@ export default {
     { src: '~/plugins/vuex-persist', mode: 'client' },
     { src: '~/plugins/apollo.config.js', mode: 'client' },
     { src: '~/plugins/apollo-overrides.js', mode: 'client' },
+    { src: '~/plugins/vue-editor.js', ssr: false },
     { src: '~/plugins/vuelidate', mode: 'client' },
     { src: '~/plugins/lazyload', mode: 'client' },
     { src: '~plugins/filters.js', mode: 'client' }
@@ -89,7 +90,7 @@ export default {
     '@nuxtjs/apollo',
     '@nuxtjs/toast',
     '@nuxtjs/moment',
-    '@nuxtjs/auth'
+    // '@nuxtjs/auth'
   ],
 
   axios: {
@@ -104,9 +105,10 @@ export default {
     strategies: {
       facebook: {
         client_id: '2419999161601918',
-        userinfo_endpoint: 'https://graph.facebook.com/v2.12/me?fields=about,name,picture{url},email,birthday',
+        userinfo_endpoint:
+          'https://graph.facebook.com/v2.12/me?fields=about,name,picture{url},email,birthday',
         scope: ['public_profile', 'email']
-      },
+      }
     }
   },
   /*

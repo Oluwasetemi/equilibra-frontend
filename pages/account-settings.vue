@@ -17,7 +17,6 @@ import residenceInfo from "~/components/account-settings/residence-info";
 import originInfo from "~/components/account-settings/origin-info";
 export default {
   layout: "greenNavOnly",
-  // middleware: ["checkauth", "auth"],
   components: {
     personalInfo,
     residenceInfo,
@@ -95,8 +94,9 @@ input.form-control:disabled {
   border-radius: 4px;
 }
 
-@media (min-width: 1200px){
-.container {
+@media (min-width: 1200px) {
+  .container {
     max-width: 1250px;
-}}
+  }
+}
 </style>

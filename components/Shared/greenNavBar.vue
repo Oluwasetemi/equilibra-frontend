@@ -66,7 +66,6 @@
               </div>
             </div>
             <button class="btn" data-toggle="modal" data-target="#signUpModal" v-else>Join Us</button>
-            <!-- <nuxt-link to="/sign-up" tag="button" class="btn"></nuxt-link> -->
           </li>
         </ul>
       </div>

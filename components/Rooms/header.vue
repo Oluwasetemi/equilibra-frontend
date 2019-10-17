@@ -1,13 +1,14 @@
 <template>
   <div>
     <loginModal />
-    <SuggestTopicModal :currentRoom="currentRoom"/>
+    <SuggestTopicModal :currentRoom="currentRoom" />
     <ChangeTopicModal :currentRoom="currentRoom" />
+    <joinRoomModal :roomId="currentRoom._id" :changeTopic="true" />
     <div class="forum-header px-4 py-2 d-flex align-items-center">
       <div class="header-content w-100">
-        <div class="d-flex justify-content-between">
-          <h4 class="d-inline-block mb-2">{{currentRoom ? currentRoom.name : '--'}}</h4>
-          <div class="d-inline-block">
+        <div class="d-lg-flex justify-content-between">
+          <h4 class="d-inline-block mb-lg-2 mb-0">{{currentRoom ? currentRoom.name : '--'}}</h4>
+          <div class="d-inline-block mb-2 mb-lg-0">
             <img src="~/assets/icons/avatar2.svg" alt class="mr-1" />
             <span style="font-size: 14px; text-decoration: underline;">Hon. Danjuma Zaccheus</span>
           </div>
@@ -15,7 +16,15 @@
         <p
           class="description mb-2 mr-md-5 pr-md-5"
           v-if="currentRoom && currentRoom.slug != 'Vent-The-Steam'"
-        >{{currentRoom.currentTopic ? currentRoom.currentTopic.title : 'This room has no topic' }}</p>
+        >
+          {{currentRoom.currentTopic ? currentRoom.currentTopic.title : 'This room has no topic' }}
+          <span
+            v-if="currentRoom.currentTopic && currentRoom.currentTopic.isClosed"
+          >
+            Topic Closed:
+            <a href="#">Voting in progress</a>
+          </span>
+        </p>
         <div class="d-flex justify-content-between align-items-end flex-wrap">
           <span>
             <div
@@ -47,16 +56,18 @@
 <script>
 import { mapGetters } from "vuex";
 import SuggestTopicModal from "~/components/Rooms/suggest-topic";
+import joinRoomModal from "~/components/Rooms/join-room-modal";
 import ChangeTopicModal from "~/components/Rooms/change-topic";
 import loginModal from "~/components/Authentication/sign-up";
 
 export default {
   layout: "greenNavOnly",
-  props: ["currentRoom"],
+  props: ["currentRoom", "isMyRoom"],
   components: {
     SuggestTopicModal,
     ChangeTopicModal,
-    loginModal
+    loginModal,
+    joinRoomModal
   },
   computed: {
     ...mapGetters("auth", ["isAuthenticated"])
@@ -65,6 +76,10 @@ export default {
     showModal(val) {
       if (!this.isAuthenticated) {
         $("#signUpModal").modal("show");
+        return;
+      }
+      if (!this.isMyRoom) {
+        $("#joinRoomModal").modal("show");
         return;
       }
       $(val).modal("show");

@@ -7,15 +7,15 @@
     aria-hidden="true"
   >
     <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content" v-if="!loading && Object.keys(comment).length > 0">
-        <div class="scrollable">
+      <div class="modal-content" v-if="Object.keys(comment).length > 0">
+        <div class="scrollable" ref="scrollableContainer">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
           <div class="user-details d-flex px-3 py-2 border-bottom">
             <figure class="m-0 pr-1 d-inline-block">
               <img
-                :src="getUser.image || avatar"
+                :src="comment.author.image || avatar"
                 alt
                 class="rounded-circle"
                 height="40px"
@@ -30,17 +30,27 @@
           <div class="comment-content p-3">
             <p class="text-left m-0">{{comment.comment}}</p>
           </div>
-          <div class="comment-image pb-3" v-if="comment.image">
-            <img :src="comment.image" alt="photo content" class="photo-content" />
+          <div class="comment-image pb-3 px-3" v-if="comment.images && comment.images.length > 0">
+            <div class="row">
+              <div class="col-md-2" v-for="(image, i) in comment.images" :key="i">
+                <img :src="image" alt="photo content" class="img-fluid" />
+              </div>
+            </div>
           </div>
           <div class="grey-wrapper px-3 py-2">
             <div class="time d-inline-block mr-4">
-              <span>{{comment.createdAt | formatTime($moment)}}</span> -
               <span>{{comment.createdAt | formatDate($moment)}}</span>
             </div>
             <div class="actions d-inline-block mr-2">
               <likeIcon :commentId="comment._id" :liked="comment.liked" :likes="comment.likes" />
 
+              <DeleteCommentIcon
+                :commentId="comment._id"
+                v-if="comment.author._id == getUser._id"
+                :isMainThread="true"
+                class="d-inline border-0 no-shadow ml-2 position-relative"
+                style="top: 2px; background: transparent"
+              />
               <span class="replies ml-2">
                 <span
                   class="text-center dropdown share-comment position-relative"
@@ -58,9 +68,15 @@
                     <span>Share</span>
                     <img src="~/assets/icons/share.svg" alt />
                   </a>
-                  <shareLinkCard class="dropdown-menu share-link" aria-labelledby="shareLink" dat/>
+                  <shareLinkCard class="dropdown-menu share-link" aria-labelledby="shareLink" dat />
                 </span>
               </span>
+              <!-- <ReportCommentIcon
+                :commentId="comment._id"
+                v-if="comment.author._id != getUser._id"
+                :isMainThread="true"
+                class="report-card"
+              />-->
             </div>
           </div>
           <div class="replies pb-4" v-if="comment.replies.length > 0">
@@ -73,7 +89,7 @@
             >
               <figure class="m-0 py-3 pr-1 d-inline-block">
                 <img
-                  :src="comment.author.image || avatar"
+                  :src="reply.author.image || avatar"
                   alt
                   class="rounded-circle"
                   height="40px"
@@ -92,8 +108,15 @@
                   <div class="comment-content pr-3">
                     <p class="text-left m-0">{{reply.comment}}</p>
                   </div>
-                  <div class="comment-image pb-3" v-if="reply.image">
-                    <img :src="reply.image" alt="photo content" class="photo-reply mt-3" />
+                  <div
+                    class="comment-image py-3 px-3"
+                    v-if="reply.images && reply.images.length > 0"
+                  >
+                    <div class="row">
+                      <div class="col-md-2" v-for="(image, i) in reply.images" :key="i">
+                        <img :src="image" alt="photo content" class="img-fluid" />
+                      </div>
+                    </div>
                   </div>
                   <div class="actions mr-2 pt-2">
                     <a
@@ -134,7 +157,11 @@
                   <shareLinkCard class="dropdown-menu share-link-2" aria-labelledby="shareLink" />
                 </div>
               </div>
-              <ReportCommentIcon :commentId="activeReply" v-if="reply.author._id != getUser._id" class="report-card"/>
+              <ReportCommentIcon
+                :commentId="activeReply"
+                v-if="reply.author._id != getUser._id"
+                class="report-card"
+              />
             </div>
           </div>
         </div>
@@ -152,7 +179,8 @@
                 type="file"
                 name="replyPhoto"
                 id="replyPhoto"
-                accept="image/*"
+                accept="image/x-png, image/gif, image/jpeg"
+                multiple
                 @change="previewReplyImage()"
                 hidden
               />
@@ -166,24 +194,19 @@
                 class="d-inline-block border-0 px-4 w-100"
                 placeholder="Type a message..."
               />
-              <div class="text-center" :class="{'position-absolute': !imageContent}">
-                <figure class="position-relative d-inline-block">
-                  <a href="#" class="close" @click="removeReplyImage()" v-if="imageContent">
-                    <span>&times;</span>
-                  </a>
-                  <img
-                    ref="replyimageContent"
-                    src
-                    alt
-                    height="340px"
-                    class="pb-4"
-                    style="max-width: 80%"
-                  />
-                </figure>
+              <div class="px-lg-5">
+                <div class="row" :class="{'position-absolute': !imageContent}">
+                  <figure class="position-relative col-md-2" v-for="(src, i) in filesSrc" :key="i">
+                    <a href="#" class="close" @click="removeReplyImage(i)">
+                      <span>&times;</span>
+                    </a>
+                    <img ref="replyimageContent" :src="src" alt class="img-fluid" />
+                  </figure>
+                </div>
               </div>
             </div>
 
-            <button class="mt-2 pt-1 post-btn" type="submit">
+            <button class="mt-2 post-btn" type="submit">
               <span
                 class="post-comment-icon"
                 data-toggle="tooltip"
@@ -193,9 +216,6 @@
             </button>
           </div>
         </form>
-      </div>
-      <div class="py-4 text-center w-100" v-else>
-        <div class="spinner-border"></div>
       </div>
     </div>
   </div>
@@ -219,7 +239,8 @@ export default {
       avatar,
       showLink: false,
       liked: false,
-      file: "",
+      files: "",
+      filesSrc: [],
       formActive: false,
       imageContent: false,
       setClass: false,
@@ -229,7 +250,8 @@ export default {
         comment: ""
       },
       fetchComment: {},
-      loading: false
+      loading: false,
+      newReplyPosted: false
     };
   },
   components: {
@@ -247,21 +269,31 @@ export default {
   },
   filters: {
     formatDate(val, moment) {
-      return moment("2019-09-04T03:50:04.428Z")
-        .startOf("day")
-        .fromNow();
-    },
-    formatTime(val, moment) {
-      return moment("2019-09-04T03:50:04.428Z").format("h:mm:ss a");
+      val = new Date(Number(val)).toISOString();
+      const now = new Date();
+      let duration = moment.duration(moment(now).diff(moment(val)));
+      if (duration.asDays() > 9) {
+        return moment(val).format("Do MMMM YYYY, h:mm:ss a");
+      }
+      if (duration.asHours() >= 24) {
+        return (
+          moment(val).fromNow() + "\xa0\xa0" + moment(val).format("h:mm:ss a")
+        );
+      }
+      return moment(val).fromNow();
     }
   },
   methods: {
     ...mapActions("comment", ["replyComment", "reportComment"]),
-    removeReplyImage() {
-      this.imageContent = false;
-      this.file = "";
-
-      this.$refs.replyimageContent.src = "";
+    removeReplyImage(i) {
+      if (this.filesSrc.length == 0) {
+        this.imageContent = false;
+      }
+      if (this.filesSrc.length == 1) {
+        this.filesSrc = [];
+        return;
+      }
+      this.filesSrc.splice(i, 1);
     },
     fetchCommentByID() {
       this.loading = true;
@@ -278,24 +310,38 @@ export default {
         watchLoading(isLoading, countModifier) {
           isLoading ? (this.loading = true) : (this.loading = false);
         },
-        result() {
-          this.loading = false;
+        result({ data }) {
+          this.$scrollTo;
+          if (this.newReplyPosted) {
+            const container = this.$refs.scrollableContainer;
+            container.scrollTop =
+              container.scrollHeight - container.clientHeight + 115;
+            this.newReplyPosted = false;
+            this.loading = false;
+          }
         }
       });
     },
     previewReplyImage() {
-      this.file = event.target.files[0];
-      const reader = new FileReader();
-      reader.readAsDataURL(this.file);
-      reader.onload = e => {
-        this.imageContent = true;
-        this.$refs.replyimageContent.src = e.target.result;
-      };
+      this.files = Array.from(event.target.files);
+      if (this.files.length > 10) {
+        this.$toast.error("You can only upload a maximum of 10 at a time");
+        this.files = [];
+        return;
+      }
+      this.files.forEach(file => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = e => {
+          this.imageContent = true;
+          this.filesSrc.push(e.target.result);
+        };
+      });
     },
     postReply() {
       this.payload.commentId = this.comment._id;
       this.payload.room = this.roomId;
-      if (this.file) this.payload.file = this.file;
+      if (this.files) this.payload.file = this.files;
       this.loading = true;
       this.replyComment(this.payload)
         .then(data => {
@@ -306,7 +352,9 @@ export default {
             this.$toast.error(data.graphQLErrors[0].message);
             return;
           }
-
+          this.newReplyPosted = true;
+          this.files = [];
+          this.filesSrc = [];
           this.$toast.success("Your reply has been posted");
         })
         .catch(err => {
@@ -330,6 +378,10 @@ export default {
 
 
 <style scoped>
+
+.no-shadow {
+  box-shadow: none !important;
+}
 .dropdown.share-comment {
   background: transparent;
   width: unset;
@@ -337,13 +389,12 @@ export default {
 }
 
 a.close {
-  border: solid 2px #07834e;
   border-radius: 50%;
   height: 25px;
   width: 27px;
   font-weight: 200;
-  position: absolute;
-  right: -10px;
+  right: -6px;
+  top: -21px;
 }
 .spinner-border {
   height: 4rem;
@@ -383,7 +434,7 @@ div.scrollable {
 .share-link {
   z-index: 10;
   top: -10px !important;
-    left: 100% !important;
+  left: 100% !important;
 }
 
 .new-comment,

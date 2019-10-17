@@ -23,8 +23,8 @@
             <div class="form-input">
               <input
                 type="text"
-                name="new-topic"
-                id="new-topic"
+                name="new-topic-suggestion"
+                id="new-topic-suggestion"
                 class="form-control p-3"
                 placeholder="Enter new topic"
                 v-model="payload.title"
@@ -32,8 +32,8 @@
             </div>
             <div class="form-input">
               <textarea
-                name="topic-desc"
-                id="topic-desc"
+                name="topic-suggestion-desc"
+                id="topic-suggestion-desc"
                 class="w-100 p-3"
                 placeholder="Topic Description"
                 v-model="payload.description"

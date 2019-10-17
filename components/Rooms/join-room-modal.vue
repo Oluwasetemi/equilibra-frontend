@@ -14,7 +14,8 @@
         </button>
         <div class="title d-flex align-items-center mb-4">
           <span class="caution-icon"></span>
-          <p class="inline-block m-0 note px-4">Only room members can post comments in a room.</p>
+          <p class="inline-block m-0 note px-4" v-if="!changeTopic">Only room members can post comments in a room.</p>
+          <p class="inline-block m-0 note px-4" v-else>Only room members can suggest or change a topic.</p>
         </div>
         <p class="text-center">Do you want to join this room?</p>
         <div class="buttons d-flex justify-content-between">
@@ -35,8 +36,9 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
+import gql from '~/apollo/user/topic'
 export default {
-  props: ["roomId"],
+  props: ["roomId", "changeTopic"],
   data() {
     return {
       loading: false
@@ -59,6 +61,8 @@ export default {
             return;
           }
           this.$emit('joinedRoom')
+          //subscribe to vote
+
           this.$toast.success("You have now joined this conversation!");
         })
         .catch(err => {

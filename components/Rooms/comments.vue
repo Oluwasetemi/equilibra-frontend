@@ -35,19 +35,20 @@
             <div class="comment-content mt-2 pr-3">
               <p class="text-left">{{comment.comment}}</p>
             </div>
-            <div class="comment-image pb-3" v-if="comment.image">
-              <a
-                data-toggle="modal"
-                data-target="#imageModal"
-                @click="imageModalSrc = $event.target.src"
-              >
-                <img
-                  :src="comment.image"
-                  alt="photo content"
-                  class="photo-content"
-                  style="cursor: pointer"
-                />
-              </a>
+
+            <div class="comment-image pb-3" v-if="comment.images && comment.images.length > 0">
+              <div class="row">
+                <a
+                  class="col-md-2"
+                  v-for="(image, i) in comment.images"
+                  :key="i"
+                  data-toggle="modal"
+                  data-target="#imageModal"
+                  @click="imageModalSrc = $event.target.src"
+                >
+                  <img :src="image" alt="photo content" class="img-fluid" style="cursor: pointer" />
+                </a>
+              </div>
             </div>
             <div class="actions mr-2">
               <likeIcon :commentId="comment._id" :liked="comment.liked" :likes="comment.likes" />
@@ -63,6 +64,19 @@
                   <span class="px-1">{{comment.replies.length}}</span>
                 </span>
               </a>
+              <DeleteCommentIcon
+                :commentId="comment._id"
+                v-if="comment.author._id == getUser._id"
+                :isMainThread="true"
+                class="d-inline border-0 no-shadow ml-2 position-relative"
+                style="top: 2px"
+              />
+              <ReportCommentIcon
+                :commentId="comment._id"
+                v-if="comment.author._id != getUser._id"
+                class=" ml-2"
+                :isMainThread="true"
+              />
             </div>
           </div>
         </div>
@@ -91,6 +105,8 @@ import { mapGetters, mapActions } from "vuex";
 import likeIcon from "~/components/Rooms/like-icon";
 import gql from "~/apollo/user/comment";
 import avatar from "~/assets/images/avatar.svg";
+import DeleteCommentIcon from "~/components/Rooms/delete-comment-icon";
+import ReportCommentIcon from "~/components/Rooms/report-comment-icon";
 import CommentModal from "~/components/Rooms/view-comment-modal";
 import ImageModal from "~/components/Rooms/image-modal";
 import imageUrl from "~/assets/images/judiciary_BG.svg";
@@ -116,6 +132,8 @@ export default {
   },
   components: {
     CommentModal,
+    DeleteCommentIcon,
+    ReportCommentIcon,
     likeIcon,
     ImageModal
   },
@@ -132,13 +150,14 @@ export default {
       const now = new Date();
       let duration = moment.duration(moment(now).diff(moment(val)));
       if (duration.asDays() > 9) {
-        console.log(duration.asDays());
         return moment(val).format("Do MMMM YYYY, h:mm:ss a");
       }
       if (duration.asHours() >= 24) {
-        return moment(val).fromNow() + "\xa0\xa0" + moment(val).format("h:mm:ss a");
+        return (
+          moment(val).fromNow() + "\xa0\xa0" + moment(val).format("h:mm:ss a")
+        );
       }
-      return moment(val).fromNow()
+      return moment(val).fromNow();
     }
   },
   watch: {
@@ -162,6 +181,7 @@ export default {
           variables: {
             cursor
           },
+          fetchPolicy: "cache-and-network",
           context: {
             headers: {
               Authorization: `Bearer ${self.getToken}`
@@ -197,11 +217,31 @@ export default {
           topicId: this.currentRoom.currentTopic._id,
           roomId: this.currentRoom._id
         },
+        fetchPolicy: "cache-and-network",
         context: {
           headers: {
             Authorization: `Bearer ${this.getToken}`
           }
         },
+        subscribeToMore: [
+          {
+            document: gql.subscribeToComments,
+            updateQuery: (previous, { subscriptionData }) => {
+              if (!subscriptionData.data.comments) return;
+              subscriptionData.data.comments.createdAt = Date.parse(
+                subscriptionData.data.comments.createdAt
+              );
+              subscriptionData.data.comments.updatedAt = Date.parse(
+                subscriptionData.data.comments.updatedAt
+              );
+              previous.fetchComments.edges = [
+                subscriptionData.data.comments,
+                ...previous.fetchComments.edges
+              ];
+              return previous;
+            }
+          }
+        ],
         watchLoading(isLoading, countModifier) {
           isLoading
             ? (this.loadingComments = true)
@@ -239,6 +279,9 @@ export default {
 </style>
 
 <style scoped>
+.no-shadow {
+  box-shadow: none !important;
+}
 .avatar {
   height: 40px;
   width: 40px;

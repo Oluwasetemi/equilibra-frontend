@@ -4,14 +4,19 @@
     <div class="px-md-3 px-0">
       <div class="row no-gutters flex-row flex-lg-nowrap justify-content-between">
         <div class="px-3 card-container d-lg-block d-none py-4 scrollable">
-          <Card :imageURL="imageUrl2.imageUrl" :title="$route.params.id" link />
+          <Card
+            :imageURL="imageUrl2.imageUrl"
+            :title="$route.params.id"
+            link
+            :localGovt="localGovt"
+          />
           <aside class="pt-5">
             <div class="groups border border-bottom-0">
               <ul class="p-0 m-o">
                 <li class="header font-weight-bold p-3 border-bottom">Groups</li>
                 <div class="group-list">
                   <div class="text-center loader" v-if="loading">
-                    <div class="spinner-border" role="status">
+                    <div class="spinner-border text-secondary" role="status">
                       <span class="sr-only">Loading...</span>
                     </div>
                   </div>
@@ -53,6 +58,7 @@
 import { mapGetters, mapActions } from "vuex";
 import { roomType } from "~/static/js/constants";
 import gql from "~/apollo/user/room";
+import gqlTopic from "~/apollo/user/topic";
 import imageUrl from "~/assets/images/judiciary_BG.svg";
 import Card from "~/components/Forums/forum-card";
 import loginModal from "~/components/Authentication/sign-up";
@@ -70,7 +76,9 @@ export default {
       roomType,
       loading: true,
       getMyRooms: [],
-      currentRoom: { slug: "Vent-The-Steam", currentTopic: null }
+      currentRoom: { slug: "Vent-The-Steam", currentTopic: null },
+      localGovt: "",
+      key: 0
     };
   },
   components: {
@@ -78,8 +86,9 @@ export default {
     loginModal
   },
   computed: {
-    ...mapGetters("room", ["federalRooms", "stateRooms"]),
+    ...mapGetters("room", ["federalRooms", "stateRooms", "ongoingTopicChange"]),
     ...mapGetters("auth", ["isAuthenticated", "getToken"]),
+    ...mapGetters("user", ["getUser"]),
     rooms() {
       return this.$route.query.state
         ? this.stateRooms[this.roomType[this.$route.params.id]]
@@ -109,8 +118,9 @@ export default {
         : this.joinRoomForum(room);
     },
     setRoom(room) {
+      this.key += 1;
       this.currentRoom = room;
-      this.$router.push({ query: { group: room.slug } });
+      this.$router.push({ query: { group: room.slug, id: room._id } });
     },
     getAllMyRooms() {
       this.$apollo.addSmartQuery("getMyRooms", {
@@ -147,12 +157,15 @@ export default {
       let self = this;
       const payload = {
         roomType: this.roomType[self.$route.params.id],
-        isOrigin: this.$route.query.state
+        isOrigin:
+          this.$route.query.isOrigin == true ||
+          this.$route.query.isOrigin == "true"
+            ? true
+            : false
       };
-      this.getStateRooms(this.roomType[self.$route.params.id])
+      this.getStateRooms(payload)
         .then(data => {
           this.loading = false;
-          console.log(data)
           if (data.graphQLErrors) {
             this.$toast.error(data.graphQLErrors[0].message);
             return;
@@ -180,7 +193,9 @@ export default {
             this.$toast.error(data.graphQLErrors[0].message);
             return;
           }
+          // this.subscribeToComments();
           this.$toast.success("You have now joined this conversation!");
+          // this.subscribeToVote();
         })
         .catch(err => {});
     },
@@ -201,17 +216,66 @@ export default {
         return false;
       }
       return this.getMyRooms.some(myRoom => myRoom._id == room._id);
+    },
+    initializeRooms() {
+      if (this.isAuthenticated) {
+        this.getAllMyRooms();
+      }
+      if (this.$route.query.state) {
+        this.getStateRooms_();
+        return;
+      }
+      this.getFedRooms();
+    },
+    fetchLGAs(stateID) {
+      const self = this;
+      this.$store
+        .dispatch("localGovernments", {
+          stateGovernmentID: stateID
+        })
+        .then(data => {
+          if (data.graphQLErrors) {
+            this.$toast.error(data.graphQLErrors[0].message);
+            this.loadingLGA = false;
+            return;
+          }
+          this.localGovt = this.getState(data, this.$route.query.id);
+        })
+        .catch(err => {});
+    },
+    getState(LGAS, id) {
+      let lga = LGAS.find(lga => {
+        return lga.id == id;
+      });
+      return lga ? lga.name : "";
+    },
+    listenForTopicChange() {
+      this.$apollo.addSmartSubscription("topicChange", {
+        query: gqlTopic.topicChange,
+        context: {
+          headers: {
+            Authorization: `Bearer ${this.getToken}`
+          }
+        },
+        result({ data }) {
+          this.initializeRooms();
+        }
+      });
     }
   },
   mounted() {
-    if (this.isAuthenticated) {
-      this.getAllMyRooms();
+    this.$eventBus.$on("topicChanged", () => {
+      this.initializeRooms();
+    });
+    this.listenForTopicChange();
+
+    if (this.$route.params.id == "LGA" && this.$route.query.id) {
+      const stateID = this.$route.query.isOrigin
+        ? this.getUser.stateOfOrigin
+        : this.getUser.stateOfResidence;
+      this.fetchLGAs(stateID);
     }
-    if (this.$route.query.state) {
-      this.getStateRooms_();
-      return;
-    }
-    this.getFedRooms();
+    this.initializeRooms();
   }
 };
 </script>

@@ -17,7 +17,10 @@
               <figure>
                 <img src="~/assets/images/total-insurance-icon.svg" alt />
               </figure>
-              <div class="value" v-if="topics.pageInfo && topics.pageInfo.totalCount">{{topics.pageInfo.totalCount}}</div>
+              <div
+                class="value"
+                v-if="topics.pageInfo && topics.pageInfo.totalCount"
+              >{{topics.pageInfo.totalCount}}</div>
               <div class="value" v-else>0</div>
               <div class="title mt-2">Total Created Topics</div>
             </div>
@@ -40,22 +43,24 @@
                 </figure>
 
                 <figure class="d-flex justify-content-between position-relative">
-                  <div class="d-flex position-relative">
-                    
-                  </div>
-                  <el-select v-model="filter" @change="getTopics" class="border-danger" placeholder="Select">
+                  <div class="d-flex position-relative"></div>
+                  <el-select
+                    v-model="filter"
+                    @change="getTopics"
+                    class="border-danger"
+                    placeholder="Select"
+                  >
                     <el-option
                       v-for="(item, i) in filters"
                       :key="i"
                       :label="item.label"
-                      :value="item.value">
-                    </el-option>
+                      :value="item.value"
+                    ></el-option>
                   </el-select>
                 </figure>
-                <div class="text-center" v-loading="loading">
-
-                </div>
-                <figure v-if="!loading"
+                <div class="text-center" v-loading="loading"></div>
+                <figure
+                  v-if="!loading"
                   class="d-flex justify-content-between position-relative"
                   v-for="(topic, i) in topics.edges"
                   :key="i"
@@ -91,7 +96,10 @@
                   </div>
                 </figure>
 
-                <div class="text-center" v-if="topics.pageInfo &&topics.pageInfo.totalCount > limit">
+                <div
+                  class="text-center"
+                  v-if="topics.pageInfo &&topics.pageInfo.totalCount > limit"
+                >
                   <button class="add-btn" @click="previousPage" :disabled="loading||!hasPrevious">
                     <i class="ft-arrow-left" v-if="!loading"></i>
                     <span v-else class="spinner-grow"></span>
@@ -182,34 +190,43 @@
                       :class="{invalid: $v.topicPayload.rooms.$error || errorMessage}"
                       @blur="$v.topicPayload.rooms.$touch()"
                       v-model="topicPayload.rooms"
-                      filterable multiple
+                      filterable
+                      multiple
                       placeholder="Select"
                     >
                       <el-option
-                        v-for="(item, i) in rooms.edges"
+                        v-for="(item, i) in rooms"
                         :key="i"
                         :label="item.name"
                         :value="item._id"
                       ></el-option>
                     </el-select>
                     <template v-if="$v.topicPayload.rooms.$dirty">
-                      <p v-if="!$v.topicPayload.rooms.required" class="invalid">This field is required</p>
                       <p
-                      v-else-if="!$v.topicPayload.rooms.minLength"
-                      class="invalid"
+                        v-if="!$v.topicPayload.rooms.required"
+                        class="invalid"
+                      >This field is required</p>
+                      <p
+                        v-else-if="!$v.topicPayload.rooms.minLength"
+                        class="invalid"
                       >Rooms should not be less than 1 items</p>
                     </template>
                     <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
                   </div>
                   <div class="form-group pt-3">
                     <label for="startDate">Start Date</label>
-                    <el-select v-model="topicPayload.date" filterable class="w-100" placeholder="Select">
+                    <el-select
+                      v-model="topicPayload.date"
+                      filterable
+                      class="w-100"
+                      placeholder="Select"
+                    >
                       <el-option
                         v-for="(item, i) in sundays"
                         :key="i"
                         :label="new Date(item).toDateString()"
-                        :value="new Date(item).toISOString()">
-                      </el-option>
+                        :value="new Date(item).toISOString()"
+                      ></el-option>
                     </el-select>
                   </div>
 
@@ -237,20 +254,23 @@ export default {
       limit: 10,
       total: 0,
       filter: true,
-      filters: [{value: true, label: 'Approved'},{value: false, label: 'Not Approved'}],
+      filters: [
+        { value: true, label: "Approved" },
+        { value: false, label: "Not Approved" }
+      ],
       loading: false,
       pickerOptions: {
-        disabledDate: (time)=>{
-          return time<Date.now()
+        disabledDate: time => {
+          return time < Date.now();
         }
       },
       topicPayload: {
         rooms: [],
         title: "",
         description: "",
-        date: "",
+        date: ""
       },
-      dateRangeValue: [Date.now(), ''],
+      dateRangeValue: [Date.now(), ""],
       errorMessage: "",
       options: [
         { name: "Vue.js", code: "vu" },
@@ -316,24 +336,32 @@ export default {
     hasPrevious() {
       return this.skip >= this.limit;
     },
-    sundays(){
-      var d = new Date(), d2 = new Date(), sundays = [];
-      d.setDate(d.getDate() + (0 + 7 - d.getDay()) % 7);
+    sundays() {
+      var d = new Date(),
+        d2 = new Date(),
+        sundays = [];
+      d.setDate(d.getDate() + ((0 + 7 - d.getDay()) % 7));
       sundays.push(new Date(d));
       for (let index = 0; index < 9; index++) {
-        sundays.push(new Date(d.setDate(d.getDate() + (7))));
+        sundays.push(new Date(d.setDate(d.getDate() + 7)));
       }
       return sundays;
     }
   },
   methods: {
-    ...mapActions("admin", ["getAllTopics", "getRooms", "saveTopic","deleteTopic", "updateTopic"]),
+    ...mapActions("admin", [
+      "getAllTopics",
+      "getRooms",
+      "saveTopic",
+      "deleteTopic",
+      "updateTopic"
+    ]),
     openNewTopic() {
       this.topicPayload = {
         rooms: [],
         title: "",
         description: "",
-        date: "",
+        date: ""
       };
       this.$router.push({ query: { new: true } });
     },
@@ -349,95 +377,101 @@ export default {
       this.$router.push({ query: {} });
     },
 
-    modifyTopic: async function(topic){
+    modifyTopic: async function(topic) {
       // modify topic logic happens here
-      this.topicPayload = {...topic};
-      this.$router.push({query: {update: topic._id}});
+      this.topicPayload = { ...topic };
+      this.$router.push({ query: { update: topic._id } });
     },
     getAllRooms: async function() {
       this.loading = true;
       let self = this;
       try {
-        let data = await this.getRooms({});
+        let data = await this.getRooms({ skip: 0, limit: 3000 });
         this.loading = false;
         if (data.graphQLErrors) {
           this.$toast.error(data.graphQLErrors[0].message);
           return;
         }
+        return;
       } catch (error) {
         this.loading = false;
+        return;
       }
     },
     submitTopic() {
       this.$v.$touch();
       let isInvalid = this.$v.$invalid;
-      if(isInvalid) return;
+      if (isInvalid) return;
       this.loading = true;
       let self = this;
-      var {_id, title, rooms, description} = self.topicPayload;
-      if(this.$route.query.update){
-        this.updateTopic({topic: {title, rooms, description}, _id})
-        .then(data => {
-          self.loading = false;
-          if (data.graphQLErrors) {
-            self.$toast.error(data.graphQLErrors[0].message);
+      var { _id, title, rooms, description } = self.topicPayload;
+      if (this.$route.query.update) {
+        this.updateTopic({ topic: { title, rooms, description }, _id })
+          .then(data => {
+            self.loading = false;
+            if (data.graphQLErrors) {
+              self.$toast.error(data.graphQLErrors[0].message);
+              return;
+            }
+            this.$router.push({ query: {} });
+            this.$toast.error("Topic updated");
             return;
-          }
-          this.$router.push({query: {}});
-          this.$toast.error("Topic updated");
-          return;
-        })
-        .catch(err => {
-          self.loading = false;
-          return;
-        });
+          })
+          .catch(err => {
+            self.loading = false;
+            return;
+          });
       }
-      
-      if(this.$route.query.new){
-        this.saveTopic({topic: self.topicPayload})
-        .then(data => {
-          self.loading = false;
-          if (data.graphQLErrors) {
-            self.$toast.error(data.graphQLErrors[0].message);
+
+      if (this.$route.query.new) {
+        this.saveTopic({ topic: self.topicPayload })
+          .then(data => {
+            self.loading = false;
+            if (data.graphQLErrors) {
+              self.$toast.error(data.graphQLErrors[0].message);
+              return;
+            }
+            this.$router.push({ query: {} });
+            this.$toast.error("Topic Created");
+          })
+          .catch(err => {
+            self.loading = false;
             return;
-          }
-          this.$router.push({query: {}});
-          this.$toast.error("Topic Created");
-        })
-        .catch(err => {
-          self.loading = false;
-          return;
-        });
+          });
       }
     },
-    resetFields(){
-      if(this.$route.query.update){
-        this.topicPayload = this.topics.filter(e=>e._id==this.$route.query.update);
+    resetFields() {
+      if (this.$route.query.update) {
+        this.topicPayload = this.topics.filter(
+          e => e._id == this.$route.query.update
+        );
       }
     },
     getTopics: async function() {
       this.loading = true;
       let self = this;
       try {
-        let data = this.getAllTopics({query: {isVerified: self.filter}, limit: self.limit, skip: self.skip})
+        let data = await this.getAllTopics({
+          query: { isVerified: self.filter },
+          limit: self.limit,
+          skip: self.skip
+        });
         this.loading = false;
         if (data.graphQLErrors) {
           this.$toast.error(data.graphQLErrors[0].message);
           return;
         }
+        return;
       } catch (error) {
         this.loading = false;
+        return;
       }
     }
   },
-  created() {
-    
-  },
-  async mounted(){
+  created() {},
+  async mounted() {
     this.resetFields();
-    await this.getTopics();
-    await this.getAllRooms();
-    console.log(this.rooms);
+    await Promise.all([this.getTopics(), this.getAllRooms()]);
   }
 };
 </script>
@@ -551,7 +585,8 @@ button {
   height: 30px;
   transition: box-shadow 0.2s ease-in-out;
 }
-.button-i:hover, .button-i:focus {
+.button-i:hover,
+.button-i:focus {
   background: #f58634;
   color: white;
 }

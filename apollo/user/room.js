@@ -6,16 +6,16 @@ export default {
       getFederalRooms(roomType: $roomType) {
         _id
         name
+        voteId
         currentTopic {
           _id
           title
-          closeDate
-          startDate
+          description
           votes
           isClosed
+          voteId
         }
         slug
-        government
       }
     }
   `,
@@ -24,16 +24,17 @@ export default {
       getStateRooms(roomType: $roomType, isOrigin: $isOrigin) {
         _id
         name
+        voteId
         currentTopic {
           _id
           title
-          closeDate
-          startDate
+          description
           votes
           isClosed
+          voteId
         }
         slug
-        government
+        # government
       }
     }
   `,
@@ -42,16 +43,17 @@ export default {
       getRoomById(roomId: $roomId) {
         _id
         name
+        voteId
         currentTopic {
           _id
           title
-          closeDate
-          startDate
+          description
           votes
           isClosed
+          voteId
         }
         slug
-        government
+        # government
       }
     }
   `,
@@ -67,17 +69,19 @@ export default {
       joinRoom(roomId: $roomId) {
         _id
         name
+        voteId
         currentTopic {
           _id
+          description
           title
-          closeDate
-          startDate
+          # closeDate
+          # startDate
           votes
           isClosed
         }
         slug
-        government
-        roomType
+        # government
+        # roomType
       }
     }
   `,
@@ -86,17 +90,35 @@ export default {
       leaveRoom(roomId: $roomId) {
         _id
         name
+        voteId
         currentTopic {
           _id
           title
-          closeDate
-          startDate
+          description
+          # closeDate
+          # startDate
           votes
           isClosed
         }
         slug
-        government
-        roomType
+        # government
+        # roomType
+      }
+    }
+  `,
+    vote: gql`
+    subscription {
+      vote {
+        _id
+        title
+        voteId
+        description
+        # closeDate
+        # startDate
+        votes
+        isClosed
+        description
+        # createdBy
       }
     }
   `
