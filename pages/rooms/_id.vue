@@ -144,8 +144,9 @@ export default {
     },
     showVotingResults() {
       if (!this.test) return
+      debugger
       if (
-        !this.currentRoom.voteId == null ||
+        !this.currentRoom.voteId ||
         (!this.currentRoom.currentTopic &&
           !this.currentRoom.currentTopic.title) ||
         (!this.ongoingDiscussionVoting_ &&
