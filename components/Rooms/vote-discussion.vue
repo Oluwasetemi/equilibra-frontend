@@ -17,8 +17,7 @@
         </div>
         <div class="px-5 pt-3 pb-5">
           <p class="topic text-center my-4">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-            is sed do eiusmod tempor inci did is unt ut labore et dolore magna aliqua um dolor sit ame.
+            {{topic && topic.title ? topic.title : " "}}
           </p>
           <form @submit.prevent="voteDiscussion()">
             <label for="poor" class="form-check my-4" :class="{selected: selected == 'poor'}">
@@ -29,6 +28,7 @@
                 :value="voteType.poor"
                 class="form-check-input"
                 hidden
+                :disabled="room.voted"
                 v-model="selected"
               />
               <div class="radio-btn rounded-circle text-center">
@@ -48,6 +48,7 @@
                 :value="voteType.notAcceptable"
                 class="form-check-input"
                 hidden
+                :disabled="room.voted"
                 v-model="selected"
               />
               <div class="radio-btn rounded-circle text-center">
@@ -70,6 +71,7 @@
                 :value="voteType.challenges"
                 class="form-check-input"
                 hidden
+                :disabled="room.voted"
                 v-model="selected"
               />
               <div class="radio-btn rounded-circle text-center">
@@ -89,6 +91,7 @@
                 :value="voteType.commendable"
                 class="form-check-input"
                 hidden
+                :disabled="room.voted"
                 v-model="selected"
               />
               <div class="radio-btn rounded-circle text-center">
@@ -108,6 +111,7 @@
                 :value="voteType.excellent"
                 class="form-check-input"
                 hidden
+                :disabled="room.voted"
                 v-model="selected"
               />
               <div class="radio-btn rounded-circle text-center">
@@ -116,7 +120,7 @@
               <label for="excellent" class="mb-0 ml-3">Excellent or Outstanding - Service Level</label>
             </label>
           </form>
-          <div class="footer d-flex justify-content-between pt-1 mt-3" v-if="!voteRegistered">
+          <div class="footer d-flex justify-content-between pt-1 mt-3" v-if="!room.voted">
             <button
               class="d-flex green-btn justify-content-between align-items-center w-100 px-4 mt-4"
               type="submit"
@@ -130,7 +134,11 @@
               <img src="~/assets/icons/vote-button-icon.svg" alt height="40px" />
             </button>
           </div>
-          <p v-else style="color: green;font-weight: 400;">✓ Your vote has been registered!</p>
+          <p
+            v-else
+            class="text-center"
+            style="color: green;font-weight: 400;"
+          >✓ Your vote has been registered!</p>
         </div>
       </div>
     </div>
@@ -143,12 +151,11 @@ import { mapGetters, mapActions } from "vuex";
 import { voteType } from "~/static/js/constants";
 import gql from "~/apollo/user/room";
 export default {
-  props: ["voteId"],
+  props: ["room", "topic"],
   data() {
     return {
       selected: null,
       voteType,
-      voteRegistered: false,
       loading: false
     };
   },
@@ -156,19 +163,24 @@ export default {
     ...mapGetters("auth", ["getToken"])
   },
   methods: {
-    ...mapActions("topic", ["vote", "closeRequestTopicChangeVoting"]),
+    ...mapActions("topic", [
+      "vote",
+      "closeRequestTopicChangeVoting",
+    ]),
+    ...mapActions("room", ['toggleRoomDiscussionVotingStatus']),
     voteDiscussion() {
       this.loading = true;
-      this.vote({ vote: this.selected, voteId: this.voteId })
+      this.vote({ vote: this.selected, voteId: this.room.voteId })
         .then(data => {
-          this.loading - false;
+          this.loading = false;
+          this.toggleRoomDiscussionVotingStatus(this.room.id);
+          $("voteDiscussionModal").modal("hide");
           if (data.graphQLErrors) {
             this.$toast.error(data.grapLErrors[0].message);
             return;
           }
           this.$toast.success("Your vote has been registered!");
-          this.voteRegistered = true;
-          $("voteDiscussionModal").modal("hide");
+          
         })
         .catch(err => {
           this.loading = false;

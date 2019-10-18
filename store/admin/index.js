@@ -153,7 +153,6 @@ const actions = {
 
   // fetch all reports by admin
   deleteReportedComment({ commit, state }, payload) {
-    debugger;
     return this.app.apolloProvider.defaultClient
       .mutate({
         mutation: gql.Admin.removeComment,

@@ -48,7 +48,7 @@
             </div>
           </aside>
         </div>
-        <nuxt-child :currentRoom="currentRoom" :isMyRoom="isMyRoom(currentRoom)" />
+        <nuxt-child :currentRoom="currentRoom" :isMyRoom="isMyRoom(currentRoom)" :key="key"/>
       </div>
     </div>
   </div>

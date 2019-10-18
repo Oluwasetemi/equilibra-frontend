@@ -16,17 +16,9 @@
         <p
           class="description mb-2 mr-md-5 pr-md-5"
           v-if="currentRoom && currentRoom.slug != 'Vent-The-Steam'"
-        >
-          {{currentRoom.currentTopic ? currentRoom.currentTopic.title : 'This room has no topic' }}
-          <span
-            v-if="currentRoom.currentTopic && currentRoom.currentTopic.isClosed"
-          >
-            Topic Closed:
-            <a href="#">Voting in progress</a>
-          </span>
-        </p>
+        >{{currentRoom.currentTopic ? currentRoom.currentTopic.title : 'This room has no topic' }}</p>
         <div class="d-flex justify-content-between align-items-end flex-wrap">
-          <span>
+          <span class="d-flex align-items-end">
             <div
               class="timer d-flex align-items-center mt-2"
               v-if="currentRoom && currentRoom.currentTopic && currentRoom.slug != 'Vent-The-Steam'"
@@ -38,6 +30,12 @@
                 <span class="ml-2" style="font-size: 14px">56</span> Minute(s)
               </span>
             </div>
+            <span v-if="ongoingDiscussionVoting && isMyRoom && !ongoingDiscussionVoting.resultsIn" class="ml-2">
+              <a href="#" style="text-decoration: underline; font-size: 11px;" @click="showModal('#voteDiscussionModal')">Voting in progress</a>
+            </span>
+            <span v-if="ongoingDiscussionVoting && isMyRoom && ongoingDiscussionVoting.resultsIn" class="ml-2">
+              <a href="#" style="text-decoration: underline; font-size: 11px;" @click="showModal('#voteResults')">View voting results</a>
+            </span>
           </span>
 
           <div class="topic-actions mt-2" v-if="currentRoom.slug != 'Vent-The-Steam'">
@@ -62,7 +60,7 @@ import loginModal from "~/components/Authentication/sign-up";
 
 export default {
   layout: "greenNavOnly",
-  props: ["currentRoom", "isMyRoom"],
+  props: ["currentRoom", "isMyRoom", "ongoingDiscussionVoting"],
   components: {
     SuggestTopicModal,
     ChangeTopicModal,

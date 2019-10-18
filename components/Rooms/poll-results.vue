@@ -18,7 +18,7 @@
         <div class="pb-5 px-5">
           <p class="topic text-center my-4">Topic: {{topic && topic.title ? topic.title : " "}}</p>
           <p class="text-center">{{topic && topic.description ? topic.description : " "}}</p>
-          <div class="results" v-if="result && result.poorVotes">
+          <div class="results" v-if="result">
             <div
               class="result-option px-3 pt-3 pb-2 my-4"
               :class="{voted: result.poorVotes == maxValue}"
@@ -85,7 +85,9 @@
               <small class="vote-count d-block px-1 pt-2">{{result.excellentVotes}} votes</small>
             </div>
           </div>
-          <div class="spinner-border" v-else></div>
+          <div v-else class="text-center">
+            <div class="spinner-border text-center"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -96,7 +98,7 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 export default {
-  props: ["voteId", "topic"],
+  props: ["voteId", "topic", "roomId"],
   data() {
     return {
       loading: false
@@ -105,7 +107,9 @@ export default {
   computed: {
     ...mapGetters("topic", ["discussionVoteResults"]),
     result() {
-      return this.discussionVoteResults[this.voteId];
+      return this.discussionVoteResults.find(
+        result => result.voteId == this.voteId
+      );
     },
     maxValue() {
       const values = [
@@ -120,6 +124,8 @@ export default {
   },
   methods: {
     ...mapActions("topic", ["closeTopicDiscussionVoting"]),
+    ...mapActions("room", ["toggleRoomDiscussionResultStatus"]),
+
     inPercent(val) {
       if (!val || val == 0) {
         return "0%";
@@ -134,12 +140,12 @@ export default {
       this.loading = true;
       this.closeTopicDiscussionVoting({ voteId: this.voteId })
         .then(data => {
-          this.loading - false;
+          this.loading = false;
           if (data.graphQLErrors) {
             this.$toast.error(data.graphQLErrors[0].message);
             return;
           }
-          this.fetchResults = false;
+          this.toggleRoomDiscussionResultStatus(this.roomId)
         })
         .catch(err => {
           this.loading = false;
@@ -148,7 +154,9 @@ export default {
   },
   mounted() {
     this.$eventBus.$on("fetchDiscussionResults", () => {
-      if (this.voteId) this.fetchResults();
+      if (this.voteId) {
+        this.fetchResults();
+      }
     });
   }
 };

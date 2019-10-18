@@ -1,17 +1,30 @@
 <template>
   <div class="px-md-3 pl-0 forum-container py-4 scrollable" ref="comments">
     <div class="border border-bottom-0">
-      <DiscussionVoteResults :voteId="currentRoom.voteId" :topic="currentRoom.currentTopic" />
-      <VoteDiscussion :voteId="currentRoom.voteId" />
+      <DiscussionVoteResults
+        v-if="ongoingDiscussionVoting_"
+        :roomId="currentRoom._id"
+        :voteId="currentRoom.voteId"
+        :topic="currentRoom.currentTopic"
+      />
+      <VoteDiscussion
+        v-if="ongoingDiscussionVoting_"
+        :room="ongoingDiscussionVoting_"
+        :topic="currentRoom.currentTopic"
+      />
       <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut" appear>
         <TopicChangePopup
-          v-if="ongoingVoting"
+          v-if="ongoingTopicVoting"
           :roomId="currentRoom._id"
           @closeTopicChangePopup="closeTopicChange_"
-          :room="ongoingVoting"
+          :room="ongoingTopicVoting"
         />
       </transition>
-      <RoomHeader :currentRoom="currentRoom" :isMyRoom="isMyRoom" />
+      <RoomHeader
+        :currentRoom="currentRoom"
+        :isMyRoom="isMyRoom"
+        :ongoingDiscussionVoting="ongoingDiscussionVoting_"
+      />
       <PostComment :currentRoom="currentRoom" :isMyRoom="isMyRoom" />
       <Comments :currentRoom="currentRoom" :fetchMore="fetchMore" @fetchedMore="fetchMore = false" />
     </div>
@@ -22,6 +35,7 @@
 import Timer from "~/components/Rooms/timer";
 import { mapGetters, mapActions } from "vuex";
 import RoomHeader from "~/components/Rooms/header";
+import { endDiscussionTime } from "~/static/js/constants";
 import TopicChangePopup from "~/components/Rooms/vote-topic-change";
 import VoteDiscussion from "~/components/Rooms/vote-discussion";
 import DiscussionVoteResults from "~/components/Rooms/poll-results";
@@ -44,11 +58,13 @@ export default {
       fetchResults: false,
       closeDiscussionInterval: null,
       votingResultsInterval: null,
-      voteCloseDate: {
-        day: 1,
-        hour: 13,
-        minutes: 30
-      }
+      startTime: this.$moment(endDiscussionTime.startTime),
+      endTime: this.$moment(this.$moment(endDiscussionTime.startTime)).add(
+        endDiscussionTime.duration,
+        "m"
+      ),
+      now: this.$moment(new Date()),
+      test: endDiscussionTime.test
     };
   },
   components: {
@@ -58,22 +74,32 @@ export default {
     TopicChangePopup,
     Timer,
     VoteDiscussion,
-
     DiscussionVoteResults
   },
   computed: {
-    ...mapGetters("room", ["ongoingTopicChange"]),
-    ongoingVoting() {
+    ...mapGetters("room", ["ongoingTopicChange", "ongoingDiscussionVoting"]),
+    ongoingTopicVoting() {
       return this.ongoingTopicChange.find(
         room => room.id == this.currentRoom._id
       );
+    },
+    ongoingDiscussionVoting_() {
+      return this.ongoingDiscussionVoting.find(
+        room => room.id == this.currentRoom._id
+      );
+    }
+  },
+  watch: {
+    ongoingDiscussionVoting_(val) {
+      if (val && !val.voted) this.showModal("#voteDiscussionModal");
     }
   },
   methods: {
     ...mapActions("room", [
       "getRoomById",
       "initiateRoomVoting",
-      "closeTopicChange"
+      "closeTopicChange",
+      "initiateRoomDiscussionVoting"
     ]),
     closeTopicChange_() {
       this.closeTopicChange(this.currentRoom._id);
@@ -88,32 +114,45 @@ export default {
     },
     checkToCloseDiscussion() {
       if (
-        new Date().getDay() == this.voteCloseDate.day &&
-        new Date().getMinutes() == this.voteCloseDate.minutes &&
-        new Date().getHours() == this.voteCloseDate.hour
+        this.now.diff(this.startTime, "minutes") < 0 ||
+        this.endTime.diff(this.now, "minutes") <= 0 ||
+        (!this.currentRoom.currentTopic &&
+          !this.currentRoom.currentTopic.title) ||
+        !this.isMyRoom ||
+        !this.currentRoom.voteId
       ) {
-        if (
-          this.currentRoom.currentTopic &&
-          this.currentRoom.currentTopic.title
-        )
-          this.showModal("#voteDiscussionModal");
-        clearInterval(this.closeDiscussionInterval);
+        return;
       }
+      if (
+        this.ongoingDiscussionVoting_ &&
+        this.ongoingDiscussionVoting_.voted
+      ) {
+        clearInterval(this.closeDiscussionInterval);
+        return;
+      }
+      this.initiateRoomDiscussionVoting({
+        id: this.currentRoom._id,
+        voteId: this.currentRoom.voteId,
+        voted: false,
+        resultsIn: false
+      });
+      this.showModal("#voteDiscussionModal");
+      clearInterval(this.closeDiscussionInterval);
     },
     showVotingResults() {
+      if (!this.test) return
       if (
-        new Date().getDay() == this.voteCloseDate.day &&
-        new Date().getMinutes() == this.voteCloseDate.minutes + 3 &&
-        new Date().getHours() == this.voteCloseDate.hour
+        !this.currentRoom.voteId == null ||
+        (!this.currentRoom.currentTopic &&
+          !this.currentRoom.currentTopic.title) ||
+        (!this.ongoingDiscussionVoting_ &&
+          this.now.diff(this.endTime, "minutes") < 0)
       ) {
-        if (
-          this.currentRoom.currentTopic &&
-          this.currentRoom.currentTopic.title
-        )
-          this.$eventBus.$emit("fetchDiscussionResults");
-        this.showModal("#voteResults");
-        clearInterval(this.votingResultsInterval);
+        return;
       }
+      this.$eventBus.$emit("fetchDiscussionResults");
+      this.showModal("#voteResults");
+      clearInterval(this.votingResultsInterval);
     },
     getRoom() {
       this.getRoomById(this.$route.query.id)
@@ -140,7 +179,6 @@ export default {
           totalDownVotes: 0,
           topicChanged: false,
           ongoingTimer: false,
-          // startTime: this.$moment(new Date()),
           endTime: this.$moment(new Date())
             .add(2, "m")
             .toDate()
