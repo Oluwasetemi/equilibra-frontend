@@ -1,8 +1,8 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-light d-flex justify-space-between mx-lg-4 pt-3">
-    <div class="container">
-      <nuxt-link to="/" class="navbar-brand">
-        <img src="~/assets/icons/green-logo.svg" alt />
+    <div class="container h-100">
+      <nuxt-link to="/" class="navbar-brand h-100">
+        <img src="~/assets/icons/green-logo.svg" alt class="h-100"/>
       </nuxt-link>
       <button
         class="navbar-toggler"

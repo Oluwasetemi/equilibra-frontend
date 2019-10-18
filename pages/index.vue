@@ -1,11 +1,10 @@
 <template>
   <div class="main-container">
     <div class="container-fluid px-0 header">
-      <div class="container">
-        <header class="pt-3">
+       <header class="pt-4">
           <nav class="navbar navbar-expand-lg navbar-light d-flex justify-space-between px-md-0">
-            <nuxt-link to="/" class="navbar-brand">
-              <img src="~/assets/icons/logo.svg" alt />
+            <nuxt-link to="/" class="navbar-brand pl-2">
+              <img src="~/assets/icons/logo.svg" alt style="position: absolute;top: -20px;"/>
             </nuxt-link>
             <button
               class="navbar-toggler"
@@ -72,6 +71,8 @@
             </div>
           </nav>
         </header>
+      <div class="container">
+       
         <div class="row">
           <div class="col-md-5 d-flex align-items-md-center">
             <div class="hero-text">
@@ -409,6 +410,9 @@ export default {
       this.logout();
     }
   },
+  mounted(){
+    // debugger
+  }
   // mounted() {
   //   let elmts = document.querySelectorAll(".lazy-load");
   //   if (window.img_observer && window.img_observer.observer) {
@@ -644,6 +648,13 @@ footer p {
   font-size: 15px;
   color: var(--black-text);
   line-height: 2rem;
+}
+
+@media (min-width: 1200px){
+header {
+    max-width: 1360px;
+    margin: auto
+}
 }
 
 @media (min-width: 1200px) {

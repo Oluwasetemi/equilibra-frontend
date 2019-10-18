@@ -16,3 +16,9 @@ export const voteType = {
   commendable: 'commendableVotes',
   excellent: 'excellentVotes'
 };
+
+export const endDiscussionTime = {
+  startTime: new Date('2019-10-18 01:44:00'),
+  duration: 5,
+  test: false //in mins
+};

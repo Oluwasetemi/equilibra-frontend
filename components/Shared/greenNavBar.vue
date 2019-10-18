@@ -1,9 +1,9 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-light d-flex justify-space-between px-lg-4">
     <signUpModal />
-    <div class="container">
-      <nuxt-link to="/" class="navbar-brand ml-lg-2">
-        <img src="~/assets/icons/logo.svg" alt />
+    <div class="container h-100">
+      <nuxt-link to="/" class="navbar-brand ml-lg-2 h-100">
+        <img src="~/assets/icons/logo.svg" alt class="h-100"/>
       </nuxt-link>
 
       <button
