@@ -18,7 +18,7 @@ export const voteType = {
 };
 
 export const endDiscussionTime = {
-  startTime: new Date('2019-10-18 13:50:00'),
-  duration: 5,
-  test: false //in mins
+  startTime: new Date('2019-10-18 14:20:00'),
+  duration: 5,//in mins
+  test: true 
 };
