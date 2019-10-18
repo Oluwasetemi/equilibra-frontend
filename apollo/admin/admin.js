@@ -51,10 +51,10 @@ export default {
         unemploymentRate
         nonOilSectorContributionToGDP
         rulingParty
-        touristAttraction
+        touristAttractionCenters
         agriculture
         mineralResources
-        museumAndParks
+        museumsAndParks
         createdAt
         updatedAt
       }

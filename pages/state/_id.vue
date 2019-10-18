@@ -372,7 +372,7 @@ export default {
         },
         {
           title: "Museums & Parks",
-          key: "museumAndParks"
+          key: "museumsAndParks"
         },
         {
           title: "Agriculture",
@@ -384,7 +384,7 @@ export default {
         },
         {
           title: "Other tourist attractions",
-          key: "touristAttraction"
+          key: "touristAttractionCenters"
         }
       ]
     };
