@@ -30,10 +30,10 @@
                 <span class="ml-2" style="font-size: 14px">56</span> Minute(s)
               </span>
             </div>
-            <span v-if="ongoingDiscussionVoting && isMyRoom && !ongoingDiscussionVoting.resultsIn" class="ml-2">
+            <span v-if="ongoingDiscussionVoting && ongoingDiscussionVoting.voteId && isMyRoom && !ongoingDiscussionVoting.resultsIn" class="ml-2">
               <a href="#" style="text-decoration: underline; font-size: 11px;" @click="showModal('#voteDiscussionModal')">Voting in progress</a>
             </span>
-            <span v-if="ongoingDiscussionVoting && isMyRoom && ongoingDiscussionVoting.resultsIn" class="ml-2">
+            <span v-if="ongoingDiscussionVoting && ongoingDiscussionVoting.voteId && isMyRoom && ongoingDiscussionVoting.resultsIn" class="ml-2">
               <a href="#" style="text-decoration: underline; font-size: 11px;" @click="showModal('#voteResults')">View voting results</a>
             </span>
           </span>

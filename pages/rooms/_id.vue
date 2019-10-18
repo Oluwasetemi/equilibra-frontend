@@ -113,6 +113,7 @@ export default {
       $(val).modal("show");
     },
     checkToCloseDiscussion() {
+      // debugger
       if (
         this.now.diff(this.startTime, "minutes") < 0 ||
         this.endTime.diff(this.now, "minutes") <= 0 ||
