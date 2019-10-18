@@ -114,6 +114,8 @@ export default {
     },
     checkToCloseDiscussion() {
       // debugger
+      const b = this.now.diff(this.startTime, "minutes") < 0 
+      const a = this.endTime.diff(this.now, "minutes") <= 0
       if (
         this.now.diff(this.startTime, "minutes") < 0 ||
         this.endTime.diff(this.now, "minutes") <= 0 ||
