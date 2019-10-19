@@ -25,6 +25,7 @@
     "gulp": "^4.0.2",
     "gulp-html-minifier": "^0.1.8",
     "js-cookie": "^2.2.1",
+    "moment": "^2.24.0",
     "nuxt": "^2.0.0",
     "nuxt-vuex-localstorage": "^1.2.6",
     "vue-infinite-scroll": "^2.0.2",
