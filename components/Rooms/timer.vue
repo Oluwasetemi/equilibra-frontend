@@ -10,7 +10,7 @@ export default {
     return {
       interval: null,
       timer: 0,
-      duration: "--"
+      duration: "..."
     };
   },
   mounted() {
@@ -19,9 +19,9 @@ export default {
   methods: {
     ...mapActions("room", ["setRoomVotingField"]),
     startTimer() {
-      const date1 = this.$moment(new Date());
-      const date2 = this.$moment(this.endTime);
-      if (date2.diff(date1, "minutes") <= 0) {
+      const now = this.$moment(new Date());
+      const endTime = this.$moment(this.endTime);
+      if (endTime.diff(now, "seconds") <= 0) {
         this.duration = "0:00";
         this.$emit("timerComplete");
         this.stopTimer();
@@ -31,14 +31,13 @@ export default {
         });
         return;
       }
-      this.timer = date2.diff(date1, "seconds");
+      this.timer = endTime.diff(now, "seconds");
       let minutes = 0;
       let seconds = 0;
       const self = this;
       this.interval = setInterval(() => {
         minutes = parseInt(self.timer / 60, 10);
         seconds = parseInt(self.timer % 60, 10);
-
         minutes = minutes < 10 ? "0" + minutes : minutes;
         seconds = seconds < 10 ? "0" + seconds : seconds;
         self.duration = minutes + ":" + seconds;

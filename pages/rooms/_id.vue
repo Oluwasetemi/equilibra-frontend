@@ -58,6 +58,7 @@ export default {
       fetchResults: false,
       closeDiscussionInterval: null,
       votingResultsInterval: null,
+      fetchNewTopicsForWeekInterval: null,
       startTime: this.$moment(endDiscussionTime.startTime),
       endTime: this.$moment(this.$moment(endDiscussionTime.startTime)).add(
         endDiscussionTime.duration,
@@ -96,7 +97,6 @@ export default {
   },
   methods: {
     ...mapActions("room", [
-      "getRoomById",
       "initiateRoomVoting",
       "closeTopicChange",
       "initiateRoomDiscussionVoting"
@@ -114,8 +114,8 @@ export default {
     },
     checkToCloseDiscussion() {
       // debugger
-      const b = this.now.diff(this.startTime, "minutes") < 0 
-      const a = this.endTime.diff(this.now, "minutes") <= 0
+      const b = this.now.diff(this.startTime, "minutes") < 0;
+      const a = this.endTime.diff(this.now, "minutes") <= 0;
       if (
         this.now.diff(this.startTime, "minutes") < 0 ||
         this.endTime.diff(this.now, "minutes") <= 0 ||
@@ -143,8 +143,7 @@ export default {
       clearInterval(this.closeDiscussionInterval);
     },
     showVotingResults() {
-      if (!this.test) return
-      debugger
+      if (!this.test) return;
       if (
         !this.currentRoom.voteId ||
         (!this.currentRoom.currentTopic &&
@@ -158,16 +157,15 @@ export default {
       this.showModal("#voteResults");
       clearInterval(this.votingResultsInterval);
     },
-    getRoom() {
-      this.getRoomById(this.$route.query.id)
-        .then(data => {
-          if (data.graphQLErrors) {
-            this.$toast.error(data.graphQLErrors[0].message);
-            return;
-          }
-        })
-        .catch(err => {});
-    }
+    fetchTopicsForNewWeek() {
+      if (
+        new Date().getDay() == 6 &&
+        new Date().getHours() == 3 &&
+        new Date().getMinutes() == 58
+      )
+        this.$eventBus.$emit("topicChanged");
+        clearInterval(this.fetchNewTopicsForWeekInterval);
+    },
   },
   mounted() {
     this.$eventBus.$on("showPopup", ({ data, roomId }) => {
@@ -189,7 +187,6 @@ export default {
         });
       }
     });
-    this.getRoom();
     const self = this;
     this.closeDiscussionInterval = setInterval(function() {
       self.checkToCloseDiscussion();
@@ -197,7 +194,9 @@ export default {
     this.votingResultsInterval = setInterval(function() {
       self.showVotingResults();
     }, 1000);
-    // }
+    this.fetchNewTopicsForWeekInterval = setInterval(function() {
+      self.fetchTopicsForNewWeek();
+    }, 1000);
     this.$refs.comments.addEventListener("scroll", this.fetchMoreComments);
   },
   beforeDestroy() {
