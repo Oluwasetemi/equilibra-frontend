@@ -48,7 +48,7 @@
             </div>
           </aside>
         </div>
-        <nuxt-child :currentRoom="currentRoom" :isMyRoom="isMyRoom(currentRoom)" :key="key"/>
+        <nuxt-child :currentRoom="currentRoom" :isMyRoom="isMyRoom(currentRoom)" :key="key" />
       </div>
     </div>
   </div>
@@ -90,6 +90,7 @@ export default {
     ...mapGetters("auth", ["isAuthenticated", "getToken"]),
     ...mapGetters("user", ["getUser"]),
     rooms() {
+      debugger;
       return this.$route.query.state
         ? this.stateRooms[this.roomType[this.$route.params.id]]
         : this.federalRooms[this.roomType[this.$route.params.id]];
@@ -120,7 +121,14 @@ export default {
     setRoom(room) {
       this.key += 1;
       this.currentRoom = room;
-      this.$router.push({ query: { group: room.slug, id: room._id } });
+      this.$router.push({
+        query: {
+          group: room.slug,
+          id: this.$route.query.id,
+          state: this.$route.query.state,
+          isOrigin: this.$route.query.isOrigin
+        }
+      });
     },
     getAllMyRooms() {
       this.$apollo.addSmartQuery("getMyRooms", {
