@@ -36,10 +36,14 @@ export default {
         unemploymentRate
         nonOilSectorContributionToGDP
         rulingParty
-        touristAttraction
+        touristAttractionCenters
         agriculture
         mineralResources
-        museumAndParks
+        museumsAndParks
+        leaderPhoto
+        senatePresidentPhoto
+        cjnPhoto
+        speakerPhoto
       }
     }
   `,
@@ -122,6 +126,10 @@ export default {
         cjn
         speaker
         leader
+        leaderPhoto
+        speakerPhoto
+        senatePresidentPhoto
+        cjnPhoto
         senatePresident
         totalLg
         population
@@ -140,10 +148,10 @@ export default {
         unemploymentRate
         nonOilSectorContributionToGDP
         rulingParty
-        touristAttraction
+        touristAttractionCenters
         agriculture
         mineralResources
-        museumAndParks
+        museumsAndParks
       }
     }
   `,
