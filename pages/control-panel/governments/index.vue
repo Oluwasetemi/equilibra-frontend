@@ -9,7 +9,7 @@
           </div>
         </div>
       </div>
-
+      <button @click="upload">Upload</button>
       <div class="row">
         <div class="col-md-6 col-lg-3">
           <div class="position-relative card-with-shadow pb-4">
@@ -178,72 +178,79 @@
                       </p>
                       <hr />
                     </div>
-
-                    <div class="form-group pt-3 col-12 col-md-4">
-                      <label for="title">Leader's Office</label>
-                      <!-- <el-select class="w-100">
-                        <el-option></el-option>
-                      </el-select>-->
-                      <el-input class="w-100"></el-input>
-                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
-                    </div>
-                    <div class="form-group pt-3 col-12 col-md-4">
+                    <div class="form-group pt-3 col-12 col-md-5">
                       <label for="title">Leader's Name</label>
-                      <el-input class="w-100"></el-input>
+                      <el-input v-model="govtPayload.leader" class="w-100"></el-input>
                       <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
                     </div>
                     <div class="form-group pt-3 col-12 col-md-4">
-                      <label for="title">Leader's Photo</label>
-                      <el-input class="w-100"></el-input>
+                      <label for="title">Upload Photo</label>
+                      <button type="button" @click="upload('leader')" class="ft-upload w-100"></button>
                       <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
                     </div>
-
-                    <div class="form-group pt-3 col-12 col-md-4">
-                      <label for="title">Leader's Office</label>
-                      <el-input class="w-100"></el-input>
-                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
-                    </div>
-                    <div class="form-group pt-3 col-12 col-md-4">
-                      <label for="title">Leader's Name</label>
-                      <el-input class="w-100"></el-input>
-                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
-                    </div>
-                    <div class="form-group pt-3 col-12 col-md-4">
-                      <label for="title">Leader's Photo</label>
-                      <el-input class="w-100"></el-input>
-                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    <div class="form-group py-3 col-12 col-md-3">
+                      <img
+                        :src="govtPayload.leaderPhoto"
+                        class="rounded-circle img-thumbnail"
+                        alt
+                        srcset
+                      />
                     </div>
 
-                    <div class="form-group pt-3 col-12 col-md-4">
-                      <label for="title">Leader's Office</label>
-                      <el-input class="w-100"></el-input>
+                    <div class="form-group pt-3 col-12 col-md-5" v-if="isFG">
+                      <label for="title">Senate President's Name</label>
+                      <el-input v-model="govtPayload.senatePresident" class="w-100"></el-input>
                       <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
                     </div>
-                    <div class="form-group pt-3 col-12 col-md-4">
-                      <label for="title">Leader's Name</label>
-                      <el-input class="w-100"></el-input>
+                    <div class="form-group pt-3 col-12 col-md-4" v-if="isFG">
+                      <label for="title">Upload Photo</label>
+                      <button type="button" @click="upload('senate')" class="ft-upload w-100"></button>
                       <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
                     </div>
-                    <div class="form-group pt-3 col-12 col-md-4">
-                      <label for="title">Leader's Photo</label>
-                      <el-input class="w-100"></el-input>
-                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    <div class="form-group py-3 col-12 col-md-3" v-if="isFG">
+                      <img
+                        :src="govtPayload.senatePresidentPhoto"
+                        class="rounded-circle img-thumbnail"
+                        alt
+                        srcset
+                      />
                     </div>
 
-                    <div class="form-group pt-3 col-12 col-md-4">
-                      <label for="title">Leader's Office</label>
-                      <el-input class="w-100"></el-input>
+                    <div class="form-group pt-3 col-12 col-md-5">
+                      <label for="title">House Leader's Name</label>
+                      <el-input v-model="govtPayload.speaker" class="w-100"></el-input>
                       <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
                     </div>
                     <div class="form-group pt-3 col-12 col-md-4">
-                      <label for="title">Leader's Name</label>
-                      <el-input class="w-100"></el-input>
+                      <label for="title">Upload Photo</label>
+                      <button type="button" @click="upload('speaker')" class="ft-upload w-100"></button>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+                    <div class="form-group py-3 col-12 col-md-3">
+                      <img
+                        :src="govtPayload.speakerPhoto"
+                        class="rounded-circle img-thumbnail"
+                        alt
+                        srcset
+                      />
+                    </div>
+
+                    <div class="form-group pt-3 col-12 col-md-5">
+                      <label for="title">Chief Justice's Name</label>
+                      <el-input v-model="govtPayload.cjn" class="w-100"></el-input>
                       <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
                     </div>
                     <div class="form-group pt-3 col-12 col-md-4">
-                      <label for="title">Leader's Photo</label>
-                      <el-input class="w-100"></el-input>
-                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                      <label for="title">Upload Photo</label>
+                      <button type="button" @click="upload('cjn')" class="ft-upload w-100"></button>
+                    </div>
+                    <div class="form-group py-3 col-12 col-md-3">
+                      <img
+                        :src="govtPayload.cjnPhoto"
+                        class="rounded-circle img-thumbnail"
+                        alt
+                        srcset
+                      />
                     </div>
 
                     <div class="form-group pt-3 pl-3">
@@ -495,6 +502,26 @@ export default {
     },
     isUpdateStep3() {
       return this.$route.query.update && this.$route.query.stage == 3;
+    },
+    isFG() {
+      if (this.categories && this.govtPayload.category) {
+        return (
+          this.categories.find(e => e.id === this.govtPayload.category).slug ===
+          "FG"
+        );
+      } else {
+        return false;
+      }
+    },
+    isLG() {
+      if (this.categories && this.govtPayload.category) {
+        return (
+          this.categories.find(e => e.id === this.govtPayload.category).slug ===
+          "LG"
+        );
+      } else {
+        return false;
+      }
     }
   },
   methods: {
@@ -505,6 +532,7 @@ export default {
       "createGovt"
     ]),
     edit_govt(govt) {
+      console.log(govt);
       this.govtPayload = { ...govt };
       this.$router.push({ query: { update: govt.id, stage: 1 } });
     },
@@ -549,6 +577,63 @@ export default {
       });
     },
 
+    upload(uploadFor) {
+      this.uploading = true;
+      var myWidget = cloudinary.createUploadWidget(
+        {
+          cloudName: "theequilibra",
+          uploadPreset: "ivdlrycr"
+        },
+        (error, result) => {
+          if (!error && result && result.event === "success") {
+            switch (uploadFor) {
+              case "leader":
+                this.govtPayload.leaderPhoto = result.info.secure_url;
+                this.updateIt();
+                break;
+              case "senate":
+                this.govtPayload.senatePresidentPhoto = result.info.secure_url;
+                this.updateIt();
+                break;
+              case "speaker":
+                this.govtPayload.speakerPhoto = result.info.secure_url;
+                this.updateIt();
+                break;
+              case "cjn":
+                this.govtPayload.cjnPhoto = result.info.secure_url;
+                this.updateIt();
+                break;
+            }
+          }
+        }
+      );
+      myWidget.open();
+    },
+    updateIt() {
+      let eazzy = { ...this.govtPayload };
+      console.log(eazzy);
+      delete eazzy.__typename;
+      delete eazzy.categoryID;
+      delete eazzy.totalStateConstituency;
+      var ds = this;
+      ds.loading = true;
+
+      Object.keys(eazzy).forEach(function(key) {
+        if (eazzy[key] === null) {
+          eazzy[key] = "";
+        }
+      });
+      if (!this.isLG) {
+        delete eazzy.stateGovernment;
+      }
+      ds.createGovt(eazzy).then(data => {
+        this.loading = false;
+        if (data.graphQLErrors) {
+          this.$toast.error(data.graphQLErrors[0].message);
+          return;
+        }
+      });
+    },
     closeNewTopic() {
       this.$router.push({ query: {} });
     },
@@ -694,6 +779,11 @@ h5 {
   font-weight: 600;
   padding-top: 18px;
   padding-bottom: 18px;
+}
+
+.img-thumbnail {
+  height: 70px;
+  width: 70px;
 }
 
 th {
