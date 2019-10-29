@@ -372,7 +372,7 @@ export default {
         },
         {
           title: "Museums & Parks",
-          key: "museumAndParks"
+          key: "museumsAndParks"
         },
         {
           title: "Agriculture",
@@ -384,13 +384,17 @@ export default {
         },
         {
           title: "Other tourist attractions",
-          key: "touristAttraction"
+          key: "touristAttractionCenters"
         }
       ]
     };
   },
   validate(data) {
-    return data.params.id;
+    if (data.params.id) {
+      console.log(data.params.id)
+      return true;
+    }
+    return false;
   },
   computed: {
     government() {

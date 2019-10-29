@@ -1,11 +1,10 @@
 <template>
   <div class="main-container">
     <div class="container-fluid px-0 header">
-      <div class="container">
-        <header class="pt-3">
+        <header class="pt-4">
           <nav class="navbar navbar-expand-lg navbar-light d-flex justify-space-between px-0">
-            <nuxt-link to="/" class="navbar-brand">
-              <img src="~/assets/icons/logo.svg" alt />
+            <nuxt-link to="/" class="navbar-brand pl-2">
+              <img src="~/assets/icons/logo.svg" alt style="position: absolute;top: 3px;"/>
             </nuxt-link>
 
             <button
@@ -38,6 +37,7 @@
                 <li class="nav-item">
                   <nuxt-link to="/contact-us" class="nav-link">Contact Us</nuxt-link>
                 </li>
+                <no-ssr>
                 <li class="nav-item ml-4">
                   <transition
                     enter-active-class="animated zoomIn"
@@ -82,10 +82,13 @@
                     <nuxt-link to="/sign-up" tag="button" class="btn" v-else :key="2">Join Us</nuxt-link>
                   </transition>
                 </li>
+                </no-ssr>
               </ul>
             </div>
           </nav>
         </header>
+      <div class="container">
+      
         <div class="row">
           <div class="col-md-12">
             <div class="hero-text mt-md-5 text-md-center">
@@ -555,6 +558,13 @@ p {
   text-overflow: ellipsis;
   width: 95px;
   color: black;
+}
+
+@media (min-width: 1200px){
+header {
+    max-width: 1360px;
+    margin: auto
+}
 }
 
 @media (min-width: 1200px) {

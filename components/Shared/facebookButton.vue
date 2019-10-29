@@ -9,24 +9,24 @@
 export default {
   methods: {
     checkFBLoginStatus() {
-      this.$auth.loginWith('facebook')
-      // const self = this;
-      // FB.login(
-      //   function(response) {
-      //     if (response.status === "connected") {
-      //       self.$emit(
-      //         "loggedInWithFacebook",
-      //         response.authResponse.accessToken
-      //       );
-      //       // Logged into your app and Facebook.
-      //     } else {
-      //       self.$emit("facebookError", response);
-      //     }
-      //   },
-      //   {
-      //     scope: "email, user_birthday"
-      //   }
-      // );
+      // this.$auth.loginWith('facebook')
+      const self = this;
+      FB.login(
+        function(response) {
+          if (response.status === "connected") {
+            self.$emit(
+              "loggedInWithFacebook",
+              response.authResponse.accessToken
+            );
+            // Logged into your app and Facebook.
+          } else {
+            self.$emit("facebookError", response);
+          }
+        },
+        {
+          scope: "email, user_birthday"
+        }
+      );
     }
   },
   created(){

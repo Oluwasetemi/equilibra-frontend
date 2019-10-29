@@ -44,6 +44,13 @@
             <div class="actions d-inline-block mr-2">
               <likeIcon :commentId="comment._id" :liked="comment.liked" :likes="comment.likes" />
 
+              <DeleteCommentIcon
+                :commentId="comment._id"
+                v-if="comment.author._id == getUser._id"
+                :isMainThread="true"
+                class="d-inline border-0 no-shadow ml-2 position-relative"
+                style="top: 2px; background: transparent"
+              />
               <span class="replies ml-2">
                 <span
                   class="text-center dropdown share-comment position-relative"
@@ -64,6 +71,12 @@
                   <shareLinkCard class="dropdown-menu share-link" aria-labelledby="shareLink" dat />
                 </span>
               </span>
+              <!-- <ReportCommentIcon
+                :commentId="comment._id"
+                v-if="comment.author._id != getUser._id"
+                :isMainThread="true"
+                class="report-card"
+              />-->
             </div>
           </div>
           <div class="replies pb-4" v-if="comment.replies.length > 0">
@@ -76,7 +89,7 @@
             >
               <figure class="m-0 py-3 pr-1 d-inline-block">
                 <img
-                  :src="comment.author.image || avatar"
+                  :src="reply.author.image || avatar"
                   alt
                   class="rounded-circle"
                   height="40px"
@@ -193,7 +206,7 @@
               </div>
             </div>
 
-            <button class="mt-2 pt-1 post-btn" type="submit">
+            <button class="mt-2 post-btn" type="submit">
               <span
                 class="post-comment-icon"
                 data-toggle="tooltip"
@@ -204,9 +217,6 @@
           </div>
         </form>
       </div>
-      <!-- <div class="py-4 text-center w-100" v-else>
-        <div class="spinner-border"></div>
-      </div>-->
     </div>
   </div>
 </template>
@@ -368,6 +378,10 @@ export default {
 
 
 <style scoped>
+
+.no-shadow {
+  box-shadow: none !important;
+}
 .dropdown.share-comment {
   background: transparent;
   width: unset;

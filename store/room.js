@@ -13,12 +13,17 @@ export default {
       COURT: [],
       MINISTRY: [],
       LGA: []
-    }
+    },
+    ongoingTopicChange: [],
+    ongoingDiscussionVoting: [],
+    count: 0
   }),
 
   getters: {
     federalRooms: state => state.federalRooms,
-    stateRooms: state => state.stateRooms
+    stateRooms: state => state.stateRooms,
+    ongoingTopicChange: state => state.ongoingTopicChange,
+    ongoingDiscussionVoting: state => state.ongoingDiscussionVoting
   },
 
   mutations: {
@@ -27,6 +32,54 @@ export default {
     },
     setStateRooms(state, { roomType, data }) {
       state.stateRooms[roomType] = data;
+    },
+
+    setRoomDiscussionVotingDetails(state, data) {
+      if (state.ongoingDiscussionVoting.find(room => room.id == data.id))
+        return;
+      state.ongoingDiscussionVoting.push(data);
+    },
+    setRoomVotingDetails(state, data) {
+      if (state.ongoingTopicChange.find(room => room.id == data.id)) return;
+      state.ongoingTopicChange.push(data);
+    },
+    toggleVotingStatus(state, roomId) {
+      state.ongoingTopicChange.forEach(room => {
+        if (room.id == roomId) {
+          room.voted = true;
+        }
+      });
+    },
+    toggleRoomDiscussionVotingStatus(state, roomId) {
+      state.ongoingDiscussionVoting.forEach(room => {
+        if (room.id == roomId) {
+          room.voted = true;
+        }
+      });
+    },
+    toggleRoomDiscussionResultStatus(state, roomId) {
+      state.ongoingDiscussionVoting.forEach(room => {
+        if (room.id == roomId) {
+          room.resultsIn = true;
+        }
+      });
+    },
+    setRoomVotingFields(state, data) {
+      state.ongoingTopicChange.forEach(room => {
+        if (room.id == data.roomId) {
+          const keys = Object.keys(data.data);
+          for (let key of keys) {
+            room[key] = data.data[key];
+          }
+        }
+      });
+    },
+    deleteRoom(state, roomId) {
+      state.ongoingTopicChange.forEach((room, i) => {
+        if (room.id == roomId) {
+          state.ongoingTopicChange.splice(i, 1);
+        }
+      });
     }
   },
 
@@ -128,6 +181,27 @@ export default {
         .catch(err => {
           return err;
         });
+    },
+    initiateRoomVoting({ commit }, payload) {
+      commit('setRoomVotingDetails', payload);
+    },
+    initiateRoomDiscussionVoting({ commit }, payload) {
+      commit('setRoomDiscussionVotingDetails', payload);
+    },
+    toggleVotingStatus({ commit }, payload) {
+      commit('toggleVotingStatus', payload);
+    },
+    setRoomVotingField({ commit }, payload) {
+      commit('setRoomVotingFields', payload);
+    },
+    toggleRoomDiscussionVotingStatus({ commit }, payload) {
+      commit('toggleRoomDiscussionVotingStatus', payload);
+    },
+    toggleRoomDiscussionResultStatus({ commit }, payload) {
+      commit('toggleRoomDiscussionResultStatus', payload);
+    },
+    closeTopicChange({ commit }, payload) {
+      commit('deleteRoom', payload);
     }
   }
 };

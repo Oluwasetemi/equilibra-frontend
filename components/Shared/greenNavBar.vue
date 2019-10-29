@@ -1,9 +1,9 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-light d-flex justify-space-between px-lg-4">
     <signUpModal />
-    <div class="container">
-      <nuxt-link to="/" class="navbar-brand ml-lg-2">
-        <img src="~/assets/icons/logo.svg" alt />
+    <div class="container h-100">
+      <nuxt-link to="/" class="navbar-brand ml-lg-2 h-100">
+        <img src="~/assets/icons/logo.svg" alt class="h-100" />
       </nuxt-link>
 
       <button
@@ -36,38 +36,39 @@
           <li class="nav-item">
             <nuxt-link to="/contact-us" class="nav-link">Contact Us</nuxt-link>
           </li>
-          <li class="nav-item ml-lg-4">
-            <div class="dropdown" style="background: white;" v-if="isAuthenticated">
-              <a
-                href="#"
-                class="dropdown-toggle d-flex align-items-center m-0"
-                id="dropdownMenuButton"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
-              >
-                <img :src="getUser.image || avatar" alt height="38px" class="mr-1 avatar" />
-                <div
-                  class="inline-block px-2 user-name"
-                  style="color: black"
-                >{{ getUser.username || getUser.fullName}}</div>
-                <img
-                  src="~assets/icons/thin-downward-arrow.svg"
-                  alt
-                  class="position-relative"
-                  style="left: 8px;"
-                />
-              </a>
-              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <nuxt-link class="dropdown-item" to="/account-settings">Account Settings</nuxt-link>
-                <a class="dropdown-item" href="#">Feedback</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#" @click.stop="logoutUser()">Logout</a>
+          <no-ssr>
+            <li class="nav-item ml-lg-4">
+              <div class="dropdown" style="background: white;" v-if="isAuthenticated">
+                <a
+                  href="#"
+                  class="dropdown-toggle d-flex align-items-center m-0"
+                  id="dropdownMenuButton"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  <img :src="getUser.image || avatar" alt height="38px" class="mr-1 avatar" />
+                  <div
+                    class="inline-block px-2 user-name"
+                    style="color: black"
+                  >{{ getUser.username || getUser.fullName}}</div>
+                  <img
+                    src="~assets/icons/thin-downward-arrow.svg"
+                    alt
+                    class="position-relative"
+                    style="left: 8px;"
+                  />
+                </a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <nuxt-link class="dropdown-item" to="/account-settings">Account Settings</nuxt-link>
+                  <a class="dropdown-item" href="#">Feedback</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="#" @click.stop="logoutUser()">Logout</a>
+                </div>
               </div>
-            </div>
-            <button class="btn" data-toggle="modal" data-target="#signUpModal" v-else>Join Us</button>
-            <!-- <nuxt-link to="/sign-up" tag="button" class="btn"></nuxt-link> -->
-          </li>
+              <button class="btn" data-toggle="modal" data-target="#signUpModal" v-else>Join Us</button>
+            </li>
+          </no-ssr>
         </ul>
       </div>
     </div>

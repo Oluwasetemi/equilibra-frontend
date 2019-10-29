@@ -48,7 +48,7 @@
             </div>
           </aside>
         </div>
-        <nuxt-child :currentRoom="currentRoom" :isMyRoom="isMyRoom(currentRoom)" />
+        <nuxt-child :currentRoom="currentRoom" :isMyRoom="isMyRoom(currentRoom)" :key="key" />
       </div>
     </div>
   </div>
@@ -77,7 +77,8 @@ export default {
       loading: true,
       getMyRooms: [],
       currentRoom: { slug: "Vent-The-Steam", currentTopic: null },
-      localGovt: ""
+      localGovt: "",
+      key: 0
     };
   },
   components: {
@@ -85,10 +86,11 @@ export default {
     loginModal
   },
   computed: {
-    ...mapGetters("room", ["federalRooms", "stateRooms"]),
+    ...mapGetters("room", ["federalRooms", "stateRooms", "ongoingTopicChange"]),
     ...mapGetters("auth", ["isAuthenticated", "getToken"]),
     ...mapGetters("user", ["getUser"]),
     rooms() {
+      debugger;
       return this.$route.query.state
         ? this.stateRooms[this.roomType[this.$route.params.id]]
         : this.federalRooms[this.roomType[this.$route.params.id]];
@@ -117,8 +119,16 @@ export default {
         : this.joinRoomForum(room);
     },
     setRoom(room) {
+      this.key += 1;
       this.currentRoom = room;
-      this.$router.push({ query: { group: room.slug, id: room._id } });
+      this.$router.push({
+        query: {
+          group: room.slug,
+          id: this.$route.query.id,
+          state: this.$route.query.state,
+          isOrigin: this.$route.query.isOrigin
+        }
+      });
     },
     getAllMyRooms() {
       this.$apollo.addSmartQuery("getMyRooms", {

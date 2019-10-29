@@ -2,7 +2,7 @@ import gql from '~/apollo/user/topic';
 
 export default {
   state: () => ({
-    voteResults: {}
+    voteResults: []
   }),
 
   getters: {
@@ -15,7 +15,8 @@ export default {
       state.federalRooms[roomType] = data;
     },
     setDiscussionVoteResults(state, data) {
-      state.voteResults[data.voteId] = data.data;;
+      // state.voteResults[data.voteId] = data.data;;
+      state.voteResults.push(data);
     }
   },
 
@@ -105,8 +106,8 @@ export default {
         })
         .then(({ data }) => {
           commit('setDiscussionVoteResults', {
-            voteId: payload.voteId,
-            data: data.closeTopicDiscussionVoting
+            ...data.closeTopicDiscussionVoting,
+            voteId: payload.voteId
           });
           return data.closeTopicDiscussionVoting;
         })

@@ -2,7 +2,7 @@
   <nav class="navbar navbar-expand-lg navbar-light d-flex justify-space-between mx-lg-4 pt-3">
     <div class="container">
       <nuxt-link to="/" class="navbar-brand">
-        <img src="~/assets/icons/green-logo.svg" alt />
+        <img src="~/assets/icons/green-logo.svg" alt style="position: absolute;top: 0;"/>
       </nuxt-link>
       <button
         class="navbar-toggler"
@@ -34,6 +34,7 @@
           <li class="nav-item">
             <nuxt-link to="/contact-us" class="nav-link">Contact Us</nuxt-link>
           </li>
+          <no-ssr>
           <li class="nav-item ml-lg-4">
             <div class="dropdown" style="background: white;" v-if="isAuthenticated">
               <a
@@ -65,6 +66,7 @@
             </div>
             <nuxt-link to="/sign-up" tag="button" class="btn" v-else>Join Us</nuxt-link>
           </li>
+          </no-ssr>
         </ul>
       </div>
     </div>

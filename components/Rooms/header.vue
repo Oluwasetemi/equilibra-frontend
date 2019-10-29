@@ -3,6 +3,7 @@
     <loginModal />
     <SuggestTopicModal :currentRoom="currentRoom" />
     <ChangeTopicModal :currentRoom="currentRoom" />
+    <joinRoomModal :roomId="currentRoom._id" :changeTopic="true" />
     <div class="forum-header px-4 py-2 d-flex align-items-center">
       <div class="header-content w-100">
         <div class="d-lg-flex justify-content-between">
@@ -15,28 +16,41 @@
         <p
           class="description mb-2 mr-md-5 pr-md-5"
           v-if="currentRoom && currentRoom.slug != 'Vent-The-Steam'"
-        >
-          {{currentRoom.currentTopic ? currentRoom.currentTopic.title : 'This room has no topic' }}
-          <span
-            v-if="currentRoom.currentTopic && currentRoom.currentTopic.isClosed"
-          >
-            Topic Closed:
-            <a href="#">Voting in progress</a>
-          </span>
-        </p>
+        >{{currentRoom.currentTopic ? currentRoom.currentTopic.title : 'This room has no topic' }}</p>
         <div class="d-flex justify-content-between align-items-end flex-wrap">
-          <span>
+          <span class="d-flex align-items-end">
             <div
               class="timer d-flex align-items-center mt-2"
               v-if="currentRoom && currentRoom.currentTopic && currentRoom.slug != 'Vent-The-Steam'"
             >
               <img src="~/assets/icons/timer.svg" alt class="mr-2" />
-              <span>
-                <span style="font-size: 15px" class="pr-1">5</span>Day(s)
-                <span style="font-size: 14px" class="px-1">15</span> HOUR(s)
-                <span class="ml-2" style="font-size: 14px">56</span> Minute(s)
+              <span class="position-relative">
+                <span style="font-size: 15px" class="pr-1">{{daysLeft}}</span>Day(s)
+                <span style="font-size: 14px" class="px-1">{{hoursLeft}}</span> Hour(s)
+                <span class="ml-2" style="font-size: 14px">{{minutesLeft}}</span> Minute(s)
+                <span class="secs">{{secondsLeft}}</span>
               </span>
             </div>
+            <span
+              v-if="ongoingDiscussionVoting && ongoingDiscussionVoting.voteId && isMyRoom && !ongoingDiscussionVoting.resultsIn"
+              class="ml-2"
+            >
+              <a
+                href="#"
+                style="text-decoration: underline; font-size: 11px;"
+                @click="showModal('#voteDiscussionModal')"
+              >Voting in progress</a>
+            </span>
+            <span
+              v-if="ongoingDiscussionVoting && ongoingDiscussionVoting.voteId && isMyRoom && ongoingDiscussionVoting.resultsIn"
+              class="ml-2"
+            >
+              <a
+                href="#"
+                style="text-decoration: underline; font-size: 11px;"
+                @click="showModal('#voteResults')"
+              >View voting results</a>
+            </span>
           </span>
 
           <div class="topic-actions mt-2" v-if="currentRoom.slug != 'Vent-The-Steam'">
@@ -54,29 +68,91 @@
 
 <script>
 import { mapGetters } from "vuex";
+import { endDiscussionTime } from "~/static/js/constants";
 import SuggestTopicModal from "~/components/Rooms/suggest-topic";
+import joinRoomModal from "~/components/Rooms/join-room-modal";
 import ChangeTopicModal from "~/components/Rooms/change-topic";
 import loginModal from "~/components/Authentication/sign-up";
 
 export default {
   layout: "greenNavOnly",
-  props: ["currentRoom"],
+  props: ["currentRoom", "isMyRoom", "ongoingDiscussionVoting"],
+  data() {
+    return {
+      startDiscussionVoteTime: this.$moment(endDiscussionTime.startTime),
+      timer: 0,
+      duration: "...",
+      interval: null
+    };
+  },
   components: {
     SuggestTopicModal,
     ChangeTopicModal,
-    loginModal
+    loginModal,
+    joinRoomModal
   },
   computed: {
-    ...mapGetters("auth", ["isAuthenticated"])
+    ...mapGetters("auth", ["isAuthenticated"]),
+    daysLeft() {
+      return `0${parseInt(
+        this.$moment
+          .utc(this.$moment.duration(this.timer, "seconds").asMilliseconds())
+          .format("DD")
+      ) - 1}`;
+    },
+    minutesLeft() {
+      return this.$moment
+        .utc(this.$moment.duration(this.timer, "seconds").asMilliseconds())
+        .format("mm");
+    },
+    hoursLeft() {
+      return this.$moment
+        .utc(this.$moment.duration(this.timer, "seconds").asMilliseconds())
+        .format("HH");
+    },
+    secondsLeft() {
+      return this.$moment
+        .utc(this.$moment.duration(this.timer, "seconds").asMilliseconds())
+        .format("ss");
+    }
   },
   methods: {
+    getTime() {
+      const now = this.$moment(new Date());
+      this.timer = this.startDiscussionVoteTime.diff(now, "seconds");
+      if (this.timer < 0) {
+        self.stopTimer();
+        return;
+      }
+      const self = this;
+      this.interval = setInterval(() => {
+        self.duration = this.$moment
+          .utc(this.$moment.duration(this.timer, "seconds").asMilliseconds())
+          .format("DD:HH:mm:ss");
+        if (self.timer < 0) {
+          self.stopTimer();
+        }
+        self.timer = self.timer - 1;
+      }, 1000);
+    },
+
+    stopTimer() {
+      clearInterval(this.interval);
+    },
     showModal(val) {
       if (!this.isAuthenticated) {
         $("#signUpModal").modal("show");
         return;
       }
+      if (!this.isMyRoom) {
+        $("#joinRoomModal").modal("show");
+        return;
+      }
       $(val).modal("show");
     }
+  },
+  mounted() {
+    this.getTime();
   }
 };
 </script>
@@ -94,6 +170,11 @@ export default {
 </style>
 
 <style scoped>
+.secs {
+  position: absolute;
+  top: -3px;
+  font-size: 7px;
+}
 .timer {
   font-size: 9px;
   border: 1px solid white;

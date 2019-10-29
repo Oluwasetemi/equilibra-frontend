@@ -30,7 +30,10 @@
           class="border-0 p-3 w-100"
           :to="link"
           style="background: #26B14F;"
-        >Join {{ title == "LGA" ? localGovt : title  | capitalizeFirstLetter}}</nuxt-link>
+        >
+        Join the discussion
+        </nuxt-link>
+        <!-- Join {{ title == "LGA" ? localGovt : title  | capitalizeFirstLetter}} -->
       </div>
     </div>
   </div>
