@@ -22,4 +22,5 @@ test_server:
     - npm install
     - npm run generate
       # Copy (Synchronize) the files to the deployed server
-    - rsync -avrc --delete --exclude=.env "$PWD/dist" root@test.natterbase.com:/var/www/html/equilibra_frontend/
+    - ssh root@test.natterbase.com "cd /var/www/html/equilibra_frontend/; git pull; /root/.nvm/versions/node/v12.13.1/bin/npm install; /root/.nvm/versions/node/v12.13.1/bin/npm generate;"
+
