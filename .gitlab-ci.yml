@@ -19,8 +19,6 @@ test_server:
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
       
       # Install dependencies
-    - npm install
-    - npm run generate
       # Copy (Synchronize) the files to the deployed server
     - ssh root@test.natterbase.com "cd /var/www/html/equilibra_frontend/; git pull; /root/.nvm/versions/node/v12.13.1/bin/npm install; /root/.nvm/versions/node/v12.13.1/bin/npm generate;"
 
