@@ -22,4 +22,4 @@ test_server:
     - npm install
     - npm run build
       # Copy (Synchronize) the files to the deployed server
-    - rsync -avrc --delete --exclude=.env "$PWD/" root@test.natterbase.com:/var/www/html/equilibra_frontend/
+    - rsync -avrc --delete --exclude=.env "$PWD/dist" root@test.natterbase.com:/var/www/html/equilibra_frontend/
