@@ -1,9 +1,105 @@
 <template>
   <div class="container pr-0 px-0">
     <loginModal />
-    <div class="px-md-3 px-0">
-      <div class="row no-gutters flex-row flex-lg-nowrap justify-content-between">
-        <div class="px-3 card-container d-lg-block d-none py-4 scrollable">
+    <SuggestTopicModal
+      :currentRoom="currentRoom"
+    />
+    <ChangeTopicModal :currentRoom="currentRoom" />
+    <joinRoomModal
+      :roomId="currentRoom._id"
+      :changeTopic="true"
+    />
+    <!-- Mobile view -->
+    <div class="mobile-view d-lg-none">
+      <div class="mx-md-3">
+        <div class="mx-md-3 d-flex border-bottom border-left border-right">
+          <a href="#" @click="showForumInfo = false">
+            <div class="px-5 py-3">
+              <span :class="{ 'selected-tab': !showForumInfo }">Forums</span>
+            </div>
+          </a>
+          <a href="#" @click="showForumInfo = true">
+            <div class="px-5 py-3 border-left">
+              <span :class="{ 'selected-tab': showForumInfo }"
+                >Forum Information</span
+              >
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="px-md-3 px-0">
+        <div class="row no-gutters">
+          <div class="px-md-3 pb-4 scrollable w-100" v-if="showForumInfo">
+            <aside>
+              <div class="groups border border-bottom-0">
+                <ul class="p-0 m-o">
+                  <li class="header font-weight-bold p-3 border-bottom">
+                    Groups
+                  </li>
+                  <div class="group-list">
+                    <div class="text-center loader" v-if="loading">
+                      <div class="spinner-border text-secondary" role="status">
+                        <span class="sr-only">Loading...</span>
+                      </div>
+                    </div>
+                    <a
+                      v-else
+                      href="#"
+                      v-for="(room, i) in rooms"
+                      :key="i"
+                      :title="room.name | formatText"
+                      @click="setRoom(room)"
+                    >
+                      <li
+                        class="px-4 border-bottom d-flex align-items-center justify-content-between"
+                        :class="{ selected: currentRoom.slug == room.slug }"
+                      >
+                        <span class="room-name">{{
+                          room.name | formatText
+                        }}</span>
+                        <div
+                          class="join-status align-items-center justify-content-between"
+                          @click="checkRoomStatus(room)"
+                        >
+                          <span>{{
+                            getMyRooms &&
+                            getMyRooms.some(myRoom => myRoom._id == room._id)
+                              ? 'Leave'
+                              : 'Join'
+                          }}</span>
+                          <span class="chat-icon"></span>
+                        </div>
+                      </li>
+                    </a>
+                  </div>
+                </ul>
+              </div>
+            </aside>
+            <Card
+              class="pt-5"
+              :imageURL="imageUrl2.imageUrl"
+              :title="$route.params.id"
+              link
+              :localGovt="localGovt"
+            />
+          </div>
+          <nuxt-child
+            :currentRoom="currentRoom"
+            :isMyRoom="isMyRoom(currentRoom)"
+            :key="key"
+            v-else
+          />
+        </div>
+      </div>
+    </div>
+    <!-- End of mobile view -->
+    <!-- Desktop view -->
+    <div class="px-md-3 px-0 d-lg-block d-none">
+      <div
+        class="row no-gutters flex-row flex-lg-nowrap justify-content-between"
+      >
+        <div class="px-3 card-container py-4 scrollable">
           <Card
             :imageURL="imageUrl2.imageUrl"
             :title="$route.params.id"
@@ -13,7 +109,9 @@
           <aside class="pt-5">
             <div class="groups border border-bottom-0">
               <ul class="p-0 m-o">
-                <li class="header font-weight-bold p-3 border-bottom">Groups</li>
+                <li class="header font-weight-bold p-3 border-bottom">
+                  Groups
+                </li>
                 <div class="group-list">
                   <div class="text-center loader" v-if="loading">
                     <div class="spinner-border text-secondary" role="status">
@@ -30,15 +128,21 @@
                   >
                     <li
                       class="px-4 border-bottom d-flex align-items-center justify-content-between"
-                      :class="{selected: currentRoom.slug == room.slug}"
+                      :class="{ selected: currentRoom.slug == room.slug }"
                     >
-                      <span class="room-name">{{room.name | formatText}}</span>
+                      <span class="room-name">{{
+                        room.name | formatText
+                      }}</span>
                       <div
                         class="join-status align-items-center justify-content-between"
                         @click="checkRoomStatus(room)"
                       >
-                        <!-- this.myRooms.some(myRoom => myRoom._id == room._id) -->
-                        <span>{{getMyRooms && getMyRooms.some(myRoom => myRoom._id == room._id) ? 'Leave' : 'Join'}}</span>
+                        <span>{{
+                          getMyRooms &&
+                          getMyRooms.some(myRoom => myRoom._id == room._id)
+                            ? 'Leave'
+                            : 'Join'
+                        }}</span>
                         <span class="chat-icon"></span>
                       </div>
                     </li>
@@ -48,22 +152,30 @@
             </div>
           </aside>
         </div>
-        <nuxt-child :currentRoom="currentRoom" :isMyRoom="isMyRoom(currentRoom)" :key="key" />
+        <nuxt-child
+          :currentRoom="currentRoom"
+          :isMyRoom="isMyRoom(currentRoom)"
+          :key="key"
+        />
       </div>
     </div>
+    <!-- End of desktop view -->
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
-import { roomType } from "~/static/js/constants";
-import gql from "~/apollo/user/room";
-import gqlTopic from "~/apollo/user/topic";
-import imageUrl from "~/assets/images/judiciary_BG.svg";
-import Card from "~/components/Forums/forum-card";
-import loginModal from "~/components/Authentication/sign-up";
+import { mapGetters, mapActions } from 'vuex';
+import { roomType } from '~/static/js/constants';
+import gql from '~/apollo/user/room';
+import gqlTopic from '~/apollo/user/topic';
+import imageUrl from '~/assets/images/judiciary_BG.svg';
+import Card from '~/components/Forums/forum-card';
+import SuggestTopicModal from '~/components/Rooms/suggest-topic';
+import joinRoomModal from '~/components/Rooms/join-room-modal';
+import ChangeTopicModal from '~/components/Rooms/change-topic';
+import loginModal from '~/components/Authentication/sign-up';
 export default {
-  layout: "greenNavOnly",
+  layout: 'greenNavOnly',
   validate({ route, query, redirect }) {
     if (!query.group) {
       redirect(`${route.path}?group=Vent-The-Steam`);
@@ -76,21 +188,24 @@ export default {
       roomType,
       loading: true,
       getMyRooms: [],
-      currentRoom: { slug: "Vent-The-Steam", currentTopic: null },
-      localGovt: "",
-      key: 0
+      currentRoom: { slug: 'Vent-The-Steam', currentTopic: null },
+      localGovt: '',
+      key: 0,
+      showForumInfo: false
     };
   },
   components: {
     Card,
-    loginModal
+    SuggestTopicModal,
+    ChangeTopicModal,
+    loginModal,
+    joinRoomModal
   },
   computed: {
-    ...mapGetters("room", ["federalRooms", "stateRooms", "ongoingTopicChange"]),
-    ...mapGetters("auth", ["isAuthenticated", "getToken"]),
-    ...mapGetters("user", ["getUser"]),
+    ...mapGetters('room', ['federalRooms', 'stateRooms', 'ongoingTopicChange']),
+    ...mapGetters('auth', ['isAuthenticated', 'getToken']),
+    ...mapGetters('user', ['getUser']),
     rooms() {
-      debugger;
       return this.$route.query.state
         ? this.stateRooms[this.roomType[this.$route.params.id]]
         : this.federalRooms[this.roomType[this.$route.params.id]];
@@ -99,19 +214,19 @@ export default {
   filters: {
     formatText(val) {
       return val
-        .split(" ")
+        .split(' ')
         .map(word => {
           return word.charAt(0).toUpperCase() + word.substring(1).toLowerCase();
         })
-        .join(" ");
+        .join(' ');
     }
   },
   methods: {
-    ...mapActions("room", [
-      "getFederalRooms",
-      "getStateRooms",
-      "joinRoom",
-      "leaveRoom"
+    ...mapActions('room', [
+      'getFederalRooms',
+      'getStateRooms',
+      'joinRoom',
+      'leaveRoom'
     ]),
     checkRoomStatus(room) {
       this.isMyRoom(room)
@@ -131,7 +246,7 @@ export default {
       });
     },
     getAllMyRooms() {
-      this.$apollo.addSmartQuery("getMyRooms", {
+      this.$apollo.addSmartQuery('getMyRooms', {
         query: gql.getMyRooms,
         variables: { roomType: this.roomType[this.$route.params.id] },
         context: {
@@ -167,7 +282,7 @@ export default {
         roomType: this.roomType[self.$route.params.id],
         isOrigin:
           this.$route.query.isOrigin == true ||
-          this.$route.query.isOrigin == "true"
+          this.$route.query.isOrigin == 'true'
             ? true
             : false
       };
@@ -191,7 +306,7 @@ export default {
     },
     joinRoomForum(room) {
       if (!this.isAuthenticated) {
-        $("#signUpModal").modal("show");
+        $('#signUpModal').modal('show');
         return;
       }
       this.setRoom(room);
@@ -202,7 +317,7 @@ export default {
             return;
           }
           // this.subscribeToComments();
-          this.$toast.success("You have now joined this conversation!");
+          this.$toast.success('You have now joined this conversation!');
           // this.subscribeToVote();
         })
         .catch(err => {});
@@ -215,7 +330,7 @@ export default {
             this.$toast.error(data.graphQLErrors[0].message);
             return;
           }
-          this.$toast.success("You have now left the conversation!");
+          this.$toast.success('You have now left the conversation!');
         })
         .catch(err => {});
     },
@@ -238,7 +353,7 @@ export default {
     fetchLGAs(stateID) {
       const self = this;
       this.$store
-        .dispatch("localGovernments", {
+        .dispatch('localGovernments', {
           stateGovernmentID: stateID
         })
         .then(data => {
@@ -255,10 +370,10 @@ export default {
       let lga = LGAS.find(lga => {
         return lga.id == id;
       });
-      return lga ? lga.name : "";
+      return lga ? lga.name : '';
     },
     listenForTopicChange() {
-      this.$apollo.addSmartSubscription("topicChange", {
+      this.$apollo.addSmartSubscription('topicChange', {
         query: gqlTopic.topicChange,
         context: {
           headers: {
@@ -272,12 +387,12 @@ export default {
     }
   },
   mounted() {
-    this.$eventBus.$on("topicChanged", () => {
+    this.$eventBus.$on('topicChanged', () => {
       this.initializeRooms();
     });
     this.listenForTopicChange();
 
-    if (this.$route.params.id == "LGA" && this.$route.query.id) {
+    if (this.$route.params.id == 'LGA' && this.$route.query.id) {
       const stateID = this.$route.query.isOrigin
         ? this.getUser.stateOfOrigin
         : this.getUser.stateOfResidence;
@@ -295,6 +410,10 @@ export default {
   border-bottom: solid 1px #dee2e6;
 }
 
+.selected-tab {
+  color: black;
+  font-weight: bold;
+}
 .join-status {
   background: white;
   color: #07834e;
@@ -378,7 +497,7 @@ a li:hover .room-name {
 }
 
 .selected:before {
-  content: "";
+  content: '';
   width: 3px;
   height: 100%;
   position: absolute;
@@ -401,7 +520,7 @@ a li:hover .room-name {
   flex: 0 0 100%;
 }
 .forum-header {
-  background-image: url("~assets/images/forum-header-BG.svg");
+  background-image: url('~assets/images/forum-header-BG.svg');
   background-repeat: no-repeat;
   background-size: cover;
   background-position-x: center;
@@ -462,7 +581,7 @@ a {
 }
 
 .chat-icon {
-  mask: url("~assets/icons/chat-icon.svg");
+  mask: url('~assets/icons/chat-icon.svg');
   mask-size: cover;
   display: inline-block;
   background-color: #07834e;

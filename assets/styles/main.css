@@ -83,6 +83,10 @@ nav .btn {
   border-radius: 2px;
 }
 
+.navbar-light .navbar-toggler-icon {
+  background-image: url('~assets/icons/toggler-icon.svg')
+}
+
 .dropdown-item.active,
 .dropdown-item:active {
   color: #fff;

@@ -1,5 +1,6 @@
 <template>
   <div
+  
     class="modal fade"
     id="suggestTopic"
     role="dialog"
@@ -7,6 +8,17 @@
     aria-hidden="true"
   >
     <div class="modal-dialog modal-dialog-centered" role="document">
+
+       <!-- <div
+    ref="modal"
+    class="modal fade"
+    id="signUpModal"
+    role="dialog"
+    aria-labelledby="signUpLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content"> -->
       <div class="modal-content">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -15,9 +27,13 @@
           <h4 class="text-center py-3 m-0">SUGGEST NEW TOPIC</h4>
         </div>
         <div class="p-4">
-          <p class="current-topic text-center">
+          <p class="current-topic text-center" v-if="!triedChangeTopic">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit,
             is sed do eiusmod tempor inci did is unt ut labore et dolore magna aliqua um dolor sit ame.
+          </p>
+          <p class="current-topic text-center" v-else>
+            This topic cannot be changed at this time.
+            You can suggest a topic for next week.
           </p>
           <form class="new-topic" @submit.prevent="suggestRoomTopic()">
             <div class="form-input">
@@ -65,6 +81,7 @@ export default {
   data() {
     return {
       loading: false,
+      triedChangeTopic: false,
       payload: {
         title: "",
         description: ""
@@ -105,6 +122,11 @@ export default {
           this.loading = false;
         });
     }
+  },
+  mounted() {
+    this.$eventBus.$on("triedChangeTopic", () => {
+      this.triedChangeTopic = true;
+    });
   }
 };
 </script>

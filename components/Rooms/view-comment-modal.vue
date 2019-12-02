@@ -44,13 +44,13 @@
             <div class="actions d-inline-block mr-2">
               <likeIcon :commentId="comment._id" :liked="comment.liked" :likes="comment.likes" />
 
-              <DeleteCommentIcon
+              <!-- <DeleteCommentIcon
                 :commentId="comment._id"
                 v-if="comment.author._id == getUser._id"
                 :isMainThread="true"
                 class="d-inline border-0 no-shadow ml-2 position-relative"
                 style="top: 2px; background: transparent"
-              />
+              /> -->
               <span class="replies ml-2">
                 <span
                   class="text-center dropdown share-comment position-relative"

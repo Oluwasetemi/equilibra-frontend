@@ -87,10 +87,10 @@ export default {
    */
   modules: [
     // Doc: https://bootstrap-vue.js.org/docs/
-    "bootstrap-vue/nuxt",
-    "@nuxtjs/apollo",
-    "@nuxtjs/toast",
-    "@nuxtjs/moment"
+    'bootstrap-vue/nuxt',
+    '@nuxtjs/apollo',
+    '@nuxtjs/toast',
+    '@nuxtjs/moment'
     // '@nuxtjs/auth'
   ],
 

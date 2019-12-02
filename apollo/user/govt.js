@@ -2,7 +2,11 @@ import gql from 'graphql-tag';
 
 export default {
   governments: gql`
-    query allGovernmentBasedOnCategory($slug: categoryEnum!, $first: Int, $start: Int) {
+    query allGovernmentBasedOnCategory(
+      $slug: categoryEnum!
+      $first: Int
+      $start: Int
+    ) {
       allGovernmentBasedOnCategory(slug: $slug, first: $first, start: $start) {
         id
         name
@@ -125,6 +129,51 @@ export default {
         agriculture
         mineralResources
         museumsAndParks
+      }
+    }
+  `,
+  governmentByID: gql`
+    query governmentByID($governmentID: ID!) {
+      governmentByID(governmentID: $governmentID) {
+        id
+        name
+        category
+        description
+        slogan
+        cjn
+        speaker
+        leader
+        senatePresident
+        totalLg
+        population
+        totalConstituency
+        infantMortalityRate
+        foreignReserve
+        crimeRate
+        inflationRate
+        budgetPerformanceRate
+        budgetPassDate
+        budgetSubmissionDate
+        plenaryAttendanceRate
+        slug
+        gdpPerHead
+        powerGenerated
+        literacyRate
+        unemploymentRate
+        nonOilSectorContributionToGDP
+        rulingParty
+        touristAttractionCenters
+        agriculture
+        mineralResources
+        museumsAndParks
+      }
+    }
+  `,
+  governmentBySlug: gql`
+    query governmentBySlug($slug: String!) {
+      governmentBySlug(slug: $slug) {
+        id
+        name
       }
     }
   `

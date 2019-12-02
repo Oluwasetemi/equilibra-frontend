@@ -1,23 +1,30 @@
 <template>
   <div>
-    <loginModal />
-    <SuggestTopicModal :currentRoom="currentRoom" />
-    <ChangeTopicModal :currentRoom="currentRoom" />
-    <joinRoomModal :roomId="currentRoom._id" :changeTopic="true" />
     <div class="forum-header px-4 py-2 d-flex align-items-center">
       <div class="header-content w-100">
-        <div class="d-lg-flex justify-content-between">
+        <div class="d-flex justify-content-between">
           <h4 class="d-inline-block mb-lg-2 mb-0">{{currentRoom ? currentRoom.name : '--'}}</h4>
-          <div class="d-inline-block mb-2 mb-lg-0">
+          <div class="d-inline-block mb-2 mb-lg-0 text-right">
             <img src="~/assets/icons/avatar2.svg" alt class="mr-1" />
             <span style="font-size: 14px; text-decoration: underline;">Hon. Danjuma Zaccheus</span>
           </div>
         </div>
-        <p
+        <div class="d-flex justify-content-between">
+<p
           class="description mb-2 mr-md-5 pr-md-5"
           v-if="currentRoom && currentRoom.slug != 'Vent-The-Steam'"
         >{{currentRoom.currentTopic ? currentRoom.currentTopic.title : 'This room has no topic' }}</p>
-        <div class="d-flex justify-content-between align-items-end flex-wrap">
+        <div>
+          <div class="text-right" style="font-size: 12px" v-if="currentRoom.currentTopic ">
+            Total Comments: {{totalComments}}
+          </div>
+          <!-- <div>
+            Total Members: {{}}
+          </div> -->
+        </div>
+        </div>
+        
+        <div class="d-flex justify-content-lg-between align-items-end flex-wrap">
           <span class="d-flex align-items-end">
             <div
               class="timer d-flex align-items-center mt-2"
@@ -53,11 +60,14 @@
             </span>
           </span>
 
-          <div class="topic-actions mt-2" v-if="currentRoom.slug != 'Vent-The-Steam'">
-            <button class="suggest-topic mr-2" @click="showModal('#suggestTopic')">Suggest Topic</button>
+          <div class="topic-actions mt-2 d-flex" v-if="currentRoom.slug != 'Vent-The-Steam'">
+            <button
+              class="suggest-topic mr-2"
+              @click="Number(daysLeft) > 5 ? showModal('#suggestTopic') : showModal('#changeTopic');$eventBus.$emit('triedChangeTopic')"
+            >Suggest Topic</button>
             <button
               class="change-topic ml-2"
-              @click="showModal('#changeTopic')"
+              @click="showChangeTopicModal = true; showModal('#changeTopic')"
             >Change Current Topic</button>
           </div>
         </div>
@@ -82,7 +92,11 @@ export default {
       startDiscussionVoteTime: this.$moment(endDiscussionTime.startTime),
       timer: 0,
       duration: "...",
-      interval: null
+      interval: null,
+      showSuggestTopicModal: false,
+      showChangeTopicModal: false,
+      showJoinRoomModal: false,
+      totalComments: 0
     };
   },
   components: {
@@ -145,14 +159,24 @@ export default {
         return;
       }
       if (!this.isMyRoom) {
+        this.showJoinRoomModal = true;
         $("#joinRoomModal").modal("show");
         return;
+      }
+      if (val == "#suggestTopic") {
+        this.showSuggestTopicModal = true;
+      }
+      if (val == "#changeTopic") {
+        this.showChangeTopicModal = true;
       }
       $(val).modal("show");
     }
   },
   mounted() {
     this.getTime();
+    this.$eventBus.$on('totalComments', (data) => {
+      this.totalComments = data
+    })
   }
 };
 </script>
@@ -198,7 +222,8 @@ button.change-topic {
   border-radius: 2px;
   height: 42px;
   background: white;
-  width: 180px;
+  width: 50%;
+  max-width: 180px;
   font-size: 14px;
 }
 .scrollable {

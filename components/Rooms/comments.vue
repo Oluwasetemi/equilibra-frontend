@@ -7,13 +7,14 @@
       @closeModal="openModal = false"
     />
     <ImageModal :img="imageModalSrc" />
-
+    {{ totalComments}}
     <div class="comments" v-if="fetchComments.edges.length > 0">
       <div
         class="d-flex px-2 comment border-bottom"
         v-for="(comment, i) in fetchComments.edges"
         :key="i"
         :id="comment._id"
+        
       >
         <figure class="m-0 py-3 pr-1 pl-4 px d-inline-block">
           <img
@@ -23,20 +24,30 @@
             height="40px"
           />
         </figure>
-        <div class="form-input position-relative d-inline-block px-3" style="flex-grow: 1">
+        <div
+          class="form-input position-relative d-inline-block px-3"
+          style="flex-grow: 1"
+        >
           <div class="comment py-3">
             <div class="user text-left">
-              <span class="username">{{comment.author.username}}</span>
+              <span class="username">{{ comment.author.username }}</span>
               <div class="d-block d-md-inline">
-                <span class="user-handle pr-2 px-md-2">@{{comment.author.username}}</span>
-                <span class="time-posted">{{comment.createdAt | formatDate($moment)}}</span>
+                <span class="user-handle pr-2 px-md-2"
+                  >@{{ comment.author.username }}</span
+                >
+                <span class="time-posted">{{
+                  comment.createdAt | formatDate($moment)
+                }}</span>
               </div>
             </div>
             <div class="comment-content mt-2 pr-3">
-              <p class="text-left">{{comment.comment}}</p>
+              <p class="text-left">{{ comment.comment }}</p>
             </div>
 
-            <div class="comment-image pb-3" v-if="comment.images && comment.images.length > 0">
+            <div
+              class="comment-image pb-3"
+              v-if="comment.images && comment.images.length > 0"
+            >
               <div class="row">
                 <a
                   class="col-md-2"
@@ -46,22 +57,31 @@
                   data-target="#imageModal"
                   @click="imageModalSrc = $event.target.src"
                 >
-                  <img :src="image" alt="photo content" class="img-fluid" style="cursor: pointer" />
+                  <img
+                    :src="image"
+                    alt="photo content"
+                    class="img-fluid"
+                    style="cursor: pointer"
+                  />
                 </a>
               </div>
             </div>
             <div class="actions mr-2">
-              <likeIcon :commentId="comment._id" :liked="comment.liked" :likes="comment.likes" />
+              <likeIcon
+                :commentId="comment._id"
+                :liked="comment.liked"
+                :likes="comment.likes"
+              />
               <a
                 href="#"
                 class="replies ml-2"
                 data-toggle="modal"
                 data-target="#commentModal"
-                @click="activeComment = comment, openModal = true"
+                @click="(activeComment = comment), (openModal = true)"
               >
                 <span data-toggle="tooltip" title="Reply">
                   <img src="~/assets/icons/replies-icon.svg" alt />
-                  <span class="px-1">{{comment.replies.length}}</span>
+                  <span class="px-1">{{ comment.replies.length }}</span>
                 </span>
               </a>
               <DeleteCommentIcon
@@ -86,8 +106,18 @@
     <div v-else class="text-center py-5 border-bottom">
       <div class="spinner-border text-center" v-if="loadingComments"></div>
       <div v-else>
-        <img src="~/assets/images/no-chat.svg" alt style="height: 150px" class="mb-4" />
-        <p class="m-0" style="font-size: 24px; color: #737373; font-weight: 600">No ongoing chat</p>
+        <img
+          src="~/assets/images/no-chat.svg"
+          alt
+          style="height: 150px"
+          class="mb-4"
+        />
+        <p
+          class="m-0"
+          style="font-size: 24px; color: #737373; font-weight: 600"
+        >
+          No ongoing chat
+        </p>
         <p class="color: #737373;">Be the first to leave a comment</p>
       </div>
     </div>
@@ -101,18 +131,18 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
-import likeIcon from "~/components/Rooms/like-icon";
-import gql from "~/apollo/user/comment";
-import avatar from "~/assets/images/avatar.svg";
-import DeleteCommentIcon from "~/components/Rooms/delete-comment-icon";
-import ReportCommentIcon from "~/components/Rooms/report-comment-icon";
-import CommentModal from "~/components/Rooms/view-comment-modal";
-import ImageModal from "~/components/Rooms/image-modal";
-import imageUrl from "~/assets/images/judiciary_BG.svg";
+import { mapGetters, mapActions } from 'vuex';
+import likeIcon from '~/components/Rooms/like-icon';
+import gql from '~/apollo/user/comment';
+import avatar from '~/assets/images/avatar.svg';
+import DeleteCommentIcon from '~/components/Rooms/delete-comment-icon';
+import ReportCommentIcon from '~/components/Rooms/report-comment-icon';
+import CommentModal from '~/components/Rooms/view-comment-modal';
+import ImageModal from '~/components/Rooms/image-modal';
+import imageUrl from '~/assets/images/judiciary_BG.svg';
 export default {
-  layout: "greenNavOnly",
-  props: ["currentRoom", "fetchMore"],
+  layout: 'greenNavOnly',
+  props: ['currentRoom', 'fetchMore'],
   data() {
     return {
       liked: false,
@@ -138,10 +168,16 @@ export default {
     ImageModal
   },
   computed: {
-    ...mapGetters("user", ["getUser"]),
-    ...mapGetters("auth", ["isAuthenticated", "getToken"]),
+    ...mapGetters('user', ['getUser']),
+    ...mapGetters('auth', ['isAuthenticated', 'getToken']),
     fetchMoreComments() {
       return this.fetchMore;
+    },
+    totalComments() {
+      if (this.fetchComments) {
+        if (this.fetchComments.pageInfo)
+          return this.fetchComments.pageInfo.totalCount;
+      }
     }
   },
   filters: {
@@ -150,18 +186,21 @@ export default {
       const now = new Date();
       let duration = moment.duration(moment(now).diff(moment(val)));
       if (duration.asDays() > 9) {
-        return moment(val).format("Do MMMM YYYY, h:mm:ss a");
+        return moment(val).format('Do MMMM YYYY, h:mm:ss a');
       }
       if (duration.asHours() >= 24) {
         return (
-          moment(val).fromNow() + "\xa0\xa0" + moment(val).format("h:mm:ss a")
+          moment(val).fromNow() + '\xa0\xa0' + moment(val).format('h:mm:ss a')
         );
       }
       return moment(val).fromNow();
     }
   },
   watch: {
-    "currentRoom.currentTopic"(val) {
+     totalComments(val) {
+      this.$eventBus.$emit('totalComments', val)
+    },
+    'currentRoom.currentTopic'(val) {
       if (!val) {
         this.fetchComments = {
           edges: [],
@@ -181,14 +220,14 @@ export default {
           variables: {
             cursor
           },
-          fetchPolicy: "cache-and-network",
+          fetchPolicy: 'cache-and-network',
           context: {
             headers: {
               Authorization: `Bearer ${self.getToken}`
             }
           },
           updateQuery: (previousResult, { fetchMoreResult }) => {
-            this.$emit("fetchedMore");
+            this.$emit('fetchedMore');
             this.loadingMoreComments = false;
             const newComments = fetchMoreResult.fetchComments.edges;
             const oldComments = previousResult.fetchComments.edges;
@@ -204,20 +243,20 @@ export default {
               : previousResult;
           }
         });
-        this.$emit("fetchedMore");
+        this.$emit('fetchedMore');
       }
     }
   },
   methods: {
     fetchRoomComments() {
-      this.$apollo.addSmartQuery("fetchComments", {
+      this.$apollo.addSmartQuery('fetchComments', {
         query: gql.fetchComments,
         variables: {
           limit: 10,
           topicId: this.currentRoom.currentTopic._id,
           roomId: this.currentRoom._id
         },
-        fetchPolicy: "cache-and-network",
+        fetchPolicy: 'cache-and-network',
         context: {
           headers: {
             Authorization: `Bearer ${this.getToken}`
@@ -243,6 +282,7 @@ export default {
           }
         ],
         watchLoading(isLoading, countModifier) {
+          // debugger
           isLoading
             ? (this.loadingComments = true)
             : (this.loadingComments = false);
@@ -251,11 +291,11 @@ export default {
     },
     showModal(val) {
       if (!this.isAuthenticated) {
-        this.$router.push("/login");
+        this.$router.push('/login');
         return;
       }
       this.openModal = true;
-      $(val).modal("show");
+      $(val).modal('show');
     }
   },
   mounted() {
@@ -265,8 +305,6 @@ export default {
   }
 };
 </script>
-
-
 
 <style>
 .modal-backdrop.show {
@@ -360,7 +398,7 @@ button.change-topic {
   flex: 0 0 100%;
 }
 .forum-header {
-  background-image: url("~assets/images/forum-header-BG.svg");
+  background-image: url('~assets/images/forum-header-BG.svg');
   background-repeat: no-repeat;
   background-size: cover;
   background-position-x: center;
