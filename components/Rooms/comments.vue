@@ -7,7 +7,6 @@
       @closeModal="openModal = false"
     />
     <ImageModal :img="imageModalSrc" />
-    {{ totalComments}}
     <div class="comments" v-if="fetchComments.edges.length > 0">
       <div
         class="d-flex px-2 comment border-bottom"

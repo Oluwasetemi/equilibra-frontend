@@ -390,8 +390,7 @@ export default {
     };
   },
   validate(data) {
-    if (data.params.id) {
-      console.log(data.params.id)
+    if (data.query.id) {
       return true;
     }
     return false;
@@ -417,7 +416,7 @@ export default {
     }, 1000);
     this.$store.dispatch("governmentByFilter", {
       filterBy: "name",
-      payload: `${this.$route.params.id.toLowerCase()} state`
+      payload: `${this.$route.query.id.toLowerCase()} state`
     });
   }
 };
