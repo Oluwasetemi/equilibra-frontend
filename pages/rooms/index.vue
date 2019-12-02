@@ -44,7 +44,7 @@ import PostComment from "~/components/Rooms/post-comment";
 export default {
   props: ["currentRoom", "isMyRoom"],
   validate(data) {
-    if (data.params.id) {
+    if (data.query.govt) {
       return true;
     }
   },

@@ -285,28 +285,28 @@ export default {
           description:
             " We are positively minded Nigerians, committed to unity and to encouraging fairness, just and equitable life.",
           backgroundImage: judiciaryImage,
-          link: "/rooms/judiciary?group=Vent-The-Steam"
+          link: "/rooms?govt=judiciary&group=Vent-The-Steam"
         },
         {
           title: "Executive",
           description:
             " We are positively minded Nigerians, committed to unity and to encouraging fairness, just and equitable life.",
           backgroundImage: executiveImage,
-          link: "/rooms/executive?group=Vent-The-Steam"
+          link: "/rooms?govt=executive&group=Vent-The-Steam"
         },
         {
           title: "Senate",
           description:
             " We are positively minded Nigerians, committed to unity and to encouraging fairness, just and equitable life.",
           backgroundImage: senateImage,
-          link: "/rooms/senate?group=Vent-The-Steam"
+          link: "/rooms?govt=senate&group=Vent-The-Steam"
         },
         {
           title: "House of Reps",
           description:
             " We are positively minded Nigerians, committed to unity and to encouraging fairness, just and equitable life.",
           backgroundImage: repsImage,
-          link: "/rooms/HOR?group=Vent-The-Steam"
+          link: "/rooms?govt=HOR&group=Vent-The-Steam"
         }
       ]
     };
@@ -321,28 +321,28 @@ export default {
           description:
             " We are positively minded Nigerians, committed to unity and to encouraging fairness, just and equitable life.",
           backgroundImage: originJudiciaryImage,
-          link: "/rooms/judiciary?group=Vent-The-Steam"
+          link: "/rooms?govt=judiciary&group=Vent-The-Steam"
         },
         {
           title: "Executive",
           description:
             " We are positively minded Nigerians, committed to unity and to encouraging fairness, just and equitable life.",
           backgroundImage: originExecutiveImage,
-          link: "/rooms/executive?group=Vent-The-Steam"
+          link: "/rooms?govt=executive&group=Vent-The-Steam"
         },
         {
           title: "House of Assembly",
           description:
             " We are positively minded Nigerians, committed to unity and to encouraging fairness, just and equitable life.",
           backgroundImage: originHOAImage,
-          link: "/rooms/HOA?group=Vent-The-Steam"
+          link: "/rooms?govt=HOA&group=Vent-The-Steam"
         },
         {
           title: "LGA",
           description:
             " We are positively minded Nigerians, committed to unity and to encouraging fairness, just and equitable life.",
           backgroundImage: originLGAImage,
-          link: `/rooms/LGA?group=Vent-The-Steam`
+          link: `/rooms?govt=LGA&group=Vent-The-Steam`
         }
       ];
     },
@@ -353,28 +353,28 @@ export default {
           description:
             " We are positively minded Nigerians, committed to unity and to encouraging fairness, just and equitable life.",
           backgroundImage: residenceJudiciaryImage,
-          link: "/rooms/judiciary?group=Vent-The-Steam"
+          link: "/rooms?govt=judiciary&group=Vent-The-Steam"
         },
         {
           title: "Executive",
           description:
             " We are positively minded Nigerians, committed to unity and to encouraging fairness, just and equitable life.",
           backgroundImage: residenceExecutiveImage,
-          link: "/rooms/executive?group=Vent-The-Steam"
+          link: "/rooms?govt=executive&group=Vent-The-Steam"
         },
         {
           title: "House of Assembly",
           description:
             " We are positively minded Nigerians, committed to unity and to encouraging fairness, just and equitable life.",
           backgroundImage: residenceHOAImage,
-          link: "/rooms/HOA?group=Vent-The-Steam"
+          link: "/rooms?govt=HOA&group=Vent-The-Steam"
         },
         {
           title: "LGA",
           description:
             " We are positively minded Nigerians, committed to unity and to encouraging fairness, just and equitable life.",
           backgroundImage: residenceLGAImage,
-          link: `/rooms/LGA?group=Vent-The-Steam`
+          link: `/rooms?govt=LGA&group=Vent-The-Steam`
         }
       ];
     },

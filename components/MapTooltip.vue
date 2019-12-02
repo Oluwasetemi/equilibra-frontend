@@ -42,10 +42,10 @@ export default {
     },
     governmentLink() {
       return this.$store.getters["currentGovernment"].name
-        ? `/state/${
+        ? `/state?id=${
             this.$store.getters["currentGovernment"].name.split(" ")[0]
           }`
-        : "/state/abia";
+        : "/state?id=abia";
     }
   },
   filters: {

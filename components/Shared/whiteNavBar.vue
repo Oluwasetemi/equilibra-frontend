@@ -36,7 +36,7 @@
           </li>
           <no-ssr>
             <li class="nav-item ml-lg-4">
-              <div class="dropdown" style="background: white;" v-if="isAuthenticated">
+              <div class="dropdown" style="background: white;" v-if="isAuth">
                 <a
                   href="#"
                   class="dropdown-toggle d-flex align-items-center m-0"
@@ -74,17 +74,25 @@
 </template>
 
 <script>
+import Cookie from 'js-cookie'
 import avatar from "~/assets/images/avatar.svg";
 import { mapActions, mapGetters } from "vuex";
 export default {
+  // asyncData() {
+  //   return {userAuth: Cookie.get('EQUI_AUTH')}
+  // },
   data() {
     return {
-      avatar
+      avatar,
+      Cookie
     };
   },
   computed: {
     ...mapGetters("auth", ["isAuthenticated", "user"]),
-    ...mapGetters("user", ["getUser"])
+    ...mapGetters("user", ["getUser"]),
+    isAuth() {
+      return Cookie.get('EQUI_AUTH') ? true : false
+    }
   },
   methods: {
     ...mapActions("auth", ["logout"]),

@@ -1,4 +1,4 @@
-import gql from 'graphql-tag';
+import gql from "graphql-tag";
 
 export default {
   getFederalRooms: gql`
@@ -16,9 +16,7 @@ export default {
           voteId
         }
         slug
-        members {
-          _id
-        }
+        members
       }
     }
   `,
@@ -37,9 +35,7 @@ export default {
           voteId
         }
         slug
-        members {
-          _id
-        }
+        members
         # government
       }
     }
@@ -59,9 +55,7 @@ export default {
           voteId
         }
         slug
-        members {
-          _id
-        }
+        members
         # government
       }
     }
@@ -89,9 +83,7 @@ export default {
           isClosed
         }
         slug
-        members {
-          _id
-        }
+        members
         # government
         # roomType
       }
@@ -118,7 +110,7 @@ export default {
       }
     }
   `,
-    vote: gql`
+  vote: gql`
     subscription {
       vote {
         _id

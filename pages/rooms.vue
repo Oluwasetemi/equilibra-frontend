@@ -1,14 +1,9 @@
 <template>
   <div class="container pr-0 px-0">
     <loginModal />
-    <SuggestTopicModal
-      :currentRoom="currentRoom"
-    />
+    <SuggestTopicModal :currentRoom="currentRoom" />
     <ChangeTopicModal :currentRoom="currentRoom" />
-    <joinRoomModal
-      :roomId="currentRoom._id"
-      :changeTopic="true"
-    />
+    <joinRoomModal :roomId="currentRoom._id" :changeTopic="true" />
     <!-- Mobile view -->
     <div class="mobile-view d-lg-none">
       <div class="mx-md-3">
@@ -65,8 +60,8 @@
                           <span>{{
                             getMyRooms &&
                             getMyRooms.some(myRoom => myRoom._id == room._id)
-                              ? 'Leave'
-                              : 'Join'
+                              ? "Leave"
+                              : "Join"
                           }}</span>
                           <span class="chat-icon"></span>
                         </div>
@@ -79,7 +74,7 @@
             <Card
               class="pt-5"
               :imageURL="imageUrl2.imageUrl"
-              :title="$route.params.id"
+              :title="$route.query.govt"
               link
               :localGovt="localGovt"
             />
@@ -102,7 +97,7 @@
         <div class="px-3 card-container py-4 scrollable">
           <Card
             :imageURL="imageUrl2.imageUrl"
-            :title="$route.params.id"
+            :title="$route.query.govt"
             link
             :localGovt="localGovt"
           />
@@ -140,8 +135,8 @@
                         <span>{{
                           getMyRooms &&
                           getMyRooms.some(myRoom => myRoom._id == room._id)
-                            ? 'Leave'
-                            : 'Join'
+                            ? "Leave"
+                            : "Join"
                         }}</span>
                         <span class="chat-icon"></span>
                       </div>
@@ -164,21 +159,22 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
-import { roomType } from '~/static/js/constants';
-import gql from '~/apollo/user/room';
-import gqlTopic from '~/apollo/user/topic';
-import imageUrl from '~/assets/images/judiciary_BG.svg';
-import Card from '~/components/Forums/forum-card';
-import SuggestTopicModal from '~/components/Rooms/suggest-topic';
-import joinRoomModal from '~/components/Rooms/join-room-modal';
-import ChangeTopicModal from '~/components/Rooms/change-topic';
-import loginModal from '~/components/Authentication/sign-up';
+import { mapGetters, mapActions } from "vuex";
+import { roomType } from "~/static/js/constants";
+import gql from "~/apollo/user/room";
+import gqlTopic from "~/apollo/user/topic";
+import imageUrl from "~/assets/images/judiciary_BG.svg";
+import Card from "~/components/Forums/forum-card";
+import SuggestTopicModal from "~/components/Rooms/suggest-topic";
+import joinRoomModal from "~/components/Rooms/join-room-modal";
+import ChangeTopicModal from "~/components/Rooms/change-topic";
+import loginModal from "~/components/Authentication/sign-up";
 export default {
-  layout: 'greenNavOnly',
+  layout: "greenNavOnly",
   validate({ route, query, redirect }) {
     if (!query.group) {
-      redirect(`${route.path}?group=Vent-The-Steam`);
+      console.log(query);
+      redirect(`/rooms?govt=judiciary`);
     }
     return true;
   },
@@ -188,8 +184,8 @@ export default {
       roomType,
       loading: true,
       getMyRooms: [],
-      currentRoom: { slug: 'Vent-The-Steam', currentTopic: null },
-      localGovt: '',
+      currentRoom: { slug: "Vent-The-Steam", currentTopic: null },
+      localGovt: "",
       key: 0,
       showForumInfo: false
     };
@@ -202,31 +198,31 @@ export default {
     joinRoomModal
   },
   computed: {
-    ...mapGetters('room', ['federalRooms', 'stateRooms', 'ongoingTopicChange']),
-    ...mapGetters('auth', ['isAuthenticated', 'getToken']),
-    ...mapGetters('user', ['getUser']),
+    ...mapGetters("room", ["federalRooms", "stateRooms", "ongoingTopicChange"]),
+    ...mapGetters("auth", ["isAuthenticated", "getToken"]),
+    ...mapGetters("user", ["getUser"]),
     rooms() {
       return this.$route.query.state
-        ? this.stateRooms[this.roomType[this.$route.params.id]]
-        : this.federalRooms[this.roomType[this.$route.params.id]];
+        ? this.stateRooms[this.roomType[this.$route.query.govt]]
+        : this.federalRooms[this.roomType[this.$route.query.govt]];
     }
   },
   filters: {
     formatText(val) {
       return val
-        .split(' ')
+        .split(" ")
         .map(word => {
           return word.charAt(0).toUpperCase() + word.substring(1).toLowerCase();
         })
-        .join(' ');
+        .join(" ");
     }
   },
   methods: {
-    ...mapActions('room', [
-      'getFederalRooms',
-      'getStateRooms',
-      'joinRoom',
-      'leaveRoom'
+    ...mapActions("room", [
+      "getFederalRooms",
+      "getStateRooms",
+      "joinRoom",
+      "leaveRoom"
     ]),
     checkRoomStatus(room) {
       this.isMyRoom(room)
@@ -239,6 +235,7 @@ export default {
       this.$router.push({
         query: {
           group: room.slug,
+          govt: this.$route.query.govt,
           id: this.$route.query.id,
           state: this.$route.query.state,
           isOrigin: this.$route.query.isOrigin
@@ -246,9 +243,9 @@ export default {
       });
     },
     getAllMyRooms() {
-      this.$apollo.addSmartQuery('getMyRooms', {
+      this.$apollo.addSmartQuery("getMyRooms", {
         query: gql.getMyRooms,
-        variables: { roomType: this.roomType[this.$route.params.id] },
+        variables: { roomType: this.roomType[this.$route.query.govt] },
         context: {
           headers: {
             Authorization: `Bearer ${this.getToken}`
@@ -258,7 +255,7 @@ export default {
     },
     getFedRooms() {
       let self = this;
-      this.getFederalRooms(this.roomType[self.$route.params.id])
+      this.getFederalRooms(this.roomType[self.$route.query.govt])
         .then(data => {
           this.loading = false;
           if (data.graphQLErrors) {
@@ -266,7 +263,7 @@ export default {
             return;
           }
           const fedRooms = this.federalRooms[
-            this.roomType[this.$route.params.id]
+            this.roomType[this.$route.query.govt]
           ];
           this.currentRoom = fedRooms.find(
             room => room.slug == this.$route.query.group
@@ -279,10 +276,10 @@ export default {
     getStateRooms_() {
       let self = this;
       const payload = {
-        roomType: this.roomType[self.$route.params.id],
+        roomType: this.roomType[self.$route.query.govt],
         isOrigin:
           this.$route.query.isOrigin == true ||
-          this.$route.query.isOrigin == 'true'
+          this.$route.query.isOrigin == "true"
             ? true
             : false
       };
@@ -294,7 +291,7 @@ export default {
             return;
           }
           const stateRooms = this.stateRooms[
-            this.roomType[this.$route.params.id]
+            this.roomType[this.$route.query.govt]
           ];
           this.currentRoom = stateRooms.find(
             room => room.slug == this.$route.query.group
@@ -306,7 +303,7 @@ export default {
     },
     joinRoomForum(room) {
       if (!this.isAuthenticated) {
-        $('#signUpModal').modal('show');
+        $("#signUpModal").modal("show");
         return;
       }
       this.setRoom(room);
@@ -317,7 +314,7 @@ export default {
             return;
           }
           // this.subscribeToComments();
-          this.$toast.success('You have now joined this conversation!');
+          this.$toast.success("You have now joined this conversation!");
           // this.subscribeToVote();
         })
         .catch(err => {});
@@ -330,7 +327,7 @@ export default {
             this.$toast.error(data.graphQLErrors[0].message);
             return;
           }
-          this.$toast.success('You have now left the conversation!');
+          this.$toast.success("You have now left the conversation!");
         })
         .catch(err => {});
     },
@@ -353,7 +350,7 @@ export default {
     fetchLGAs(stateID) {
       const self = this;
       this.$store
-        .dispatch('localGovernments', {
+        .dispatch("localGovernments", {
           stateGovernmentID: stateID
         })
         .then(data => {
@@ -370,10 +367,10 @@ export default {
       let lga = LGAS.find(lga => {
         return lga.id == id;
       });
-      return lga ? lga.name : '';
+      return lga ? lga.name : "";
     },
     listenForTopicChange() {
-      this.$apollo.addSmartSubscription('topicChange', {
+      this.$apollo.addSmartSubscription("topicChange", {
         query: gqlTopic.topicChange,
         context: {
           headers: {
@@ -387,12 +384,12 @@ export default {
     }
   },
   mounted() {
-    this.$eventBus.$on('topicChanged', () => {
+    this.$eventBus.$on("topicChanged", () => {
       this.initializeRooms();
     });
     this.listenForTopicChange();
 
-    if (this.$route.params.id == 'LGA' && this.$route.query.id) {
+    if (this.$route.query.govt == "LGA" && this.$route.query.id) {
       const stateID = this.$route.query.isOrigin
         ? this.getUser.stateOfOrigin
         : this.getUser.stateOfResidence;
@@ -497,7 +494,7 @@ a li:hover .room-name {
 }
 
 .selected:before {
-  content: '';
+  content: "";
   width: 3px;
   height: 100%;
   position: absolute;
@@ -520,7 +517,7 @@ a li:hover .room-name {
   flex: 0 0 100%;
 }
 .forum-header {
-  background-image: url('~assets/images/forum-header-BG.svg');
+  background-image: url("~assets/images/forum-header-BG.svg");
   background-repeat: no-repeat;
   background-size: cover;
   background-position-x: center;
@@ -581,7 +578,7 @@ a {
 }
 
 .chat-icon {
-  mask: url('~assets/icons/chat-icon.svg');
+  mask: url("~assets/icons/chat-icon.svg");
   mask-size: cover;
   display: inline-block;
   background-color: #07834e;
