@@ -16,6 +16,9 @@ export default {
           voteId
         }
         slug
+        members {
+          _id
+        }
       }
     }
   `,
@@ -34,6 +37,9 @@ export default {
           voteId
         }
         slug
+        members {
+          _id
+        }
         # government
       }
     }
@@ -53,6 +59,9 @@ export default {
           voteId
         }
         slug
+        members {
+          _id
+        }
         # government
       }
     }
@@ -80,6 +89,9 @@ export default {
           isClosed
         }
         slug
+        members {
+          _id
+        }
         # government
         # roomType
       }

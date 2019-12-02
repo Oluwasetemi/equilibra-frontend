@@ -1,7 +1,7 @@
 <template>
   <div class="main-container">
     <div class="container-fluid px-0 header">
-        <header class="pt-4">
+        <header class="pt-4 px-lg-5">
           <nav class="navbar navbar-expand-lg navbar-light d-flex justify-space-between px-0">
             <nuxt-link to="/" class="navbar-brand pl-2">
               <img src="~/assets/icons/logo.svg" alt style="position: absolute;top: 3px;"/>
@@ -562,7 +562,7 @@ p {
 
 @media (min-width: 1200px){
 header {
-    max-width: 1360px;
+    max-width: calc(1360px + 6rem);
     margin: auto
 }
 }

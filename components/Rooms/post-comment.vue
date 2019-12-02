@@ -2,8 +2,8 @@
   <div class="input-comment border-bottom pb-3 pb-md-0">
     <joinRoomModal :roomId="currentRoom._id" @joinedRoom="postComment(true)" />
     <ChangeTopicModal :currentRoom="currentRoom" :hasTopic="false" />
-    <div class="d-flex align-items-center px-2">
-      <figure class="m-0 d-flex align-items-center pr-2 pl-3 px d-inline-block">
+    <div class="d-flex align-items-center px-2 py-3">
+      <figure class="m-0 d-flex align-items-center pr-md-2 pl-md-3 px d-inline-block">
         <img :src="getUser.image || avatar" alt class="rounded-circle avatar" height="40px" />
       </figure>
       <form
@@ -12,36 +12,42 @@
         style="flex-grow: 1"
         @submit.prevent="postComment()"
       >
-        <div class="form-input position-relative d-inline-block px-3" style="flex-grow: 1">
-          <input
-            type="text"
-            name="comment"
-            id="comment"
-            class="w-100 form-control"
-            v-model="payload.comment"
-          />
-          <label for="photo" class="m-0 add-photo d-inline-flex">
-            <span class="add-photo-icon mt-2 pt-1"></span>
-            <input
-              type="file"
-              name="photo"
-              id="photo"
-              accept="image/x-png,image/gif,image/jpeg"
-              @change="previewImage()"
-              multiple
-              hidden
-            />
-          </label>
-        </div>
-        <div class="px-2" style="flex: 0 0 140px">
-          <button
-            class="post d-flex align-items-center justify-content-center"
-            type="submit"
-            :disabled="(!payload.comment && !imageContent) || loading"
-          >
-            <div class="spinner-grow" style="color: green !important;" v-if="loading"></div>
-            <span>Post</span>
-          </button>
+        <div class="row w-100 no-gutters">
+          <div class="col-10">
+            <div class="form-input position-relative px-md-3 px-1" style="flex-grow: 1">
+              <input
+                type="text"
+                name="comment"
+                id="comment"
+                class="w-100 form-control m-0"
+                v-model="payload.comment"
+              />
+              <label for="photo" class="m-0 add-photo d-inline-flex">
+                <span class="add-photo-icon mt-2 pt-1"></span>
+                <input
+                  type="file"
+                  name="photo"
+                  id="photo"
+                  accept="image/x-png, image/gif, image/jpeg"
+                  @change="previewImage()"
+                  multiple
+                  hidden
+                />
+              </label>
+            </div>
+          </div>
+          <div class="col-2">
+            <div class="px-2">
+              <button
+                class="post d-flex align-items-center justify-content-center"
+                type="submit"
+                :disabled="(!payload.comment && !imageContent) || loading"
+              >
+                <div class="spinner-grow" style="color: green !important;" v-if="loading"></div>
+                <span>Post</span>
+              </button>
+            </div>
+          </div>
         </div>
       </form>
     </div>
@@ -54,7 +60,7 @@
         <a href="#" class="close" @click="removeImage(i)">
           <span>&times;</span>
         </a>
-        <img ref="imageContent" :src="src" alt class="pb-4 img-fluid"/>
+        <img ref="imageContent" :src="src" alt class="pb-4 img-fluid" />
       </figure>
     </div>
   </div>
@@ -142,8 +148,8 @@ export default {
             this.$toast.error(data.graphQLErrors[0].message);
             return;
           }
-          this.files = []
-          this.filesSrc = []
+          this.files = [];
+          this.filesSrc = [];
           this.payload.comment = "";
           this.removeImage();
           this.$toast.success("Your comment has been posted");
@@ -312,7 +318,7 @@ a {
 label.add-photo {
   position: absolute;
   top: 29%;
-  right: 35px;
+  right: 5%;
 }
 @media (min-width: 992px) {
   .forum-container {

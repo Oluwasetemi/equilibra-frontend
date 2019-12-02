@@ -1,10 +1,10 @@
 <template>
   <div class="main-container">
     <div class="container-fluid px-0 header">
-       <header class="pt-4">
+       <header class="pt-4 px-md-5">
           <nav class="navbar navbar-expand-lg navbar-light d-flex justify-space-between px-md-0">
             <nuxt-link to="/" class="navbar-brand pl-2">
-              <img src="~/assets/icons/logo.svg" alt style="position: absolute;top: -20px;"/>
+              <img src="~/assets/icons/logo.svg" alt style="top: -20px;" class="position-lg-absolute"/>
             </nuxt-link>
             <button
               class="navbar-toggler"
@@ -83,7 +83,12 @@
                 class="pt-3"
               >Forum for the people to discuss issues of common interest in the community, constructively.</h5>
               <div class="pt-4">
-                <button class="white-btn lorem" style="width: 190px">Lorem Ipsum</button>
+                 <a href="https://play.google.com/store/apps/details?id=com.theequilibra" target="_blank"  class="mr-4">
+                  <img src="~assets/icons/play-store-icon.svg" alt class="mb-2" />
+                </a>
+                <a href="https://itunes.apple.com/us/app/the-equilibra/id1109228587" target="_blank" >
+                  <img src="~assets/icons/app-store-icon.svg" alt class="mb-2" />
+                </a>
               </div>
             </div>
           </div>
@@ -654,7 +659,7 @@ footer p {
 
 @media (min-width: 1200px){
 header {
-    max-width: 1360px;
+    max-width: calc(1360px + 6rem);
     margin: auto
 }
 }

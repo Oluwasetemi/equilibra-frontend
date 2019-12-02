@@ -1,5 +1,5 @@
 <template>
-  <div class="px-md-3 pl-0 forum-container py-4 scrollable" ref="comments">
+  <div class="px-md-3 pl-0 forum-container py-lg-4 scrollable" ref="comments">
     <div class="border border-bottom-0">
       <DiscussionVoteResults
         v-if="ongoingDiscussionVoting_"
@@ -113,19 +113,20 @@ export default {
       $(val).modal("show");
     },
     checkToCloseDiscussion() {
-      // debugger
       const b = this.now.diff(this.startTime, "minutes") < 0;
       const a = this.endTime.diff(this.now, "minutes") <= 0;
+      if (this.currentRoom.currentTopic) {
+        if (!this.currentRoom.currentTopic.title) return;
+      }
       if (
         this.now.diff(this.startTime, "minutes") < 0 ||
         this.endTime.diff(this.now, "minutes") <= 0 ||
-        (!this.currentRoom.currentTopic &&
-          !this.currentRoom.currentTopic.title) ||
         !this.isMyRoom ||
         !this.currentRoom.voteId
       ) {
         return;
       }
+      debugger
       if (
         this.ongoingDiscussionVoting_ &&
         this.ongoingDiscussionVoting_.voted
@@ -144,10 +145,11 @@ export default {
     },
     showVotingResults() {
       if (!this.test) return;
+      if (!this.currentRoom.currentTopic) {
+        return;
+      }
       if (
-        !this.currentRoom.voteId ||
-        (!this.currentRoom.currentTopic &&
-          !this.currentRoom.currentTopic.title) ||
+        this.currentRoom.voteId == null ||
         (!this.ongoingDiscussionVoting_ &&
           this.now.diff(this.endTime, "minutes") < 0)
       ) {
@@ -164,8 +166,8 @@ export default {
         new Date().getMinutes() == 58
       )
         this.$eventBus.$emit("topicChanged");
-        clearInterval(this.fetchNewTopicsForWeekInterval);
-    },
+      clearInterval(this.fetchNewTopicsForWeekInterval);
+    }
   },
   mounted() {
     this.$eventBus.$on("showPopup", ({ data, roomId }) => {

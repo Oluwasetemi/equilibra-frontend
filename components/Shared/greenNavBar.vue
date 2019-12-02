@@ -1,6 +1,7 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-light d-flex justify-space-between px-lg-4">
-    <signUpModal />
+    <!-- <signUpModal /> -->
+    <!-- <ChangeTopicModal :currentRoom="currentRoom" /> -->
     <div class="container h-100">
       <nuxt-link to="/" class="navbar-brand ml-lg-2 h-100">
         <img src="~/assets/icons/logo.svg" alt class="h-100" />
@@ -38,7 +39,7 @@
           </li>
           <no-ssr>
             <li class="nav-item ml-lg-4">
-              <div class="dropdown" style="background: white;" v-if="isAuthenticated">
+              <div class="dropdown" style="background: white;" v-if="isAuth">
                 <a
                   href="#"
                   class="dropdown-toggle d-flex align-items-center m-0"
@@ -77,8 +78,10 @@
 
 
 <script>
+import Cookie from 'js-cookie'
 import avatar from "~/assets/images/avatar.svg";
 import { mapActions, mapGetters } from "vuex";
+import ChangeTopicModal from "~/components/Rooms/change-topic";
 import signUpModal from "~/components/Authentication/sign-up";
 export default {
   data() {
@@ -87,11 +90,15 @@ export default {
     };
   },
   components: {
-    signUpModal
+    signUpModal,
+    ChangeTopicModal
   },
   computed: {
     ...mapGetters("auth", ["isAuthenticated", "user"]),
-    ...mapGetters("user", ["getUser"])
+    ...mapGetters("user", ["getUser"]),
+    isAuth() {
+      return Cookie.get('EQUI_AUTH') ? true : false
+    }
   },
   methods: {
     ...mapActions("auth", ["logout"]),

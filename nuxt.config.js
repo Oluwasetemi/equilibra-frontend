@@ -89,7 +89,7 @@ export default {
     'bootstrap-vue/nuxt',
     '@nuxtjs/apollo',
     '@nuxtjs/toast',
-    '@nuxtjs/moment',
+    '@nuxtjs/moment'
     // '@nuxtjs/auth'
   ],
 

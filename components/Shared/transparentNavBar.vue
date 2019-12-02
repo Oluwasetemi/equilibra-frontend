@@ -130,7 +130,7 @@ li .nuxt-link-exact-active::after {
 }
 @media (min-width: 1200px) {
   .container {
-    max-width: 1380px !important;
+    max-width: calc(1360px + 6rem) !important;
   }
 }
 </style>
