@@ -40,6 +40,10 @@ export default {
         agriculture
         mineralResources
         museumsAndParks
+        leaderPhoto
+        senatePresidentPhoto
+        cjnPhoto
+        speakerPhoto
       }
     }
   `,
@@ -122,6 +126,10 @@ export default {
         cjn
         speaker
         leader
+        leaderPhoto
+        speakerPhoto
+        senatePresidentPhoto
+        cjnPhoto
         senatePresident
         totalLg
         population
