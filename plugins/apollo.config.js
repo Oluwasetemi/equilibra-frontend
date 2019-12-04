@@ -1,4 +1,4 @@
-import { onError } from 'apollo-link-error';
+import { onError } from "apollo-link-error";
 export default function(context) {
   const errorLink = onError(
     ({ graphQLErrors, networkError, response, operation }) => {
@@ -19,12 +19,12 @@ export default function(context) {
   );
   return {
     onError: errorLink,
-    httpEndpoint: 'https://api.equilibra.test.natterbase.com',
-    wsEndpoint: 'wss://api.equilibra.test.natterbase.com:5505/subscriptions',
+    httpEndpoint: "https://api.equilibra.test.natterbase.com",
+    wsEndpoint: "https://api.equilibra.test.natterbase.com:5505/subscriptions",
     persisting: false,
     websocketsOnly: false,
     httpLinkOptions: {
-      credentials: 'same-origin',
+      credentials: "same-origin",
       connectToDevTools: true
     }
   };
