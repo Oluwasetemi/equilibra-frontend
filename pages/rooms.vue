@@ -173,7 +173,6 @@ export default {
   layout: "greenNavOnly",
   validate({ route, query, redirect }) {
     if (!query.group) {
-      console.log(query);
       redirect(`/rooms?govt=judiciary`);
     }
     return true;

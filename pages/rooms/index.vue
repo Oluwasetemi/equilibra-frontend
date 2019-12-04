@@ -126,7 +126,6 @@ export default {
       ) {
         return;
       }
-      debugger
       if (
         this.ongoingDiscussionVoting_ &&
         this.ongoingDiscussionVoting_.voted

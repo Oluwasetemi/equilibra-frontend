@@ -7,7 +7,6 @@ let saturday =
         .weekday(6)
         .format('YYYY-MM-DD');
 saturday = new Date(saturday + ' ' + '23:58');
-console.log(saturday);
 
 export const roomType = {
   judiciary: 'COURT',

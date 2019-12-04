@@ -1,8 +1,9 @@
-import VuexPersistence from 'vuex-persist';
-import Cookies from 'js-cookie';
+import VuexPersistence from "vuex-persist";
+import Cookies from "js-cookie";
 
 export default ({ store }) => {
-		    new VuexPersistence({
-		      /* your options */
-		    }).plugin(store);
+  new VuexPersistence({
+    /* your options */
+    key: "equilibra"
+  }).plugin(store);
 };

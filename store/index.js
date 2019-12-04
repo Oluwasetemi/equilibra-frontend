@@ -1,4 +1,4 @@
-import gql from '~/apollo/user/govt';
+import gql from "~/apollo/user/govt";
 export default {
   state: () => ({
     governments: [],
@@ -19,12 +19,12 @@ export default {
       state.currentGovernment = data;
     },
     setUserGovernment(state, { roomType, data }) {
-      if (roomType == 'HOUSE_OF_REPRESENTATIVE') {
-        roomType = 'fedConstituencies';
-      } else if (roomType == 'HOUSE_OF_ASSEMBLY') {
-        roomType = 'stateConstituencies';
+      if (roomType == "HOUSE_OF_REPRESENTATIVE") {
+        roomType = "fedConstituencies";
+      } else if (roomType == "HOUSE_OF_ASSEMBLY") {
+        roomType = "stateConstituencies";
       } else {
-        roomType = 'senatorialDistricts';
+        roomType = "senatorialDistricts";
       }
       state.userGovernment[roomType] = data;
     },
@@ -37,11 +37,12 @@ export default {
     nuxtServerInit({ commit }) {
       return this.app.apolloProvider.defaultClient
         .query({
+          fetchPolicy: "no-cache",
           query: gql.governments,
-          variables: { slug: 'SG', first: 37, start: 0 }
+          variables: { slug: "SG", first: 37, start: 0 }
         })
         .then(({ data }) => {
-          commit('setGovernments', data.allGovernmentBasedOnCategory);
+          commit("setGovernments", data.allGovernmentBasedOnCategory);
         })
         .catch(err => {
           return err;
@@ -51,7 +52,7 @@ export default {
       const government = getters.governments.filter(
         govt => govt[filterBy] == payload
       );
-      commit('setCurrentGovernment', government[0]);
+      commit("setCurrentGovernment", government[0]);
     },
     governmentByID({ commit }, payload) {
       return this.app.apolloProvider.defaultClient
@@ -99,7 +100,7 @@ export default {
           variables: { stateGovernmentID, roomType }
         })
         .then(({ data }) => {
-          commit('setUserGovernment', { roomType, data });
+          commit("setUserGovernment", { roomType, data });
           return data.fetchConstituency;
         })
         .catch(err => {
@@ -107,7 +108,7 @@ export default {
         });
     },
     resetCurrentGovernment({ commit }) {
-      commit('resetCurrentGovernment');
+      commit("resetCurrentGovernment");
     }
   }
 };

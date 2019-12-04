@@ -418,13 +418,11 @@ export default {
             return;
           }
           this[val] = this.getState(data, this.getUser[val], val);
-          console.log(this[val]);
         })
         .catch(err => {});
     },
     getState(LGAS, id, key) {
       let lga = LGAS.find(lga => lga.id == id);
-      console.log(lga, key)
       return lga ? { name: lga.name, id: lga.id } : {};
     },
     logoutUser() {
