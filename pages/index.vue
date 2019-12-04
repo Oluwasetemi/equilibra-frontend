@@ -1,11 +1,10 @@
 <template>
   <div class="main-container">
     <div class="container-fluid px-0 header">
-      <div class="container">
-        <header class="pt-3">
+       <header class="pt-4 px-md-5">
           <nav class="navbar navbar-expand-lg navbar-light d-flex justify-space-between px-md-0">
-            <nuxt-link to="/" class="navbar-brand">
-              <img src="~/assets/icons/logo.svg" alt />
+            <nuxt-link to="/" class="navbar-brand pl-2">
+              <img src="~/assets/icons/logo.svg" alt style="top: -20px;" class="position-lg-absolute"/>
             </nuxt-link>
             <button
               class="navbar-toggler"
@@ -35,8 +34,9 @@
                   <a class="nav-link" href="#">Blog</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="#">Contact Us</a>
+                  <nuxt-link to="/contact-us" class="nav-link">Contact Us</nuxt-link>
                 </li>
+                <no-ssr>
                 <li class="nav-item ml-lg-4">
                   <div class="dropdown" style="background: white;" v-if="isAuthenticated">
                     <a
@@ -68,10 +68,13 @@
                   </div>
                   <nuxt-link to="/sign-up" tag="button" class="btn" v-else>Join Us</nuxt-link>
                 </li>
+                </no-ssr>
               </ul>
             </div>
           </nav>
         </header>
+      <div class="container">
+       
         <div class="row">
           <div class="col-md-5 d-flex align-items-md-center">
             <div class="hero-text">
@@ -80,7 +83,12 @@
                 class="pt-3"
               >Forum for the people to discuss issues of common interest in the community, constructively.</h5>
               <div class="pt-4">
-                <button class="white-btn lorem" style="width: 190px">Lorem Ipsum</button>
+                 <a href="https://play.google.com/store/apps/details?id=com.theequilibra" target="_blank"  class="mr-4">
+                  <img src="~assets/icons/play-store-icon.svg" alt class="mb-2" />
+                </a>
+                <a href="https://itunes.apple.com/us/app/the-equilibra/id1109228587" target="_blank" >
+                  <img src="~assets/icons/app-store-icon.svg" alt class="mb-2" />
+                </a>
               </div>
             </div>
           </div>
@@ -383,7 +391,7 @@
 </template>
 
 <script>
-import avatar from "~/assets/images/avatar.png";
+import avatar from "~/assets/images/avatar.svg";
 import { mapActions, mapGetters } from "vuex";
 import Map from "~/components/Map";
 import Footer from "~/components/Shared/footer";
@@ -404,32 +412,34 @@ export default {
   },
   methods: {
     ...mapActions("auth", ["logout"]),
-    ...mapActions('home', ['nuxtServerInit']),
+    ...mapActions('govt', ['getSGs']),
     logoutUser() {
       this.logout();
     }
   },
-  mounted() {
-    this.nuxtServerInit();
-    let elmts = document.querySelectorAll(".lazy-load");
-    if (window.img_observer && window.img_observer.observer) {
-      window.img_observer.observer.disconnect();
-      delete window.img_observer;
-      for (let i = 0, len = elmts.length; i < len; i++) {
-        // load image only when the image src is updated
-        const img = elmts[i].getAttribute("data-src") || false;
-        if (
-          img &&
-          elmts[i].getAttribute("data-loaded") === "true" &&
-          img !== elmts[i].getAttribute("src")
-        ) {
-          elmts[i].setAttribute("data-loaded", false);
-        }
-      }
-    }
-    window.img_observer = lozad(elmts);
-    window.img_observer.observe();
+  mounted(){
+    // debugger
   }
+  // mounted() {
+  //   let elmts = document.querySelectorAll(".lazy-load");
+  //   if (window.img_observer && window.img_observer.observer) {
+  //     window.img_observer.observer.disconnect();
+  //     delete window.img_observer;
+  //     for (let i = 0, len = elmts.length; i < len; i++) {
+  //       // load image only when the image src is updated
+  //       const img = elmts[i].getAttribute("data-src") || false;
+  //       if (
+  //         img &&
+  //         elmts[i].getAttribute("data-loaded") === "true" &&
+  //         img !== elmts[i].getAttribute("src")
+  //       ) {
+  //         elmts[i].setAttribute("data-loaded", false);
+  //       }
+  //     }
+  //   }
+  //   window.img_observer = lozad(elmts);
+  //   window.img_observer.observe();
+  // }
 };
 </script>
 
@@ -645,6 +655,13 @@ footer p {
   font-size: 15px;
   color: var(--black-text);
   line-height: 2rem;
+}
+
+@media (min-width: 1200px){
+header {
+    max-width: calc(1360px + 6rem);
+    margin: auto
+}
 }
 
 @media (min-width: 1200px) {

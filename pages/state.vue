@@ -354,13 +354,6 @@
 import { setTimeout } from "timers";
 export default {
   layout: "whiteNavWithFooter",
-  // asyncData({ params, store }) {
-  //   store.dispatch("governmentByFilter", {
-  //     filterBy: "name",
-  //     payload: `${params.id.toLowerCase()} state`
-  //   });
-  //   return { government: store.getters["currentGovernment"] };
-  // },
   data() {
     return {
       pageLoaded: false,
@@ -379,7 +372,7 @@ export default {
         },
         {
           title: "Museums & Parks",
-          key: "museumAndParks"
+          key: "museumsAndParks"
         },
         {
           title: "Agriculture",
@@ -391,13 +384,16 @@ export default {
         },
         {
           title: "Other tourist attractions",
-          key: "touristAttraction"
+          key: "touristAttractionCenters"
         }
       ]
     };
   },
   validate(data) {
-    return data.params.id;
+    if (data.query.id) {
+      return true;
+    }
+    return false;
   },
   computed: {
     government() {
@@ -420,7 +416,7 @@ export default {
     }, 1000);
     this.$store.dispatch("governmentByFilter", {
       filterBy: "name",
-      payload: `${this.$route.params.id.toLowerCase()} state`
+      payload: `${this.$route.query.id.toLowerCase()} state`
     });
   }
 };

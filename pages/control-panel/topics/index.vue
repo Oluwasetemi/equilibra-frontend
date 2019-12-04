@@ -17,7 +17,10 @@
               <figure>
                 <img src="~/assets/images/total-insurance-icon.svg" alt />
               </figure>
-              <div class="value" v-if="topics.pageInfo && topics.pageInfo.totalCount">{{topics.pageInfo.totalCount}}</div>
+              <div
+                class="value"
+                v-if="topics.pageInfo && topics.pageInfo.totalCount"
+              >{{topics.pageInfo.totalCount}}</div>
               <div class="value" v-else>0</div>
               <div class="title mt-2">Total Created Topics</div>
             </div>
@@ -38,7 +41,26 @@
                     <i class="ft-plus"></i>
                   </button>
                 </figure>
-                <figure v-if="topics.edges"
+
+                <figure class="d-flex justify-content-between position-relative">
+                  <div class="d-flex position-relative"></div>
+                  <el-select
+                    v-model="filter"
+                    @change="getTopics"
+                    class="border-danger"
+                    placeholder="Select"
+                  >
+                    <el-option
+                      v-for="(item, i) in filters"
+                      :key="i"
+                      :label="item.label"
+                      :value="item.value"
+                    ></el-option>
+                  </el-select>
+                </figure>
+                <div class="text-center" v-loading="loading"></div>
+                <figure
+                  v-if="!loading"
                   class="d-flex justify-content-between position-relative"
                   v-for="(topic, i) in topics.edges"
                   :key="i"
@@ -46,24 +68,20 @@
                   <div class="d-flex position-relative">
                     <img src="~/assets/images/total-insurance-icon.svg" alt />
                     <div>
-                      <!-- <div class="title ml-3 pt-4">{{admin.fullName}}</div>
-                      <small class="ml-3">{{admin.email}}</small> -->
+                      <!-- <div class="title ml-3 pt-4">{{admin.fullName}}</div> -->
+                      <small class="ml-3">{{topic.title}}</small>
                     </div>
                   </div>
                   <div>
-                    <button class="add-btn" @click="delete_admin(topic._id)" :disabled="loading">
-                      <i class="ft-trash-2" v-if="!loading"></i>
-                      <span v-else class="spinner-grow"></span>
-                    </button>
-                    <!-- <button
+                    <button
                       class="add-btn"
-                      :class="admin.isSuspended?'suspended':'active'"
-                      @click="suspend_admin(topic._id)"
+                      :class="'active'"
+                      @click="modifyTopic(topic)"
                       :disabled="loading"
                     >
-                      <i :class="!admin.isSuspended?'ft-user-x':'ft-user-check'" v-if="!loading"></i>
+                      <i :class="'el-icon-edit'" v-if="!loading"></i>
                       <span v-else class="spinner-grow"></span>
-                    </button> -->
+                    </button>
                   </div>
                 </figure>
                 <figure
@@ -78,7 +96,10 @@
                   </div>
                 </figure>
 
-                <div class="text-center" v-if="topics.pageInfo &&topics.pageInfo.totalCount > limit">
+                <div
+                  class="text-center"
+                  v-if="topics.pageInfo &&topics.pageInfo.totalCount > limit"
+                >
                   <button class="add-btn" @click="previousPage" :disabled="loading||!hasPrevious">
                     <i class="ft-arrow-left" v-if="!loading"></i>
                     <span v-else class="spinner-grow"></span>
@@ -101,7 +122,8 @@
                 <figure class="d-flex justify-content-between position-relative">
                   <div class="d-flex position-relative">
                     <img src="~/assets/images/total-insurance-icon.svg" alt />
-                    <div class="title ml-3 pt-4">Create New Topic</div>
+                    <div class="title ml-3 pt-4" v-if="$route.query.new">Create New Topic</div>
+                    <div class="title ml-3 pt-4" v-if="$route.query.update">Update Topic</div>
                   </div>
                   <button class="add-btn" @click="closeNewTopic()">
                     <i class="ft-x"></i>
@@ -129,55 +151,87 @@
                       <p
                         v-else-if="!$v.topicPayload.title.minLength"
                         class="invalid"
-                      >Username should not be less than 2 characters</p>
+                      >Title should not be less than 5 characters</p>
                     </template>
                     <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
                   </div>
 
                   <div class="form-group pt-3">
-                    <label for="rooms">Select Rooms (Required)</label>
+                    <label for="title">Topic Description (Required)</label>
+                    <textarea
+                      :rows="2"
+                      @focus="errorMessage=''"
+                      id="description"
+                      :class="{invalid: $v.topicPayload.description.$error || errorMessage}"
+                      @blur="$v.topicPayload.description.$touch()"
+                      class="form-control"
+                      v-model="topicPayload.description"
+                      placeholder="Topic Description"
+                    />
+                    <template v-if="$v.topicPayload.description.$dirty">
+                      <p
+                        v-if="!$v.topicPayload.description.required"
+                        class="invalid"
+                      >This field is required</p>
+                      <p
+                        v-else-if="!$v.topicPayload.description.minLength"
+                        class="invalid"
+                      >Description should not be less than 5 characters</p>
+                    </template>
+                    <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                  </div>
+
+                  <div class="form-group pt-3">
+                    <label for="rooms">Schedule for Rooms (Required)</label>
                     <el-select
                       class="w-100"
                       @focus="errorMessage=''"
                       id="rooms"
-                      :class="{invalid: $v.topicPayload.roomId.$error || errorMessage}"
-                      @blur="$v.topicPayload.roomId.$touch()"
-                      v-model="topicPayload.roomId"
+                      :class="{invalid: $v.topicPayload.rooms.$error || errorMessage}"
+                      @blur="$v.topicPayload.rooms.$touch()"
+                      v-model="topicPayload.rooms"
                       filterable
+                      multiple
                       placeholder="Select"
                     >
                       <el-option
-                        v-for="(item, i) in rooms.edges"
+                        v-for="(item, i) in rooms"
                         :key="i"
                         :label="item.name"
                         :value="item._id"
                       ></el-option>
                     </el-select>
-                    <template v-if="$v.topicPayload.roomId.$dirty">
-                                <p v-if="!$v.topicPayload.roomId.required" class="invalid">This field is required</p>
-                                <p
-                                v-else-if="!$v.topicPayload.roomId.minLength"
-                                class="invalid"
-                                >Rooms should not be less than 1 items</p>
+                    <template v-if="$v.topicPayload.rooms.$dirty">
+                      <p
+                        v-if="!$v.topicPayload.rooms.required"
+                        class="invalid"
+                      >This field is required</p>
+                      <p
+                        v-else-if="!$v.topicPayload.rooms.minLength"
+                        class="invalid"
+                      >Rooms should not be less than 1 items</p>
                     </template>
                     <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
                   </div>
-
                   <div class="form-group pt-3">
                     <label for="startDate">Start Date</label>
-                    <el-date-picker
+                    <el-select
+                      v-model="topicPayload.date"
+                      filterable
                       class="w-100"
-                      v-model="dateRangeValue"
-                      :picker-options="pickerOptions"
-                      type="daterange"
-                      range-separator="-"
-                      start-placeholder="Start date"
-                      end-placeholder="End date"
-                    ></el-date-picker>
+                      placeholder="Select"
+                    >
+                      <el-option
+                        v-for="(item, i) in sundays"
+                        :key="i"
+                        :label="new Date(item).toDateString()"
+                        :value="new Date(item).toISOString()"
+                      ></el-option>
+                    </el-select>
                   </div>
 
                   <div class="form-group pt-3">
-                    <button>Save</button>
+                    <el-button class="button-i" native-type="submit" :loading="loading">Save</el-button>
                   </div>
                 </form>
               </div>
@@ -197,20 +251,26 @@ export default {
   data() {
     return {
       skip: 0,
-      limit: 5,
+      limit: 10,
       total: 0,
+      filter: true,
+      filters: [
+        { value: true, label: "Approved" },
+        { value: false, label: "Not Approved" }
+      ],
+      loading: false,
       pickerOptions: {
-        disabledDate: (time)=>{
-          return time<Date.now()
+        disabledDate: time => {
+          return time < Date.now();
         }
       },
       topicPayload: {
-        roomId: '',
+        rooms: [],
         title: "",
-        startDate: "",
-        closeDate: ""
+        description: "",
+        date: ""
       },
-      dateRangeValue: [Date.now(), ''],
+      dateRangeValue: [Date.now(), ""],
       errorMessage: "",
       options: [
         { name: "Vue.js", code: "vu" },
@@ -251,7 +311,15 @@ export default {
         required,
         minLength: minLength(6)
       },
-      roomId: {
+      description: {
+        required,
+        minLength: minLength(6)
+      },
+      date: {
+        required,
+        minLength: minLength(6)
+      },
+      rooms: {
         required,
         minLength: minLength(1)
       }
@@ -260,23 +328,42 @@ export default {
   computed: {
     ...mapGetters("admin", ["topics", "rooms"]),
     isNewActive() {
-      return this.$route.query.new;
+      return this.$route.query.new || this.$route.query.update;
     },
     hasNext() {
       return this.skip < this.total - this.limit;
     },
     hasPrevious() {
       return this.skip >= this.limit;
+    },
+    sundays() {
+      var d = new Date(),
+        d2 = new Date(),
+        sundays = [];
+      d.setDate(d.getDate() + ((0 + 7 - d.getDay()) % 7));
+      sundays.push(new Date(d));
+      for (let index = 0; index < 9; index++) {
+        sundays.push(new Date(d.setDate(d.getDate() + 7)));
+      }
+      return sundays;
     }
   },
   methods: {
-    ...mapActions("admin", ["getAllTopics", "getRooms", "saveTopic"]),
+    ...mapActions("admin", [
+      "getAllTopics",
+      "getRooms",
+      "saveTopic",
+      "deleteTopic",
+      "updateTopic"
+    ]),
     openNewTopic() {
+      this.topicPayload = {
+        rooms: [],
+        title: "",
+        description: "",
+        date: ""
+      };
       this.$router.push({ query: { new: true } });
-    },
-    disabledDate(date) {
-      console.log(date);
-      return date.getTime() > Date.now();
     },
     nextPage() {
       this.skip += this.limit;
@@ -289,64 +376,102 @@ export default {
     closeNewTopic() {
       this.$router.push({ query: {} });
     },
-    getAllRooms() {
+
+    modifyTopic: async function(topic) {
+      // modify topic logic happens here
+      this.topicPayload = { ...topic };
+      this.$router.push({ query: { update: topic._id } });
+    },
+    getAllRooms: async function() {
       this.loading = true;
       let self = this;
-      this.getRooms({})
-        .then(data => {
-          this.loading = false;
-          if (data.graphQLErrors) {
-            this.$toast.error(data.graphQLErrors[0].message);
-            return;
-          }
-        })
-        .catch(err => {
-          this.loading = false;
-        });
+      try {
+        let data = await this.getRooms({ skip: 0, limit: 3000 });
+        this.loading = false;
+        if (data.graphQLErrors) {
+          this.$toast.error(data.graphQLErrors[0].message);
+          return;
+        }
+        return;
+      } catch (error) {
+        this.loading = false;
+        return;
+      }
     },
     submitTopic() {
       this.$v.$touch();
       let isInvalid = this.$v.$invalid;
-      if(isInvalid) return;
-      // this.topicPayload.startDate = this.dateRangeValue[0];
-      // this.topicPayload.closeDate = this.dateRangeValue[1];
+      if (isInvalid) return;
       this.loading = true;
       let self = this;
-      this.saveTopic({topic: self.topicPayload})
-        .then(data => {
-          self.loading = false;
-          if (data.graphQLErrors) {
-            self.$toast.error(data.graphQLErrors[0].message);
+      var { _id, title, rooms, description } = self.topicPayload;
+      if (this.$route.query.update) {
+        this.updateTopic({ topic: { title, rooms, description }, _id })
+          .then(data => {
+            self.loading = false;
+            if (data.graphQLErrors) {
+              self.$toast.error(data.graphQLErrors[0].message);
+              return;
+            }
+            this.$router.push({ query: {} });
+            this.$toast.error("Topic updated");
             return;
-          }
-          this.$toast.error("Topic Created");
-            // location.href = location.href;
-          // setTimeout(() => {
-          // }, 1000);
-        })
-        .catch(err => {
-          self.loading = false;
-        });
+          })
+          .catch(err => {
+            self.loading = false;
+            return;
+          });
+      }
+
+      if (this.$route.query.new) {
+        this.saveTopic({ topic: self.topicPayload })
+          .then(data => {
+            self.loading = false;
+            if (data.graphQLErrors) {
+              self.$toast.error(data.graphQLErrors[0].message);
+              return;
+            }
+            this.$router.push({ query: {} });
+            this.$toast.error("Topic Created");
+          })
+          .catch(err => {
+            self.loading = false;
+            return;
+          });
+      }
     },
-    getTopics() {
+    resetFields() {
+      if (this.$route.query.update) {
+        this.topicPayload = this.topics.filter(
+          e => e._id == this.$route.query.update
+        );
+      }
+    },
+    getTopics: async function() {
       this.loading = true;
       let self = this;
-      this.getAllTopics({limit: self.limit, skip: self.skip})
-        .then(data => {
-          this.loading = false;
-          if (data.graphQLErrors) {
-            this.$toast.error(data.graphQLErrors[0].message);
-            return;
-          }
-        })
-        .catch(err => {
-          this.loading = false;
+      try {
+        let data = await this.getAllTopics({
+          query: { isVerified: self.filter },
+          limit: self.limit,
+          skip: self.skip
         });
+        this.loading = false;
+        if (data.graphQLErrors) {
+          this.$toast.error(data.graphQLErrors[0].message);
+          return;
+        }
+        return;
+      } catch (error) {
+        this.loading = false;
+        return;
+      }
     }
   },
-  created() {
-    this.getTopics();
-    this.getAllRooms();
+  created() {},
+  async mounted() {
+    this.resetFields();
+    await Promise.all([this.getTopics(), this.getAllRooms()]);
   }
 };
 </script>
@@ -447,6 +572,23 @@ button {
   border: none;
   height: 30px;
   transition: box-shadow 0.2s ease-in-out;
+}
+.button-i {
+  background: #f58634;
+  border-radius: 2px;
+  color: white;
+  font-size: 12px;
+  letter-spacing: 0.2px;
+  /* width: 100%; */
+  width: 136px;
+  border: none;
+  height: 30px;
+  transition: box-shadow 0.2s ease-in-out;
+}
+.button-i:hover,
+.button-i:focus {
+  background: #f58634;
+  color: white;
 }
 
 button.view {

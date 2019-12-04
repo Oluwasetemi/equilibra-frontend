@@ -1,87 +1,471 @@
 <template>
   <div class="container pr-0 px-0">
-    <div class="px-md-3 px-0">
-      <div class="row no-gutters flex-row flex-lg-nowrap justify-content-between">
-        <div class="px-3 card-container d-lg-block d-none py-4 scrollable">
-          <Card :imageURL="imageUrl2.imageUrl" :title="$route.params.id" link />
+    <loginModal />
+    <SuggestTopicModal :currentRoom="currentRoom" />
+    <ChangeTopicModal :currentRoom="currentRoom" />
+    <joinRoomModal :roomId="currentRoom._id" :changeTopic="true" />
+    <!-- Mobile view -->
+    <div class="mobile-view d-lg-none">
+      <div class="mx-md-3">
+        <div class="mx-md-3 d-flex border-bottom border-left border-right">
+          <a href="#" @click="showForumInfo = false">
+            <div class="px-5 py-3">
+              <span :class="{ 'selected-tab': !showForumInfo }">Forums</span>
+            </div>
+          </a>
+          <a href="#" @click="showForumInfo = true">
+            <div class="px-5 py-3 border-left">
+              <span :class="{ 'selected-tab': showForumInfo }"
+                >Forum Information</span
+              >
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="px-md-3 px-0">
+        <div class="row no-gutters">
+          <div class="px-md-3 pb-4 scrollable w-100" v-if="showForumInfo">
+            <aside>
+              <div class="groups border border-bottom-0">
+                <ul class="p-0 m-o">
+                  <li class="header font-weight-bold p-3 border-bottom">
+                    Groups
+                  </li>
+                  <div class="group-list">
+                    <div class="text-center loader" v-if="loading">
+                      <div class="spinner-border text-secondary" role="status">
+                        <span class="sr-only">Loading...</span>
+                      </div>
+                    </div>
+                    <a
+                      v-else
+                      href="#"
+                      v-for="(room, i) in rooms"
+                      :key="i"
+                      :title="room.name | formatText"
+                      @click="setRoom(room)"
+                    >
+                      <li
+                        class="px-4 border-bottom d-flex align-items-center justify-content-between"
+                        :class="{ selected: currentRoom.slug == room.slug }"
+                      >
+                        <span class="room-name">{{
+                          room.name | formatText
+                        }}</span>
+                        <div
+                          class="join-status align-items-center justify-content-between"
+                          @click="checkRoomStatus(room)"
+                        >
+                          <span>{{
+                            getMyRooms &&
+                            getMyRooms.some(myRoom => myRoom._id == room._id)
+                              ? "Leave"
+                              : "Join"
+                          }}</span>
+                          <span class="chat-icon"></span>
+                        </div>
+                      </li>
+                    </a>
+                  </div>
+                </ul>
+              </div>
+            </aside>
+            <Card
+              class="pt-5"
+              :imageURL="imageUrl2.imageUrl"
+              :title="$route.query.govt"
+              link
+              :localGovt="localGovt"
+            />
+          </div>
+          <nuxt-child
+            :currentRoom="currentRoom"
+            :isMyRoom="isMyRoom(currentRoom)"
+            :key="key"
+            v-else
+          />
+        </div>
+      </div>
+    </div>
+    <!-- End of mobile view -->
+    <!-- Desktop view -->
+    <div class="px-md-3 px-0 d-lg-block d-none">
+      <div
+        class="row no-gutters flex-row flex-lg-nowrap justify-content-between"
+      >
+        <div class="px-3 card-container py-4 scrollable">
+          <Card
+            :imageURL="imageUrl2.imageUrl"
+            :title="$route.query.govt"
+            link
+            :localGovt="localGovt"
+          />
           <aside class="pt-5">
             <div class="groups border border-bottom-0">
               <ul class="p-0 m-o">
-                <li class="header font-weight-bold p-3 border-bottom">Groups</li>
-                <a href="#" @click="currentRoom = null">
-                  <li class="p-3 border-bottom" :class="{selected: !currentRoom}">Vent the Steam</li>
-                </a>
-                <a
-                  href="#"
-                  v-for="(room, i) in federalRooms[roomType[$route.params.id]]"
-                  :key="i"
-                  :title="room.name"
-                  @click="currentRoom = room"
-                >
-                  <li
-                    class="px-4 py-3 border-bottom"
-                    :class="{selected: currentRoom == room}"
-                  >{{room.name}}</li>
-                </a>
+                <li class="header font-weight-bold p-3 border-bottom">
+                  Groups
+                </li>
+                <div class="group-list">
+                  <div class="text-center loader" v-if="loading">
+                    <div class="spinner-border text-secondary" role="status">
+                      <span class="sr-only">Loading...</span>
+                    </div>
+                  </div>
+                  <a
+                    v-else
+                    href="#"
+                    v-for="(room, i) in rooms"
+                    :key="i"
+                    :title="room.name | formatText"
+                    @click="setRoom(room)"
+                  >
+                    <li
+                      class="px-4 border-bottom d-flex align-items-center justify-content-between"
+                      :class="{ selected: currentRoom.slug == room.slug }"
+                    >
+                      <span class="room-name">{{
+                        room.name | formatText
+                      }}</span>
+                      <div
+                        class="join-status align-items-center justify-content-between"
+                        @click="checkRoomStatus(room)"
+                      >
+                        <span>{{
+                          getMyRooms &&
+                          getMyRooms.some(myRoom => myRoom._id == room._id)
+                            ? "Leave"
+                            : "Join"
+                        }}</span>
+                        <span class="chat-icon"></span>
+                      </div>
+                    </li>
+                  </a>
+                </div>
               </ul>
             </div>
           </aside>
         </div>
-        <nuxt-child :currentRoom="currentRoom" />
+        <nuxt-child
+          :currentRoom="currentRoom"
+          :isMyRoom="isMyRoom(currentRoom)"
+          :key="key"
+        />
       </div>
     </div>
+    <!-- End of desktop view -->
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from "vuex";
 import { roomType } from "~/static/js/constants";
+import gql from "~/apollo/user/room";
+import gqlTopic from "~/apollo/user/topic";
 import imageUrl from "~/assets/images/judiciary_BG.svg";
 import Card from "~/components/Forums/forum-card";
+import SuggestTopicModal from "~/components/Rooms/suggest-topic";
+import joinRoomModal from "~/components/Rooms/join-room-modal";
+import ChangeTopicModal from "~/components/Rooms/change-topic";
+import loginModal from "~/components/Authentication/sign-up";
 export default {
   layout: "greenNavOnly",
+  validate({ route, query, redirect }) {
+    if (!query.group) {
+      console.log(query);
+      redirect(`/rooms?govt=judiciary`);
+    }
+    return true;
+  },
   data() {
     return {
       imageUrl2: { imageUrl },
       roomType,
-      currentRoom: null
+      loading: true,
+      getMyRooms: [],
+      currentRoom: { slug: "Vent-The-Steam", currentTopic: null },
+      localGovt: "",
+      key: 0,
+      showForumInfo: false
     };
   },
   components: {
-    Card
+    Card,
+    SuggestTopicModal,
+    ChangeTopicModal,
+    loginModal,
+    joinRoomModal
   },
   computed: {
-    ...mapGetters("room", ["federalRooms"])
+    ...mapGetters("room", ["federalRooms", "stateRooms", "ongoingTopicChange"]),
+    ...mapGetters("auth", ["isAuthenticated", "getToken"]),
+    ...mapGetters("user", ["getUser"]),
+    rooms() {
+      return this.$route.query.state
+        ? this.stateRooms[this.roomType[this.$route.query.govt]]
+        : this.federalRooms[this.roomType[this.$route.query.govt]];
+    }
+  },
+  filters: {
+    formatText(val) {
+      return val
+        .split(" ")
+        .map(word => {
+          return word.charAt(0).toUpperCase() + word.substring(1).toLowerCase();
+        })
+        .join(" ");
+    }
   },
   methods: {
-    ...mapActions("room", ["getFederalRooms"]),
-    getRooms() {
-      this.loading = true;
+    ...mapActions("room", [
+      "getFederalRooms",
+      "getStateRooms",
+      "joinRoom",
+      "leaveRoom"
+    ]),
+    checkRoomStatus(room) {
+      this.isMyRoom(room)
+        ? this.leaveRoomForum(room)
+        : this.joinRoomForum(room);
+    },
+    setRoom(room) {
+      this.key += 1;
+      this.currentRoom = room;
+      this.$router.push({
+        query: {
+          group: room.slug,
+          govt: this.$route.query.govt,
+          id: this.$route.query.id,
+          state: this.$route.query.state,
+          isOrigin: this.$route.query.isOrigin
+        }
+      });
+    },
+    getAllMyRooms() {
+      this.$apollo.addSmartQuery("getMyRooms", {
+        query: gql.getMyRooms,
+        variables: { roomType: this.roomType[this.$route.query.govt] },
+        context: {
+          headers: {
+            Authorization: `Bearer ${this.getToken}`
+          }
+        }
+      });
+    },
+    getFedRooms() {
       let self = this;
-      this.getFederalRooms(this.roomType[self.$route.params.id])
+      this.getFederalRooms(this.roomType[self.$route.query.govt])
         .then(data => {
           this.loading = false;
           if (data.graphQLErrors) {
             this.$toast.error(data.graphQLErrors[0].message);
             return;
           }
+          const fedRooms = this.federalRooms[
+            this.roomType[this.$route.query.govt]
+          ];
+          this.currentRoom = fedRooms.find(
+            room => room.slug == this.$route.query.group
+          );
         })
         .catch(err => {
           this.loading = false;
         });
+    },
+    getStateRooms_() {
+      let self = this;
+      const payload = {
+        roomType: this.roomType[self.$route.query.govt],
+        isOrigin:
+          this.$route.query.isOrigin == true ||
+          this.$route.query.isOrigin == "true"
+            ? true
+            : false
+      };
+      this.getStateRooms(payload)
+        .then(data => {
+          this.loading = false;
+          if (data.graphQLErrors) {
+            this.$toast.error(data.graphQLErrors[0].message);
+            return;
+          }
+          const stateRooms = this.stateRooms[
+            this.roomType[this.$route.query.govt]
+          ];
+          this.currentRoom = stateRooms.find(
+            room => room.slug == this.$route.query.group
+          );
+        })
+        .catch(err => {
+          this.loading = false;
+        });
+    },
+    joinRoomForum(room) {
+      if (!this.isAuthenticated) {
+        $("#signUpModal").modal("show");
+        return;
+      }
+      this.setRoom(room);
+      this.joinRoom(this.currentRoom._id)
+        .then(data => {
+          if (data.graphQLErrors) {
+            this.$toast.error(data.graphQLErrors[0].message);
+            return;
+          }
+          // this.subscribeToComments();
+          this.$toast.success("You have now joined this conversation!");
+          // this.subscribeToVote();
+        })
+        .catch(err => {});
+    },
+    leaveRoomForum(room) {
+      this.setRoom(room);
+      this.leaveRoom(this.currentRoom._id)
+        .then(data => {
+          if (data.graphQLErrors) {
+            this.$toast.error(data.graphQLErrors[0].message);
+            return;
+          }
+          this.$toast.success("You have now left the conversation!");
+        })
+        .catch(err => {});
+    },
+    isMyRoom(room) {
+      if (!this.getMyRooms) {
+        return false;
+      }
+      return this.getMyRooms.some(myRoom => myRoom._id == room._id);
+    },
+    initializeRooms() {
+      if (this.isAuthenticated) {
+        this.getAllMyRooms();
+      }
+      if (this.$route.query.state) {
+        this.getStateRooms_();
+        return;
+      }
+      this.getFedRooms();
+    },
+    fetchLGAs(stateID) {
+      const self = this;
+      this.$store
+        .dispatch("localGovernments", {
+          stateGovernmentID: stateID
+        })
+        .then(data => {
+          if (data.graphQLErrors) {
+            this.$toast.error(data.graphQLErrors[0].message);
+            this.loadingLGA = false;
+            return;
+          }
+          this.localGovt = this.getState(data, this.$route.query.id);
+        })
+        .catch(err => {});
+    },
+    getState(LGAS, id) {
+      let lga = LGAS.find(lga => {
+        return lga.id == id;
+      });
+      return lga ? lga.name : "";
+    },
+    listenForTopicChange() {
+      this.$apollo.addSmartSubscription("topicChange", {
+        query: gqlTopic.topicChange,
+        context: {
+          headers: {
+            Authorization: `Bearer ${this.getToken}`
+          }
+        },
+        result({ data }) {
+          this.initializeRooms();
+        }
+      });
     }
   },
   mounted() {
-    this.getRooms();
+    this.$eventBus.$on("topicChanged", () => {
+      this.initializeRooms();
+    });
+    this.listenForTopicChange();
+
+    if (this.$route.query.govt == "LGA" && this.$route.query.id) {
+      const stateID = this.$route.query.isOrigin
+        ? this.getUser.stateOfOrigin
+        : this.getUser.stateOfResidence;
+      this.fetchLGAs(stateID);
+    }
+    this.initializeRooms();
   }
 };
 </script>
 
 <style scoped>
-aside ul{
+.loader {
+  padding: 10px;
+  border-radius: 4px;
+  border-bottom: solid 1px #dee2e6;
+}
+
+.selected-tab {
+  color: black;
+  font-weight: bold;
+}
+.join-status {
+  background: white;
+  color: #07834e;
+  padding: 5px 13px;
+  display: none;
+  border: solid 1px #07834e;
+  width: 80px;
+  border-radius: 2px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+li.selected .join-status {
+  border: solid 1px white;
+  display: inline-flex;
+}
+
+li.selected:hover > .join-status {
+  display: inline-flex;
+}
+
+li:hover > .join-status {
+  display: inline-flex;
+}
+
+li .join-status:hover {
+  color: white;
+  background: #07834e;
+  border: solid 1px #07834e !important;
+}
+
+li .join-status:hover .chat-icon {
+  background-color: white;
+}
+
+aside ul {
   overflow-y: scroll;
   max-height: calc(100vh - (80px + 3rem));
 }
+
+div.group-list {
+  max-height: 550px;
+  overflow-y: scroll;
+}
+a li {
+  height: 55px;
+}
+
+a li:hover .room-name {
+  width: 70%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .scrollable {
   overflow-y: scroll;
   max-height: calc(100vh - 80px);
@@ -105,7 +489,18 @@ aside ul{
 }
 .selected {
   background: #dceee6;
-  border-left: solid 3px #07834e;
+  /* border-left: solid 3px #07834e; */
+  position: relative;
+}
+
+.selected:before {
+  content: "";
+  width: 3px;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: #07834e;
 }
 
 /* Groups end */
@@ -181,6 +576,16 @@ a {
   color: inherit;
   text-decoration: none;
 }
+
+.chat-icon {
+  mask: url("~assets/icons/chat-icon.svg");
+  mask-size: cover;
+  display: inline-block;
+  background-color: #07834e;
+  width: 12.57px;
+  height: 12px;
+}
+
 @media (min-width: 768px) {
   .forum-container {
     flex: 0 0 70%;

@@ -1,7 +1,8 @@
 <template>
   <div class="position-relative card-with-shadow pb-4">
     <info :info="information" />
-    <div class="card border-0">
+    <div class="card border-0 mx-auto mx-lg-0">
+      <!-- {{government}} -->
       <div
         class="background-img d-flex align-items-end"
         :style="{backgroundImage: `url(${imageURL})`}"
@@ -10,7 +11,7 @@
       </div>
       <div class="card-content py-4" style="padding-left: 20px; padding-right: 20px">
         <h3 class="pt-3 font-weight-bold">
-          <span>{{ title | capitalizeFirstLetter }}</span>
+          <span>{{ title == "LGA" ? localGovt : title | capitalizeFirstLetter }}</span>
           <a
             href="#"
             class="ml-1 position-relative"
@@ -30,7 +31,8 @@
           class="border-0 p-3 w-100"
           :to="link"
           style="background: #26B14F;"
-        >Join {{ title | capitalizeFirstLetter}}</nuxt-link>
+        >Join the discussion</nuxt-link>
+        <!-- Join {{ title == "LGA" ? localGovt : title  | capitalizeFirstLetter}} -->
       </div>
     </div>
   </div>
@@ -38,10 +40,11 @@
 
 
 <script>
+import { mapGetters, mapActions } from "vuex";
 import info from "~/components/Rooms/room-info";
 import imgURL from "~/assets/images/tanko.png";
 export default {
-  props: ["imageURL", "title", "link"],
+  props: ["imageURL", "title", "link", "localGovt"],
   components: {
     info
   },
@@ -65,7 +68,8 @@ export default {
             title: "Average judgement delivery rate (%)"
           }
         ]
-      }
+      },
+      government: {}
     };
   },
   filters: {
@@ -77,6 +81,41 @@ export default {
         })
         .join(" ");
     }
+  },
+  computed: {
+    ...mapGetters("user", ["getUser"])
+  },
+  methods: {
+    ...mapActions(["governmentByID", "governmentBySlug"]),
+    getRoomByGovernmentId(fedId) {
+      const stateId = this.$route.query.isOrigin
+        ? this.getUser.stateOfOrigin
+        : this.getUser.stateOfResidence;
+      const id = this.$route.query.state ? stateId : fedId;
+      this.governmentByID({ governmentID: id })
+        .then(data => {
+          if (data.graphQLErrors) {
+            this.$toast.error(data.graphQLErrors[0].message);
+            return;
+          }
+          this.government = data;
+        })
+        .catch(err => {});
+    },
+    getGovernmentBySlug() {
+      this.governmentBySlug({ slug: "FG" })
+        .then(data => {
+          if (data.graphQLErrors) {
+            this.$toast.error(data.graphQLErrors[0].message);
+            return;
+          }
+          this.getRoomByGovernmentId(data.id);
+        })
+        .catch(err => {});
+    }
+  },
+  mounted() {
+    this.getGovernmentBySlug();
   }
 };
 </script>

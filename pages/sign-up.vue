@@ -9,7 +9,7 @@
         </div>
         <div class="p-4">
           <div class="social-media-login px-3">
-            <googleButton @loggedInWithGoogle="authenticateGoogleUser" />
+            <googleButton @loggedInWithGoogle="authenticateGoogleUser" :disabled="loading"/>
             <facebookButton @loggedInWithFacebook="authenticateFacebookUser" :disabled="loading" />
           </div>
           <!-- <div class="g-signin2" data-onsuccess="onSignIn"></div> -->
@@ -378,22 +378,6 @@ export default {
           self.loading = false;
         });
     }
-  },
-  head() {
-    return {
-      meta: [
-        {
-          name: "google-signin-client_id",
-          content:
-            "769165313432-rq98o9410ntrgg2obvkhl86k82bueoq0.apps.googleusercontent.com"
-        }
-      ],
-      script: [
-        {
-          src: "https://apis.google.com/js/platform.js"
-        }
-      ]
-    };
   }
 };
 </script>

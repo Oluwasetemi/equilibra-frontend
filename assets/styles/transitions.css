@@ -27,7 +27,7 @@
 }
 
 .show-enter-active,
-.show-leave-active {
+.show-leave-active { 
   opacity: 1;
   transition: opacity 1s;
 }

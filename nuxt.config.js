@@ -51,13 +51,23 @@ export default {
       {
         src: "https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js",
         type: "text/javascript"
+<<<<<<< HEAD
       }
+=======
+      },
+      { src: "https://widget.cloudinary.com/v2.0/global/all.js" }
+>>>>>>> ff0194edfb51fbdd429a319634a0dd59781ece65
     ]
   },
   env: {
     googleClientID:
+<<<<<<< HEAD
       "769165313432-rq98o9410ntrgg2obvkhl86k82bueoq0.apps.googleusercontent.com",
     facebookAppID: "2310649132486818"
+=======
+      "832023611491-25tvnsvouh2a5rsghbmsuo39f09r7pae.apps.googleusercontent.com",
+    facebookAppID: "2419999161601918"
+>>>>>>> ff0194edfb51fbdd429a319634a0dd59781ece65
   },
   /*
    ** Customize the progress-bar color
@@ -72,10 +82,18 @@ export default {
    */
   plugins: [
     "~/plugins/",
+<<<<<<< HEAD
     { src: "~/plugins/fb-sdk.js", mode: "client" },
     { src: "~/plugins/vuex-persist", ssr: true },
     { src: "~/plugins/apollo.config.js", mode: "client" },
     { src: "~/plugins/apollo-overrides.js", mode: "client" },
+=======
+    // { src: '~/plugins/fb-sdk.js', mode: 'client' },
+    { src: "~/plugins/vuex-persist", mode: "client" },
+    { src: "~/plugins/apollo.config.js", mode: "client" },
+    { src: "~/plugins/apollo-overrides.js", mode: "client" },
+    { src: "~/plugins/vue-editor.js", ssr: false },
+>>>>>>> ff0194edfb51fbdd429a319634a0dd59781ece65
     { src: "~/plugins/vuelidate", mode: "client" },
     { src: "~/plugins/lazyload", mode: "client" },
     { src: "~plugins/filters.js", mode: "client" }
@@ -85,9 +103,17 @@ export default {
    */
   modules: [
     // Doc: https://bootstrap-vue.js.org/docs/
+<<<<<<< HEAD
     "bootstrap-vue/nuxt",
     "@nuxtjs/apollo",
     "@nuxtjs/toast"
+=======
+    'bootstrap-vue/nuxt',
+    '@nuxtjs/apollo',
+    '@nuxtjs/toast',
+    '@nuxtjs/moment'
+    // '@nuxtjs/auth'
+>>>>>>> ff0194edfb51fbdd429a319634a0dd59781ece65
   ],
 
   axios: {
@@ -97,6 +123,16 @@ export default {
   bootstrapVue: {
     bootstrapCSS: true,
     bootstrapVueCSS: false
+  },
+  auth: {
+    strategies: {
+      facebook: {
+        client_id: "2419999161601918",
+        userinfo_endpoint:
+          "https://graph.facebook.com/v2.12/me?fields=about,name,picture{url},email,birthday",
+        scope: ["public_profile", "email"]
+      }
+    }
   },
   /*
    ** Build configuration
@@ -113,7 +149,11 @@ export default {
     }
   },
   toast: {
+<<<<<<< HEAD
     position: "top-right",
+=======
+    position: "top-center",
+>>>>>>> ff0194edfb51fbdd429a319634a0dd59781ece65
     className: "toast",
     duration: 5000,
     register: [

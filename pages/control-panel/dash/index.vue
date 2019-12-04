@@ -90,15 +90,18 @@
 						<img src="~/assets/images/total-insurance-icon.svg" alt />
 						<div class="title ml-3 pt-4">Latest Comments</div>
 					</figure>
-					<ul style="padding-inline-start: 0;" class="px-3" v-if="adminStatistics.latestComments">
-						<li class="list-style-none py-3 border-bottom flex justify-content-between position-relative"
-						v-for="(comment, i) in adminStatistics.latestComments" :key="i">
-							<!-- {{comment}} -->
-						</li>
-            <li v-if="adminStatistics.latestComments.length===0" class="list-style-none py-3 border-bottom flex justify-content-between position-relative">
-              No Comments in the last month.              
-            </li>
-					</ul>
+					<figure
+            class="d-flex justify-content-between position-relative"
+            v-for="(comment, i) in recentComments" :key="i"
+          >
+            <div class="d-flex position-relative">
+              <img :src="comment.author.image" class="mt-4" style="width: 30px; height: 30px; border-radius: 100%;" alt />
+              <div>
+                <div class="title ml-3 pt-3">{{comment.comment}}</div>
+                <small class="ml-3">{{comment.author.fullName}}</small>
+              </div>
+            </div>
+          </figure>
 				
 				</div>
 			</div>
@@ -146,6 +149,13 @@ export default {
   },
   computed: {
   	...mapGetters('admin', ['adminStatistics', 'user']),
+    recentComments(){
+      let rec = [];
+      if(this.adminStatistics.latestComments){
+        rec = this.adminStatistics.latestComments.filter(e=>e.author.image);
+      }
+      return rec;
+    }
   },
   methods: {
 	  ...mapActions('admin', ['getAdminStatistics']),

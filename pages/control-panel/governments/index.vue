@@ -9,7 +9,6 @@
           </div>
         </div>
       </div>
-
       <div class="row">
         <div class="col-md-6 col-lg-3">
           <div class="position-relative card-with-shadow pb-4">
@@ -26,7 +25,7 @@
       <div class="row">
         <div
           class="col-md-5 row"
-          :class="isNewActive ? 'hidden':''"
+          :class="isUpdate ? 'hidden':''"
           style="padding-right: 0px !important;"
         >
           <div class="col-12 col-md-12" style="padding-right: 0px !important;">
@@ -37,9 +36,22 @@
                     <img src="~/assets/images/total-insurance-icon.svg" alt />
                     <div class="title ml-3 pt-4 font-weight-bold">Created Governments</div>
                   </div>
-                  <button class="add-btn" @click="openNewTopic()">
-                    <i class="ft-plus"></i>
-                  </button>
+                </figure>
+                <figure class="d-flex justify-content-between position-relative">
+                  <div class="d-flex position-relative"></div>
+                  <el-select
+                    v-model="filter"
+                    @change="changeFilter"
+                    class="border-danger"
+                    placeholder="Select"
+                  >
+                    <el-option
+                      v-for="(item, i) in filters"
+                      :key="i"
+                      :label="item.label"
+                      :value="item.value"
+                    ></el-option>
+                  </el-select>
                 </figure>
 
                 <figure
@@ -49,34 +61,25 @@
                 >
                   <div class="d-flex position-relative">
                     <img src="~/assets/images/total-insurance-icon.svg" alt />
-                    <div>
+                    <div style="text-transform: capitalize;">
                       <div class="title ml-3 pt-4">{{govt.name}}</div>
-                      <small class="ml-3">{{govt.description}}</small>
+                      <small class="ml-3">{{govt.leader}}</small>
                     </div>
                   </div>
                   <div>
-                    <button class="add-btn" @click="delete_admin(govt.id)" :disabled="loading">
-                      <i class="ft-trash-2" v-if="!loading"></i>
+                    <button class="add-btn active" @click="edit_govt(govt)" :disabled="loading">
+                      <i class="el-icon-edit" v-if="!loading"></i>
                       <span v-else class="spinner-grow"></span>
                     </button>
-                    <!-- <button
-                      class="add-btn"
-                      :class="admin.isSuspended?'suspended':'active'"
-                      @click="suspend_admin(admin._id, admin.isSuspended)"
-                      :disabled="loading"
-                    >
-                      <i :class="!admin.isSuspended?'ft-user-x':'ft-user-check'" v-if="!loading"></i>
-                      <span v-else class="spinner-grow"></span>
-                    </button> -->
                   </div>
                 </figure>
                 <div class="text-center">
                   <button class="add-btn" @click="previousPage" :disabled="loading||!hasPrevious">
-                    <i class="ft-arrow-left" v-if="!loading"></i>
+                    <i class="ft-chevron-left" v-if="!loading"></i>
                     <span v-else class="spinner-grow"></span>
                   </button>
                   <button class="add-btn active" @click="nextPage" :disabled="loading||!hasNext">
-                    <i class="ft-arrow-right" v-if="!loading"></i>
+                    <i class="ft-chevron-right" v-if="!loading"></i>
                     <span v-else class="spinner-grow"></span>
                   </button>
                 </div>
@@ -86,48 +89,306 @@
         </div>
 
         <!-- d-flex justify-content-between position-relative -->
-        <div class="col-md-7 row ml-lg-3" style="padding-right: 0px !important;" v-if="isNewActive">
+        <div
+          class="col-md-7 row ml-lg-3"
+          style="padding-right: 0px !important;"
+          v-if="$route.query.update"
+        >
           <div class="col-12 col-md-12" style="padding-right: 0px !important;">
             <div class="position-relative card-with-shadow pb-4">
               <div class="card text-left p-3 card4">
                 <figure class="d-flex justify-content-between position-relative">
                   <div class="d-flex position-relative">
                     <img src="~/assets/images/total-insurance-icon.svg" alt />
-                    <div class="title ml-3 pt-4">Create New Government</div>
+                    <div class="title ml-3 pt-4">Modify Government</div>
                   </div>
                   <button class="add-btn" @click="closeNewTopic()">
                     <i class="ft-x"></i>
                   </button>
                 </figure>
 
-                <form @submit.prevent="submitNewAdmin">
-                  <div class="form-group pt-3">
-                    <label for="title">Government Category</label>
-                    <input
-                      type="text"
-                      @focus="errorMessage=''"
-                      id="title"
-                      :class="{invalid: $v.govtPayload.categoryID.$error || errorMessage}"
-                      @blur="$v.govtPayload.categoryID.$touch()"
-                      class="form-control"
-                      v-model="govtPayload.categoryID"
-                      placeholder="Admin First Name"
-                    />
-                    <template v-if="$v.govtPayload.categoryID.$dirty">
-                      <p
-                        v-if="!$v.govtPayload.categoryID.required"
-                        class="invalid"
-                      >This field is required</p>
-                      <p
-                        v-else-if="!$v.govtPayload.categoryID.minLength"
-                        class="invalid"
-                      >Full Name should not be less than 5 characters</p>
-                    </template>
-                    <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
-                  </div>
+                <form @submit.prevent="submitGovt" v-if="isUpdate">
+                  <div class="row">
+                    <div class="col-12">
+                      <p>
+                        <b>Basic Information</b>
+                      </p>
+                      <hr />
+                    </div>
+                    <div class="form-group pt-3 col-12 col-md-6">
+                      <label for="title">Government Name</label>
+                      <el-input class="w-100" v-model="govtPayload.name"></el-input>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+                    <div class="form-group pt-3 col-12 col-md-6">
+                      <label for="title">Government Category</label>
+                      <el-select
+                        style="text-transform: capitalize;"
+                        class="w-100"
+                        v-model="govtPayload.category"
+                        @change="changedCategory"
+                      >
+                        <el-option
+                          style="text-transform: capitalize;"
+                          v-for="(item, i) in categories"
+                          :value="item.id"
+                          :key="i"
+                          :label="item.name.toUpperCase()"
+                        ></el-option>
+                      </el-select>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+                    <div class="form-group pt-3 col-12 col-md-6">
+                      <label for="title">Government Slogan</label>
+                      <el-input class="w-100" v-model="govtPayload.slogan"></el-input>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+                    <div class="form-group pt-3 col-12 col-md-6" v-if="viewStateGovt">
+                      <label for="title">State Government</label>
+                      <el-select class="w-100" v-model="govtPayload.stateGovernment">
+                        <el-option
+                          v-for="(govt, i) in stateGovts"
+                          :key="i"
+                          :label="govt.name"
+                          :value="govt.id"
+                        ></el-option>
+                      </el-select>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+                    <div class="form-group pt-3 col-12 col-md-12">
+                      <label for="title">Government Description</label>
+                      <vue-editor v-model="govtPayload.description"></vue-editor>
 
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+                  </div>
                   <div class="form-group pt-3">
-                    <button type="submit">Save</button>
+                    <el-button :loading="loading" native-type="submit">Next</el-button>
+                    <el-button :loading="loading" @click="goTo2" native-type="button">Skip</el-button>
+                  </div>
+                </form>
+
+                <!-- step two -->
+                <form v-if="isUpdateStep2" @submit.prevent="submitGovt()">
+                  <div class="row">
+                    <div class="col-12 mt-3">
+                      <p>
+                        <b>Leaders Information</b>
+                      </p>
+                      <hr />
+                    </div>
+                    <div class="form-group pt-3 col-12 col-md-5">
+                      <label for="title">Leader's Name</label>
+                      <el-input v-model="govtPayload.leader" class="w-100"></el-input>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+                    <div class="form-group pt-3 col-12 col-md-4">
+                      <label for="title">Upload Photo</label>
+                      <button type="button" @click="upload('leader')" class="ft-upload w-100"></button>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+                    <div class="form-group py-3 col-12 col-md-3">
+                      <img
+                        :src="govtPayload.leaderPhoto"
+                        class="rounded-circle img-thumbnail"
+                        alt
+                        srcset
+                      />
+                    </div>
+
+                    <div class="form-group pt-3 col-12 col-md-5" v-if="isFG">
+                      <label for="title">Senate President's Name</label>
+                      <el-input v-model="govtPayload.senatePresident" class="w-100"></el-input>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+                    <div class="form-group pt-3 col-12 col-md-4" v-if="isFG">
+                      <label for="title">Upload Photo</label>
+                      <button type="button" @click="upload('senate')" class="ft-upload w-100"></button>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+                    <div class="form-group py-3 col-12 col-md-3" v-if="isFG">
+                      <img
+                        :src="govtPayload.senatePresidentPhoto"
+                        class="rounded-circle img-thumbnail"
+                        alt
+                        srcset
+                      />
+                    </div>
+
+                    <div class="form-group pt-3 col-12 col-md-5">
+                      <label for="title">House Leader's Name</label>
+                      <el-input v-model="govtPayload.speaker" class="w-100"></el-input>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+                    <div class="form-group pt-3 col-12 col-md-4">
+                      <label for="title">Upload Photo</label>
+                      <button type="button" @click="upload('speaker')" class="ft-upload w-100"></button>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+                    <div class="form-group py-3 col-12 col-md-3">
+                      <img
+                        :src="govtPayload.speakerPhoto"
+                        class="rounded-circle img-thumbnail"
+                        alt
+                        srcset
+                      />
+                    </div>
+
+                    <div class="form-group pt-3 col-12 col-md-5">
+                      <label for="title">Chief Justice's Name</label>
+                      <el-input v-model="govtPayload.cjn" class="w-100"></el-input>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+                    <div class="form-group pt-3 col-12 col-md-4">
+                      <label for="title">Upload Photo</label>
+                      <button type="button" @click="upload('cjn')" class="ft-upload w-100"></button>
+                    </div>
+                    <div class="form-group py-3 col-12 col-md-3">
+                      <img
+                        :src="govtPayload.cjnPhoto"
+                        class="rounded-circle img-thumbnail"
+                        alt
+                        srcset
+                      />
+                    </div>
+
+                    <div class="form-group pt-3 pl-3">
+                      <el-button :loading="loading" @click="goTo1" native-type="button">Back</el-button>
+                      <el-button :loading="loading" @click="goTo3" native-type="button">Skip</el-button>
+                      <el-button :loading="loading" native-type="submit">Next</el-button>
+                    </div>
+                  </div>
+                </form>
+
+                <!-- step two -->
+                <form v-if="isUpdateStep3" @submit.prevent="submitGovt">
+                  <div class="row">
+                    <div class="col-12 mt-3">
+                      <p>
+                        <b>Government Area Information</b>
+                      </p>
+                      <hr />
+                    </div>
+
+                    <div class="form-group pt-3 col-6 col-md-3">
+                      <label for="title">Population</label>
+                      <el-input type="number" v-model="govtPayload.population" class="w-100"></el-input>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+                    <div class="form-group pt-3 col-6 col-md-3">
+                      <label for="title">Total LGAs</label>
+                      <el-input type="number" v-model="govtPayload.totalLg" class="w-100"></el-input>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+                    <div class="form-group pt-3 col-6 col-md-3">
+                      <label for="title">Ruling Party</label>
+                      <el-input class="w-100" v-model="govtPayload.rulingParty"></el-input>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+
+                    <div class="form-group pt-3 col-6 col-md-3">
+                      <label for="title">Constituencies</label>
+                      <el-input type="number" class="w-100" v-model="govtPayload.totalConstituency"></el-input>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+                    <div class="form-group pt-3 col-6 col-md-3">
+                      <label for="title">GDP per Head</label>
+                      <el-input class="w-100" v-model="govtPayload.gdpPerHead"></el-input>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+                    <div class="form-group pt-3 col-6 col-md-3">
+                      <label for="title">Unemployment Rate</label>
+                      <el-input type="number" class="w-100" v-model="govtPayload.unemploymentRate"></el-input>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+
+                    <div class="form-group pt-3 col-6 col-md-3">
+                      <label for="title">Literacy Rate</label>
+                      <el-input type="number" class="w-100" v-model="govtPayload.literacyRate"></el-input>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+                    <div class="form-group pt-3 col-6 col-md-3">
+                      <label for="title">Crime Rate</label>
+                      <el-input type="number" class="w-100" v-model="govtPayload.crimeRate"></el-input>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+                    <div class="form-group pt-3 col-6 col-md-3">
+                      <label for="title">Inflation Rate</label>
+                      <el-input type="number" class="w-100" v-model="govtPayload.inflationRate"></el-input>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+
+                    <div class="form-group pt-3 col-6 col-md-3">
+                      <label for="title">Infant Mortality</label>
+                      <el-input
+                        type="number"
+                        class="w-100"
+                        v-model="govtPayload.infantMortalityRate"
+                      ></el-input>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+                    <div class="form-group pt-3 col-6 col-md-3">
+                      <label for="title">Foreign Reserve</label>
+                      <el-input type="number" class="w-100" v-model="govtPayload.foreignReserve"></el-input>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+                    <div class="form-group pt-3 col-6 col-md-3">
+                      <label for="title">Power Generated</label>
+                      <el-input type="number" class="w-100" v-model="govtPayload.powerGenerated"></el-input>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+
+                    <div class="form-group pt-3 col-12 col-md-4">
+                      <label for="title">Budget Pass Rate</label>
+                      <el-input type="number" class="w-100" v-model="govtPayload.budgetPassDate"></el-input>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+
+                    <div class="form-group pt-3 col-12 col-md-4">
+                      <label for="title">Budget Performance Rate</label>
+                      <el-input
+                        type="number"
+                        class="w-100"
+                        v-model="govtPayload.budgetPerformanceRate"
+                      ></el-input>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+                    <div class="form-group pt-3 col-12 col-md-4">
+                      <label for="title">Budget Submission Rate</label>
+                      <el-input
+                        type="number"
+                        class="w-100"
+                        v-model="govtPayload.budgetSubmissionDate"
+                      ></el-input>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+                    <div class="form-group pt-3 col-12 col-md-4">
+                      <label for="title">Plenary Attendance Rate</label>
+                      <el-input
+                        type="number"
+                        class="w-100"
+                        v-model="govtPayload.plenaryAttendanceRate"
+                      ></el-input>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+                    <div class="form-group pt-3 col-12 col-md-4">
+                      <label for="title">Non-oil Contribution</label>
+                      <el-input
+                        type="number"
+                        class="w-100"
+                        v-model="govtPayload.nonOilSectorContributionToGDP"
+                      ></el-input>
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+
+                    <div class="form-group pt-3 pl-3 col-12">
+                      <el-button :loading="loading" @click="goTo2" native-type="button">Back</el-button>
+                      <el-button
+                        :loading="loading"
+                        @click.prevent="submitGovt"
+                        native-type="button"
+                      >Save and Exit</el-button>
+                    </div>
                   </div>
                 </form>
               </div>
@@ -149,13 +410,21 @@ export default {
       skip: 0,
       limit: 5,
       total: 1000,
-      pickerOptions: {
-        disabledDate(time) {
-          return time.getTime() < Date.now();
-        }
-      },
+      filter: "SG",
+      offices: [
+        { label: "President", slug: "president" },
+        { label: "Governor", slug: "governor" },
+        { label: "Senate President", slug: "senate-president" },
+        { label: "Speaker", slug: "speaker" },
+        { label: "Chief Justice", slug: "chief-justice" }
+      ],
+      filters: [
+        { value: "FG", label: "Federal Govts" },
+        { value: "SG", label: "State Govts" },
+        { value: "LG", label: "Loccal Govts" }
+      ],
       govtPayload: {
-        categoryID: "",
+        category: "",
         name: "",
         slogan: "",
         description: "",
@@ -163,27 +432,25 @@ export default {
         cjn: "",
         senatePresident: "",
         speaker: "",
-        totalLg: "",
-        population: "",
-        totalConstituency: "",
-        infantMortalityRate: "",
-        literacyRate: "",
-        unemploymentRate: ""
+        totalLg: 0,
+        population: 0,
+        totalConstituency: 0,
+        infantMortalityRate: 0,
+        literacyRate: 0,
+        unemploymentRate: 0,
+        crimeRate: 0
       },
-      
+
       dateRangeValue: "",
       errorMessage: "",
-      options: [
-        { name: "Vue.js", code: "vu" },
-        { name: "Javascript", code: "js" },
-        { name: "Open Source", code: "os" }
-      ],
-      loading: false
+      loading: false,
+      viewStateGovt: false,
+      stateGovts: []
     };
   },
   validations: {
     govtPayload: {
-      categoryID: {
+      category: {
         required,
         minLength: minLength(5)
       },
@@ -219,21 +486,72 @@ export default {
     }
   },
   computed: {
-    ...mapGetters("admin/data", ["governments"]),
-    isNewActive() {
-      return this.$route.query.new;
-    },
+    ...mapGetters("admin/data", ["governments", "categories"]),
     hasNext() {
-      return this.skip < this.total - this.limit;
+      return this.limit == this.governments.length;
     },
     hasPrevious() {
       return this.skip >= this.limit;
+    },
+    isUpdate() {
+      return this.$route.query.update && this.$route.query.stage == 1;
+    },
+    isUpdateStep2() {
+      return this.$route.query.update && this.$route.query.stage == 2;
+    },
+    isUpdateStep3() {
+      return this.$route.query.update && this.$route.query.stage == 3;
+    },
+    isFG() {
+      if (this.categories && this.govtPayload.category) {
+        return (
+          this.categories.find(e => e.id === this.govtPayload.category).slug ===
+          "FG"
+        );
+      } else {
+        return false;
+      }
+    },
+    isLG() {
+      if (this.categories && this.govtPayload.category) {
+        return (
+          this.categories.find(e => e.id === this.govtPayload.category).slug ===
+          "LG"
+        );
+      } else {
+        return false;
+      }
     }
   },
   methods: {
     ...mapActions("admin/data", [
-      "getAllGovts"
+      "getAllGovts",
+      "getCats",
+      "getStateGovts",
+      "createGovt"
     ]),
+    edit_govt(govt) {
+      console.log(govt);
+      this.govtPayload = { ...govt };
+      this.$router.push({ query: { update: govt.id, stage: 1 } });
+    },
+    async changedCategory() {
+      let catLg = this.categories.find(e => e.slug == "LG");
+      if (this.govtPayload.categoryID == catLg.id) {
+        this.stateGovts = await this.getAllGovts({
+          skip: 0,
+          limit: 37,
+          slug: "SG"
+        });
+        this.viewStateGovt = true;
+      } else {
+        this.viewStateGovt = false;
+      }
+    },
+    changeFilter() {
+      this.skip = 0;
+      this.getGovts();
+    },
     nextPage() {
       this.skip += this.limit;
       this.getGovts();
@@ -242,78 +560,119 @@ export default {
       this.skip -= this.limit;
       this.getGovts();
     },
-    openNewTopic() {
-      this.$router.push({ query: { new: true } });
+    goTo1() {
+      this.$router.push({
+        query: { update: this.$route.query.update, stage: 1 }
+      });
     },
-    disabledDate(date) {
-      console.log(date);
-      return date.getTime() > Date.now();
+    goTo2() {
+      this.$router.push({
+        query: { update: this.$route.query.update, stage: 2 }
+      });
     },
-    closeNewTopic() {
-      this.$router.push({ query: {} });
+    goTo3() {
+      this.$router.push({
+        query: { update: this.$route.query.update, stage: 3 }
+      });
     },
-    submitNewAdmin() {
+
+    upload(uploadFor) {
+      this.uploading = true;
+      var myWidget = cloudinary.createUploadWidget(
+        {
+          cloudName: "theequilibra",
+          uploadPreset: "ivdlrycr"
+        },
+        (error, result) => {
+          if (!error && result && result.event === "success") {
+            switch (uploadFor) {
+              case "leader":
+                this.govtPayload.leaderPhoto = result.info.secure_url;
+                this.updateIt();
+                break;
+              case "senate":
+                this.govtPayload.senatePresidentPhoto = result.info.secure_url;
+                this.updateIt();
+                break;
+              case "speaker":
+                this.govtPayload.speakerPhoto = result.info.secure_url;
+                this.updateIt();
+                break;
+              case "cjn":
+                this.govtPayload.cjnPhoto = result.info.secure_url;
+                this.updateIt();
+                break;
+            }
+          }
+        }
+      );
+      myWidget.open();
+    },
+    updateIt() {
+      let eazzy = { ...this.govtPayload };
+      console.log(eazzy);
+      delete eazzy.__typename;
+      delete eazzy.categoryID;
+      delete eazzy.totalStateConstituency;
       var ds = this;
       ds.loading = true;
-      ds.createAdmin(ds.adminPayload).then(data => {
+
+      Object.keys(eazzy).forEach(function(key) {
+        if (eazzy[key] === null) {
+          eazzy[key] = "";
+        }
+      });
+      if (!this.isLG) {
+        delete eazzy.stateGovernment;
+      }
+      ds.createGovt(eazzy).then(data => {
         this.loading = false;
         if (data.graphQLErrors) {
           this.$toast.error(data.graphQLErrors[0].message);
           return;
         }
-        this.$toast.error(data.successMessage);
       });
     },
-    suspend_admin(id, suspended) {
-      var message = !suspended
-        ? "This will permanently suspend this admin. Continue?"
-        : "This will reactivate this admin. Continue?";
+    closeNewTopic() {
+      this.$router.push({ query: {} });
+    },
+    submitGovt() {
+      let eazzy = { ...this.govtPayload };
+      console.log(eazzy);
+      delete eazzy.__typename;
+      delete eazzy.categoryID;
+      delete eazzy.totalStateConstituency;
       var ds = this;
-      this.$confirm(message, "Warning", {
-        confirmButtonText: "OK",
-        cancelButtonText: "Cancel",
-        type: "warning"
-      }).then(() => {
-        ds.loading = true;
-        return this.suspendAdmin({ suspended, adminId: id })
-          .then(data => {
-            this.loading = false;
-            if (data.graphQLErrors) {
-              this.$toast.error(data.graphQLErrors[0].message);
-              return;
-            }
-            this.$toast.error(data.successMessage);
-            this.getAdmins();
-          })
-          .catch(err => {
-            return (this.loading = false);
-          });
+      ds.loading = true;
+      ds.createGovt(eazzy).then(data => {
+        this.loading = false;
+        if (data.graphQLErrors) {
+          this.$toast.error(data.graphQLErrors[0].message);
+          return;
+        }
+        if (this.isUpdate) {
+          // go to update 2
+          this.$router.push({ query: { update: data.id, stage: 2 } });
+        }
+        if (this.isUpdateStep2) {
+          // go to update 3
+          this.$router.push({ query: { update: data.id, stage: 3 } });
+        }
+        if (this.isUpdateStep3) {
+          // close editing pane
+          this.$router.push({ query: {} });
+        }
       });
     },
 
-    delete_admin(id) {
-      var message = "This will permanently delete this admin. Continue?";
-      var ds = this;
-      this.$confirm(message, "Warning", {
-        confirmButtonText: "OK",
-        cancelButtonText: "Cancel",
-        type: "warning"
-      }).then(async () => {
-        ds.loading = true;
-        ds.deleteAdmin({ adminId: id }).then(data => {
-          this.loading = false;
-          if (data.graphQLErrors) {
-            this.$toast.error(data.graphQLErrors[0].message);
-            return;
-          }
-          this.$toast.error(data.successMessage);
-        });
-      });
-    },
     getGovts() {
       this.loading = true;
       let self = this;
-      this.getAllGovts({skip: self.skip, limit: self.limit})
+      this.getAllGovts({
+        skip: self.skip,
+        limit: self.limit,
+        slug: this.filter
+      })
         .then(data => {
           this.loading = false;
           if (data.graphQLErrors) {
@@ -324,10 +683,31 @@ export default {
         .catch(err => {
           this.loading = false;
         });
+    },
+    getCategories() {
+      this.loading = true;
+      let self = this;
+      this.getCats()
+        .then(data => {
+          this.loading = false;
+          if (data.graphQLErrors) {
+            this.$toast.error(data.graphQLErrors[0].message);
+            return;
+          }
+          this.govtPayload.categoryID = this.categories[0].id;
+        })
+        .catch(err => {
+          this.loading = false;
+        });
     }
   },
   created() {
+    if (this.$route.query.update) {
+      let id = this.$route.query.update;
+      this.govtPayload = { ...this.governments.find(e => e.id === id) };
+    }
     this.getGovts();
+    this.getCategories();
   }
 };
 </script>
@@ -400,6 +780,11 @@ h5 {
   padding-bottom: 18px;
 }
 
+.img-thumbnail {
+  height: 70px;
+  width: 70px;
+}
+
 th {
   font-size: 14px;
   letter-spacing: 0.2px;
@@ -445,7 +830,6 @@ button.active {
   background: #f58634 !important;
   color: #fff !important;
 }
-
 button:focus {
   outline: 0;
   box-shadow: none;
@@ -456,6 +840,7 @@ button.add-btn {
   width: 60px;
   height: 60px;
   font-size: 18px;
+  line-height: 60px;
   border: solid 1px #f58634;
 }
 button.add-btn:hover,

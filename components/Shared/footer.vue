@@ -14,10 +14,10 @@
             </div>
             <div class="row">
               <div class="col-md-7 pb-5">
-                <a href class="mr-4">
+                <a href="https://play.google.com/store/apps/details?id=com.theequilibra" class="mr-4">
                   <img src="~assets/icons/play-store-icon.svg" alt class="mb-2" />
                 </a>
-                <a href>
+                <a href="https://itunes.apple.com/us/app/the-equilibra/id1109228587">
                   <img src="~assets/icons/app-store-icon.svg" alt class="mb-2" />
                 </a>
               </div>
@@ -48,16 +48,16 @@
                   <h6>COMPANY</h6>
                   <ul class="py-2 px-0">
                     <li>
-                      <a href>Home</a>
+                      <nuxt-link to="/" class="footer-link">Home</nuxt-link>
                     </li>
                     <li>
-                      <a href>Partner With Us</a>
+                       <nuxt-link to="/contact-us" class="footer-link">Partner With Us</nuxt-link>
                     </li>
                     <li>
                       <a href>About Us</a>
                     </li>
                     <li>
-                      <a href>Contact Us</a>
+                      <nuxt-link to="/contact-us" class="footer-link">Contact Us</nuxt-link>
                     </li>
                   </ul>
                 </div>
@@ -76,13 +76,13 @@
                   <h6>SOCIAL</h6>
                   <ul class="py-2 px-0">
                     <li>
-                      <a href>Facebook</a>
+                      <a href="https://facebook.com/TheEquilibra">Facebook</a>
                     </li>
                     <li>
-                      <a href>Twitter</a>
+                      <a href="https://facebook.com/theequilibra">Twitter</a>
                     </li>
                     <li>
-                      <a href>Instagram</a>
+                      <a href="https://facebook.com/TheEquilibra">Instagram</a>
                     </li>
                   </ul>
                 </div>
@@ -115,6 +115,12 @@
     </section>
   </div>
 </template>
+
+<script>
+export default {
+ 
+}
+</script>
 
 <style scoped>
 .main-container {

@@ -9,11 +9,29 @@
     </div>
     <p>Are you sure you want to delete this message?</p>
     <div class="buttons d-flex justify-content-between">
-      <button class="delete">Delete</button>
-      <button class="cancel">Cancel</button>
+      <button class="delete" @click="deleteComment()">Delete</button>
+      <button
+          type="submit"
+          class="cancel d-flex align-items-center justify-content-center"
+          :disabled="loading"
+        >
+          <div class="spinner-grow text-success" v-if="loading"></div>
+          <span>Cancel</span>
+        </button>
     </div>
   </div>
 </template>
+
+<script>
+export default {
+  props: ['loading'],
+  methods:  {
+    deleteComment() {
+      this.$emit('deleteComment')
+    }
+  }
+}
+</script>
 
 <style scoped>
 .dropdown-menu {

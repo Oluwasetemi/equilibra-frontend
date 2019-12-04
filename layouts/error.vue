@@ -35,7 +35,7 @@
                 <a class="nav-link" href="#">Blog</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Contact Us</a>
+                <nuxt-link to="/contact-us" class="nav-link">Contact Us</nuxt-link>
               </li>
               <li class="nav-item ml-lg-4">
                 <div class="dropdown" style="background: white;" v-if="isAuthenticated">
@@ -92,7 +92,7 @@
 
 
 <script>
-import avatar from "~/assets/images/avatar.png";
+import avatar from "~/assets/images/avatar.svg";
 import { mapActions, mapGetters } from "vuex";
 export default {
   data() {

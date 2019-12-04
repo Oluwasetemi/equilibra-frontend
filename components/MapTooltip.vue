@@ -38,14 +38,14 @@
 export default {
   computed: {
     government() {
-      return this.$store.getters["home/currentGovernment"];
+      return this.$store.getters["currentGovernment"];
     },
     governmentLink() {
-      return this.$store.getters["home/currentGovernment"].name
-        ? `/state/${
-            this.$store.getters["home/currentGovernment"].name.split(" ")[0]
+      return this.$store.getters["currentGovernment"].name
+        ? `/state?id=${
+            this.$store.getters["currentGovernment"].name.split(" ")[0]
           }`
-        : "/state/abia";
+        : "/state?id=abia";
     }
   },
   filters: {

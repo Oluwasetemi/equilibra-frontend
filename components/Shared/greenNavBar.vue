@@ -1,9 +1,10 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-light d-flex justify-space-between px-lg-4">
-    <signUpModal />
-    <div class="container">
-      <nuxt-link to="/" class="navbar-brand ml-lg-2">
-        <img src="~/assets/icons/logo.svg" alt />
+    <!-- <signUpModal /> -->
+    <!-- <ChangeTopicModal :currentRoom="currentRoom" /> -->
+    <div class="container h-100">
+      <nuxt-link to="/" class="navbar-brand ml-lg-2 h-100">
+        <img src="~/assets/icons/logo.svg" alt class="h-100" />
       </nuxt-link>
 
       <button
@@ -20,7 +21,7 @@
 
       <div
         class="collapse navbar-collapse d-lg-flex justify-content-md-end"
-      id="navbarSupportedContent"
+        id="navbarSupportedContent"
       >
         <ul class="navbar-nav">
           <li class="nav-item">
@@ -34,40 +35,41 @@
             <a class="nav-link" href="#">Blog</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Contact Us</a>
+            <nuxt-link to="/contact-us" class="nav-link">Contact Us</nuxt-link>
           </li>
-          <li class="nav-item ml-lg-4">
-            <div class="dropdown" style="background: white;" v-if="isAuthenticated">
-              <a
-                href="#"
-                class="dropdown-toggle d-flex align-items-center m-0"
-                id="dropdownMenuButton"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
-              >
-                <img :src="getUser.image || avatar" alt height="38px" class="mr-1 avatar" />
-                <div
-                  class="inline-block px-2 user-name"
-                  style="color: black"
-                >{{ getUser.username || getUser.fullName}}</div>
-                <img
-                  src="~assets/icons/thin-downward-arrow.svg"
-                  alt
-                  class="position-relative"
-                  style="left: 8px;"
-                />
-              </a>
-              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <nuxt-link class="dropdown-item" to="/account-settings">Account Settings</nuxt-link>
-                <a class="dropdown-item" href="#">Feedback</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#" @click.stop="logoutUser()">Logout</a>
+          <no-ssr>
+            <li class="nav-item ml-lg-4">
+              <div class="dropdown" style="background: white;" v-if="isAuth">
+                <a
+                  href="#"
+                  class="dropdown-toggle d-flex align-items-center m-0"
+                  id="dropdownMenuButton"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  <img :src="getUser.image || avatar" alt height="38px" class="mr-1 avatar" />
+                  <div
+                    class="inline-block px-2 user-name"
+                    style="color: black"
+                  >{{ getUser.username || getUser.fullName}}</div>
+                  <img
+                    src="~assets/icons/thin-downward-arrow.svg"
+                    alt
+                    class="position-relative"
+                    style="left: 8px;"
+                  />
+                </a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <nuxt-link class="dropdown-item" to="/account-settings">Account Settings</nuxt-link>
+                  <a class="dropdown-item" href="#">Feedback</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="#" @click.stop="logoutUser()">Logout</a>
+                </div>
               </div>
-            </div>
-            <button class="btn" data-toggle="modal" data-target="#signUpModal" v-else>Join Us</button>
-            <!-- <nuxt-link to="/sign-up" tag="button" class="btn"></nuxt-link> -->
-          </li>
+              <button class="btn" data-toggle="modal" data-target="#signUpModal" v-else>Join Us</button>
+            </li>
+          </no-ssr>
         </ul>
       </div>
     </div>
@@ -76,21 +78,27 @@
 
 
 <script>
-import avatar from "~/assets/images/avatar.png";
+import Cookie from 'js-cookie'
+import avatar from "~/assets/images/avatar.svg";
 import { mapActions, mapGetters } from "vuex";
+import ChangeTopicModal from "~/components/Rooms/change-topic";
 import signUpModal from "~/components/Authentication/sign-up";
 export default {
   data() {
     return {
       avatar
-    }
+    };
   },
   components: {
-    signUpModal
+    signUpModal,
+    ChangeTopicModal
   },
   computed: {
-    ...mapGetters("auth", ["isAuthenticated","user"]),
-    ...mapGetters("user", ["getUser"])
+    ...mapGetters("auth", ["isAuthenticated", "user"]),
+    ...mapGetters("user", ["getUser"]),
+    isAuth() {
+      return Cookie.get('EQUI_AUTH') ? true : false
+    }
   },
   methods: {
     ...mapActions("auth", ["logout"]),

@@ -1,6 +1,6 @@
 <template>
   <div id="gSignInWrapper">
-    <button class="d-block w-100 google py-2 px-4 border-0" ref="googleBtn">
+    <button class="d-block w-100 google py-2 px-4 border-0" ref="googleBtn" :disabled="disabled">
       <img src="~/assets/icons/google-icon.svg" alt class="float-left" />
       <span ref="googleTxt">Use Google Account</span>
     </button>
@@ -12,6 +12,7 @@
 var googleUser = {};
 import { mapActions, mapGetters } from "vuex";
 export default {
+  props: ["disabled"],
   mounted() {
     this.startApp();
   },
@@ -34,7 +35,7 @@ export default {
       );
     },
     startApp() {
-    this.$refs.googleBtn;
+      this.$refs.googleBtn;
       const self = this;
       gapi.load("auth2", function() {
         // Retrieve the singleton for the GoogleAuth library and set up the client.

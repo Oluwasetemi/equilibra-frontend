@@ -6,33 +6,10 @@
 </template>
 
 <script>
-window.fbAsyncInit = function() {
-  FB.init({
-    appId: process.env.facebookAppID,
-    cookie: true,
-    xfbml: true,
-    version: "v2.9"
-  });
-
-  FB.AppEvents.logPageView();
-};
-
-(function(d, s, id) {
-  var js,
-    fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) {
-    return;
-  }
-  js = d.createElement(s);
-  js.id = id;
-  js.src = "https://connect.facebook.net/en_US/sdk.js";
-  fjs.parentNode.insertBefore(js, fjs);
-})(document, "script", "facebook-jssdk");
-</script>
-<script>
 export default {
   methods: {
     checkFBLoginStatus() {
+      // this.$auth.loginWith('facebook')
       const self = this;
       FB.login(
         function(response) {
@@ -51,6 +28,9 @@ export default {
         }
       );
     }
+  },
+  created(){
+    
   },
   head() {
     return {

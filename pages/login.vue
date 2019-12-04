@@ -124,7 +124,7 @@ export default {
     payload: {
       username: {
         required,
-        minLength: minLength(6)
+        minLength: minLength(2)
       },
       password: {
         required,

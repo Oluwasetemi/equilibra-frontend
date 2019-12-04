@@ -1,97 +1,196 @@
-import gql from 'graphql-tag'
+import gql from "graphql-tag";
 
 export default {
-  allAdmins: gql `query fetchUsers($type: type!, $limit: Int, $skip: Int){
-    fetchUsers(userType: $type, limit: $limit, skip: $skip){
-      edges {
-        role
-        fullName
-        username
-        email
-        isSuspended
-        _id
-      }
-      pageInfo {
-        totalCount
-        hasNextPage
+  allAdmins: gql`
+    query fetchUsers($type: type!, $limit: Int, $skip: Int) {
+      fetchUsers(userType: $type, limit: $limit, skip: $skip) {
+        edges {
+          role
+          fullName
+          username
+          email
+          isSuspended
+          _id
+        }
+        pageInfo {
+          totalCount
+          hasNextPage
+        }
       }
     }
-  }`,
+  `,
 
-  allReports: gql `query fetchReportedComments{
-    fetchReportedComments{
-      comment
-      topic{
+  allGovernments: gql`
+    query allGovernmentBasedOnCategory($slug: categoryEnum!) {
+      allGovernmentBasedOnCategory(slug: $slug) {
+        id
+        name
+        category
+        stateGovernment
+        description
+        slogan
+        slug
+        cjn
+        speaker
+        leader
+        senatePresident
+        totalLg
+        population
+        totalConstituency
+        infantMortalityRate
+        foreignReserve
+        crimeRate
+        inflationRate
+        budgetPerformanceRate
+        budgetPassDate
+        budgetSubmissionDate
+        plenaryAttendanceRate
+        gdpPerHead
+        powerGenerated
+        literacyRate
+        unemploymentRate
+        nonOilSectorContributionToGDP
+        rulingParty
+        touristAttractionCenters
+        agriculture
+        mineralResources
+        museumsAndParks
+        createdAt
+        updatedAt
+      }
+    }
+  `,
+
+  allTopics: gql`
+    query fetchTopics($query: topicFilter, $limit: Int, $skip: Int) {
+      fetchTopics(query: $query, limit: $limit, skip: $skip) {
+        edges {
+          _id
+          title
+          description
+          rooms {
+            _id
+          }
+          isClosed
+          createdBy {
+            fullName
+            image
+          }
+        }
+        pageInfo {
+          totalCount
+        }
+      }
+    }
+  `,
+
+  allRooms: gql`
+    query fetchRooms($cursor: String, $limit: Int, $skip: Int) {
+      fetchRooms(cursor: $cursor, limit: $limit, skip: $skip) {
+        edges {
+          _id
+          name
+        }
+      }
+    }
+  `,
+
+  allReports: gql`
+    query fetchReportedComments($limit: Int, $skip: Int) {
+      fetchReportedComments(limit: $limit, skip: $skip) {
+        edges {
+          comment
+          _id
+          reporter {
+            fullName
+            _id
+            image
+          }
+          author {
+            fullName
+            _id
+            image
+          }
+          reports {
+            report
+            reporter {
+              fullName
+              _id
+              image
+            }
+          }
+          likes
+          report
+          image
+        }
+        pageInfo {
+          hasNextPage
+          totalCount
+        }
+      }
+    }
+  `,
+
+  removeComment: gql`
+    mutation deleteComment($commentId: ID!) {
+      deleteComment(commentId: $commentId) {
+        successMessage
+      }
+    }
+  `,
+
+  removeUser: gql`
+    mutation suspendUser($id: ID!) {
+      suspendUser(id: $id) {
+        successMessage
+      }
+    }
+  `,
+
+  createTopic: gql`
+    mutation scheduleTopic($topic: topicInputType!) {
+      scheduleTopic(topic: $topic) {
         _id
         title
-        createdBy{
-          fullName
-          image
+        rooms {
+          _id
+        }
+        description
+        isClosed
+        startDate
+        createdBy {
           _id
         }
       }
-      author{
-        fullName
-        image
-        _id
-      }
-      reporter{
-        fullName
-        image
-        _id
-      }
-      _id
     }
-  }`,
+  `,
 
-  allTopics: gql `query fetchTopics($limit: Int, $skip: Int){
-    fetchTopics(limit: $limit, skip: $skip){
-      edges {
+  updateTopic: gql`
+    mutation updateTopic($topic: topicInputType!, $topicId: darangiGraphId!) {
+      updateTopic(topic: $topic, topicId: $topicId) {
         _id
         title
+        rooms
         closeDate
         startDate
         isClosed
         createdBy {
-          fullName
-          image
+          _id
         }
       }
-      pageInfo {
-        totalCount
+    }
+  `,
+
+  deleteTopic: gql`
+    mutation deleteTopic($topicId: darangiGraphId!) {
+      deleteTopic(topicId: $topicId) {
+        successMessage
       }
     }
-  }`,
+  `,
 
-  allRooms: gql `query fetchRooms($cursor: String, $limit: Int, $skip: Int){
-    fetchRooms(cursor: $cursor, limit: $limit, skip: $skip){
-      edges {
-        _id
-        name
-        government
-        roomType
-      }
-      pageInfo {
-        totalCount
-        hasNextPage
-      }
-    }
-  }`,
-
-  createTopic: gql `mutation createTopic($topic: topicInputType!) {
-    createTopic(topic: $topic) {
-      _id
-      title
-      closeDate
-      startDate
-      isClosed
-      createdBy {
-        _id
-      }
-    }
-  }`,
-
-  create: gql `mutation createAdmin($adminInput: createAdmin!) {
+  create: gql`
+    mutation createAdmin($adminInput: createAdmin!) {
       createAdmin(adminInput: $adminInput) {
         role
         fullName
@@ -100,54 +199,64 @@ export default {
         isSuspended
         _id
       }
-    }`,
-
-  suspend: gql `mutation suspendAdmin($adminId: ID!) {
-    suspendAdmin(id: $adminId) {
-      role
-      fullName
-      username
-      email
-      successMessage
-      isSuspended
-      _id
     }
-  }`,
+  `,
 
-  reactivate: gql `mutation reactiveAdmin($adminId: ID!) {
-    reactiveAdmin(id: $adminId) {
-      role
-      fullName
-      username
-      email
-      successMessage
-      isSuspended
-      _id
-    }
-  }`,
-
-  delete: gql `mutation deleteAdmin($adminId: ID!) {
-	  deleteAdmin(id: $adminId) {
-      successMessage
-	  }
-  }`,
-  
-  statistics: gql `query adminDashboard{
-    adminDashboard{
-      usersCount
-      adminsCount
-      commentCount
-      latestComments{
-        comment
-        author{
-         fullName
-          username
-          _id
-        }
+  suspend: gql`
+    mutation suspendAdmin($adminId: ID!) {
+      suspendAdmin(id: $adminId) {
+        role
+        fullName
+        username
+        email
+        successMessage
+        isSuspended
+        _id
       }
-      lastMonthComments
-      topicsCount
-      roomsCount
     }
-  }`
-}
+  `,
+
+  reactivate: gql`
+    mutation reactiveAdmin($adminId: ID!) {
+      reactiveAdmin(id: $adminId) {
+        role
+        fullName
+        username
+        email
+        successMessage
+        isSuspended
+        _id
+      }
+    }
+  `,
+
+  delete: gql`
+    mutation deleteAdmin($adminId: ID!) {
+      deleteAdmin(id: $adminId) {
+        successMessage
+      }
+    }
+  `,
+
+  statistics: gql`
+    query adminDashboard {
+      adminDashboard {
+        usersCount
+        adminsCount
+        commentCount
+        latestComments {
+          comment
+          author {
+            fullName
+            username
+            image
+            _id
+          }
+        }
+        lastMonthComments
+        topicsCount
+        roomsCount
+      }
+    }
+  `
+};

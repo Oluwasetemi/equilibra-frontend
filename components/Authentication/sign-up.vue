@@ -48,6 +48,7 @@ import { mapActions, mapGetters } from "vuex";
 import googleButton from "~/components/Shared/googleButton";
 import facebookButton from "~/components/Shared/facebookButton";
 export default {
+  props: ["showModal"],
   data() {
     return {
       loading: false
@@ -98,9 +99,9 @@ export default {
       self.loading = true;
       this.loginWIthFacebook({ accessToken: token })
         .then(user => {
+          this.loading = false;
           if (user.graphQLErrors) {
             this.errorMessage = user.graphQLErrors[0].message;
-            this.loading = false;
             return;
           }
           self.checkUser(user);

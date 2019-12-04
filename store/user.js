@@ -1,4 +1,4 @@
-import gql from '~/apollo/user';
+import gql from '~/apollo/user/user';
 
 export default {
   state: () => ({
@@ -49,7 +49,7 @@ export default {
           }
         })
         .then(({ data }) => {
-          commit('setUser', data.updateProfile.user);
+          commit('setUser', data.updateProfile);
           return data.updateProfile;
         })
         .catch(err => {
@@ -68,12 +68,12 @@ export default {
           }
         })
         .then(({ data }) => {
-          commit('setUser', data.updateResidence.user);
+          commit('setUser', data.updateResidence);
           return data.updateResidence;
         })
         .catch(err => {
           return err;
         });
     }
-  }
+  },
 };
