@@ -281,7 +281,6 @@ export default {
           }
         ],
         watchLoading(isLoading, countModifier) {
-          // debugger
           isLoading
             ? (this.loadingComments = true)
             : (this.loadingComments = false);

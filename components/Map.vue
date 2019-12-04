@@ -515,7 +515,6 @@ export default {
         .catch(err => {});
     },
     setActiveState(e) {
-      console.log(e)
       this.$store.dispatch("resetCurrentGovernment");
       const slug = e.currentTarget.dataset.code;
       if (this.activeState == slug) {
