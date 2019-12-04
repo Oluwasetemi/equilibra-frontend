@@ -17,7 +17,7 @@ test_server:
     - mkdir -p ~/.ssh
       # Prevent ssh public key confirmation
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-      # Install dependencies
-    - npm install
+      # Install dependencie
       # Copy (Synchronize) the files to the deployed server
-    - rsync -avrc --delete --exclude=.env "$PWD/" root@test.natterbase.com:/var/www/html/equilibra_frontend/
+    - rsync -avrc --delete --exclude=node_modules "$PWD/" root@test.natterbase.com:/var/www/html/equilibra_frontend/
+    - ssh root@$SERVER_IP "cd /var/www/html/equilibra_frontend/; npm install; pm2 restart equilibra-frontend"
