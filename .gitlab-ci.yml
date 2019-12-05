@@ -15,9 +15,10 @@ test_server:
     - ssh-add <(echo "$SSH_PRIVATE_KEY")
       # Create the .ssh folder
     - mkdir -p ~/.ssh
+    - npm install
+    - npm run generate
       # Prevent ssh public key confirmation
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
       # Install dependencie
       # Copy (Synchronize) the files to the deployed server
     - rsync -avrc --delete --exclude=node_modules "$PWD/" root@test.natterbase.com:/var/www/html/equilibra_frontend/
-    - ssh root@$SERVER_IP "cd /var/www/html/equilibra_frontend/; /root/.nvm/versions/node/v12.13.1/bin/npm install;"
