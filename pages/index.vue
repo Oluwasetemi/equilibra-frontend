@@ -1,44 +1,57 @@
 <template>
   <div class="main-container">
     <div class="container-fluid px-0 header">
-       <header class="pt-4 px-md-5">
-          <nav class="navbar navbar-expand-lg navbar-light d-flex justify-space-between px-md-0">
-            <nuxt-link to="/" class="navbar-brand pl-2">
-              <img src="~/assets/icons/logo.svg" alt style="top: -20px;" class="position-lg-absolute"/>
-            </nuxt-link>
-            <button
-              class="navbar-toggler"
-              type="button"
-              data-toggle="collapse"
-              data-target="#navbarSupportedContent"
-              aria-controls="navbarSupportedContent"
-              aria-expanded="false"
-              aria-label="Toggle navigation"
-            >
-              <span class="navbar-toggler-icon"></span>
-            </button>
+      <header class="pt-4 px-md-5">
+        <nav
+          class="navbar navbar-expand-lg navbar-light d-flex justify-space-between px-md-0"
+        >
+          <nuxt-link to="/" class="navbar-brand pl-2">
+            <img
+              src="~/assets/icons/logo.svg"
+              alt
+              style="top: -20px;"
+              class="position-lg-absolute"
+            />
+          </nuxt-link>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
 
-            <div
-              class="collapse navbar-collapse d-lg-flex justify-content-md-end"
-              id="navbarSupportedContent"
-            >
-              <ul class="navbar-nav">
-                <li class="nav-item">
-                  <nuxt-link to="/" class="nav-link">Home</nuxt-link>
-                  <!-- <a class="" href="#"></a> -->
-                </li>
-                <li class="nav-item">
-                  <nuxt-link to="/forums" class="nav-link">Forums</nuxt-link>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#">Blog</a>
-                </li>
-                <li class="nav-item">
-                  <nuxt-link to="/contact-us" class="nav-link">Contact Us</nuxt-link>
-                </li>
-                <no-ssr>
+          <div
+            class="collapse navbar-collapse d-lg-flex justify-content-md-end"
+            id="navbarSupportedContent"
+          >
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <nuxt-link to="/" class="nav-link">Home</nuxt-link>
+                <!-- <a class="" href="#"></a> -->
+              </li>
+              <li class="nav-item">
+                <nuxt-link to="/forums" class="nav-link">Forums</nuxt-link>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Blog</a>
+              </li>
+              <li class="nav-item">
+                <nuxt-link to="/contact-us" class="nav-link"
+                  >Contact Us</nuxt-link
+                >
+              </li>
+              <no-ssr>
                 <li class="nav-item ml-lg-4">
-                  <div class="dropdown" style="background: white;" v-if="isAuthenticated">
+                  <div
+                    class="dropdown"
+                    style="background: white;"
+                    v-if="isAuth"
+                  >
                     <a
                       href="#"
                       class="dropdown-toggle d-flex align-items-center m-0"
@@ -47,11 +60,18 @@
                       aria-haspopup="true"
                       aria-expanded="false"
                     >
-                      <img :src="getUser.image || avatar" alt height="38px" class="mr-1 avatar" />
+                      <img
+                        :src="getUser.image || avatar"
+                        alt
+                        height="38px"
+                        class="mr-1 avatar"
+                      />
                       <div
                         class="inline-block px-2 user-name"
                         style="color: black"
-                      >{{getUser.username || getUser.fullName}}</div>
+                      >
+                        {{ getUser.username || getUser.fullName }}
+                      </div>
                       <img
                         src="~assets/icons/thin-downward-arrow.svg"
                         alt
@@ -59,35 +79,62 @@
                         style="left: 8px;"
                       />
                     </a>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                      <nuxt-link class="dropdown-item" to="account-settings">Account Settings</nuxt-link>
+                    <div
+                      class="dropdown-menu"
+                      aria-labelledby="dropdownMenuButton"
+                    >
+                      <nuxt-link class="dropdown-item" to="account-settings"
+                        >Account Settings</nuxt-link
+                      >
                       <a class="dropdown-item" href="#">Feedback</a>
                       <div class="dropdown-divider"></div>
-                      <a class="dropdown-item" href="#" @click.stop="logoutUser()">Logout</a>
+                      <a
+                        class="dropdown-item"
+                        href="#"
+                        @click.stop="logoutUser()"
+                        >Logout</a
+                      >
                     </div>
                   </div>
-                  <nuxt-link to="/sign-up" tag="button" class="btn" v-else>Join Us</nuxt-link>
+                  <nuxt-link to="/sign-up" tag="button" class="btn" v-else
+                    >Join Us</nuxt-link
+                  >
                 </li>
-                </no-ssr>
-              </ul>
-            </div>
-          </nav>
-        </header>
+              </no-ssr>
+            </ul>
+          </div>
+        </nav>
+      </header>
       <div class="container">
-       
         <div class="row">
           <div class="col-md-5 d-flex align-items-md-center">
             <div class="hero-text">
               <h1 class="font-weight-bold pt-3">The People’s Parliament!</h1>
-              <h5
-                class="pt-3"
-              >Forum for the people to discuss issues of common interest in the community, constructively.</h5>
+              <h5 class="pt-3">
+                Forum for the people to discuss issues of common interest in the
+                community, constructively.
+              </h5>
               <div class="pt-4">
-                 <a href="https://play.google.com/store/apps/details?id=com.theequilibra" target="_blank"  class="mr-4">
-                  <img src="~assets/icons/play-store-icon.svg" alt class="mb-2" />
+                <a
+                  href="https://play.google.com/store/apps/details?id=com.theequilibra"
+                  target="_blank"
+                  class="mr-4"
+                >
+                  <img
+                    src="~assets/icons/play-store-icon.svg"
+                    alt
+                    class="mb-2"
+                  />
                 </a>
-                <a href="https://itunes.apple.com/us/app/the-equilibra/id1109228587" target="_blank" >
-                  <img src="~assets/icons/app-store-icon.svg" alt class="mb-2" />
+                <a
+                  href="https://itunes.apple.com/us/app/the-equilibra/id1109228587"
+                  target="_blank"
+                >
+                  <img
+                    src="~assets/icons/app-store-icon.svg"
+                    alt
+                    class="mb-2"
+                  />
                 </a>
               </div>
             </div>
@@ -126,9 +173,10 @@
           <section class="pb-4 pb-md-0 mb-5 mb-md-0">
             <h3 class="pb-2">Who we are</h3>
             <p>
-              We are positively minded Nigerians, committed to unity and to encouraging fairness,
-              just and equitable life, resulting collective progress and greatness for our country
-              and humanity in general.
+              We are positively minded Nigerians, committed to unity and to
+              encouraging fairness, just and equitable life, resulting
+              collective progress and greatness for our country and humanity in
+              general.
             </p>
             <div class="pt-2">
               <button class="green-btn">Read More</button>
@@ -139,7 +187,9 @@
       <section class="values pb-4 mb-4">
         <div class="row">
           <div class="col-md-4">
-            <h3 class="mb-4">The values that holds us liare ir and lorem ipsum together</h3>
+            <h3 class="mb-4">
+              The values that holds us liare ir and lorem ipsum together
+            </h3>
           </div>
         </div>
 
@@ -148,7 +198,11 @@
             <div class="col-title mb-3">
               <div class="row">
                 <div class="col-md-12 pb-3">
-                  <img src="~assets/icons/Vision icon.svg" alt class="img-fluid mr-2" />
+                  <img
+                    src="~assets/icons/Vision icon.svg"
+                    alt
+                    class="img-fluid mr-2"
+                  />
                   <h4 class="d-inline-block">Our Vision</h4>
                 </div>
               </div>
@@ -156,8 +210,8 @@
                 <div class="col-md-12">
                   <p style="width: 80%;">
                     To achieve, sustain unity and continuously engage positively
-                    to harness the synergies from contributions of our diverse and
-                    rich heritage in a free, fair and just society.
+                    to harness the synergies from contributions of our diverse
+                    and rich heritage in a free, fair and just society.
                   </p>
                 </div>
               </div>
@@ -167,15 +221,20 @@
             <div class="col-title mb-3">
               <div class="row">
                 <div class="col-md-12 pb-3">
-                  <img src="~assets/icons/Values icon.svg" alt class="img-fluid mr-2" />
+                  <img
+                    src="~assets/icons/Values icon.svg"
+                    alt
+                    class="img-fluid mr-2"
+                  />
                   <h4 class="d-inline-block">Our Values</h4>
                 </div>
               </div>
               <div class="row">
                 <div class="col-md-12">
                   <p style="width: 80%;">
-                    To achieve, sustain unity and continuously engage positively to harness the synergies
-                    from contributions of our diverse and rich heritage in a free, fair and just society.
+                    To achieve, sustain unity and continuously engage positively
+                    to harness the synergies from contributions of our diverse
+                    and rich heritage in a free, fair and just society.
                   </p>
                 </div>
               </div>
@@ -185,16 +244,22 @@
             <div class="col-title mb-3">
               <div class="row">
                 <div class="col-md-12 pb-3">
-                  <img src="~assets/icons/Mission icon.svg" alt class="img-fluid mr-2" />
+                  <img
+                    src="~assets/icons/Mission icon.svg"
+                    alt
+                    class="img-fluid mr-2"
+                  />
                   <h4 class="d-inline-block">Our Mission</h4>
                 </div>
               </div>
               <div class="row">
                 <div class="col-md-12">
                   <p>
-                    To create and nurture platforms and such other programs for positive engagement between
-                    the people, social partners and our country’s institutions, including those elected or
-                    appointed to serve within them, towards achieving greater common good.
+                    To create and nurture platforms and such other programs for
+                    positive engagement between the people, social partners and
+                    our country’s institutions, including those elected or
+                    appointed to serve within them, towards achieving greater
+                    common good.
                   </p>
                 </div>
               </div>
@@ -210,36 +275,42 @@
               <li class="px-md-4 pb-2">
                 <h5>Discuss issues of common interest</h5>
                 <p class="pl-2">
-                  Discuss issues of common interest in the community, constructively.
-                  These issues maybe of common interest due to location or tier, e.g: local government area/state of origin;
-                  local government area/state of residence; institutional service (e.g. ministry of …); federal.
-                  It could relate to any arm of government
+                  Discuss issues of common interest in the community,
+                  constructively. These issues maybe of common interest due to
+                  location or tier, e.g: local government area/state of origin;
+                  local government area/state of residence; institutional
+                  service (e.g. ministry of …); federal. It could relate to any
+                  arm of government
                 </p>
               </li>
               <li class="px-md-4 pb-2">
                 <h5>Engage with the institutions</h5>
                 <p class="pl-2">
-                  Engage with the institutions and those elected/appointed to serve the people within them.
-                  The aim is to gain clarity on what is expected from the people/
-                  citizens requiring service and the institution ensuring timely service with
-                  the right quality and courtesy
+                  Engage with the institutions and those elected/appointed to
+                  serve the people within them. The aim is to gain clarity on
+                  what is expected from the people/ citizens requiring service
+                  and the institution ensuring timely service with the right
+                  quality and courtesy
                 </p>
               </li>
 
               <li class="px-md-4 pb-2">
                 <h5>Engage with the institutions</h5>
                 <p class="pl-2">
-                  Discuss issues of common interest in the community, constructively.
-                  These issues maybe of common interest due to location or tier, e.g: local government area/state of origin;
-                  local government area/state of residence; institutional service (e.g. ministry of …); federal.
-                  It could relate to any arm of government
+                  Discuss issues of common interest in the community,
+                  constructively. These issues maybe of common interest due to
+                  location or tier, e.g: local government area/state of origin;
+                  local government area/state of residence; institutional
+                  service (e.g. ministry of …); federal. It could relate to any
+                  arm of government
                 </p>
               </li>
               <li class="px-md-4 pb-2">
                 <h5>Engage with the institutions</h5>
-                <p
-                  class="pl-2"
-                >Encourage the culture of improvement through accepting constructive dialogue and criticism.</p>
+                <p class="pl-2">
+                  Encourage the culture of improvement through accepting
+                  constructive dialogue and criticism.
+                </p>
               </li>
             </ul>
           </div>
@@ -268,7 +339,10 @@
         <div class="row">
           <div class="col-md-5">
             <h3 class="pt-5">The Equlibra Form Sections</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.</p>
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+              eiusmod tempor incididunt.
+            </p>
           </div>
         </div>
         <div class="row">
@@ -359,7 +433,10 @@
                 <div class="row">
                   <div class="col-md-12">
                     <h4 class="pt-3">We'd like to keep in touch with you</h4>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit aot</p>
+                    <p>
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit
+                      aot
+                    </p>
                   </div>
                 </div>
 
@@ -375,7 +452,9 @@
                           />
                         </div>
                         <div class="col-4">
-                          <button class="w-100 h-100 subscribe">Subscribe</button>
+                          <button class="w-100 h-100 subscribe">
+                            Subscribe
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -391,6 +470,7 @@
 </template>
 
 <script>
+import Cookie from "js-cookie";
 import avatar from "~/assets/images/avatar.svg";
 import { mapActions, mapGetters } from "vuex";
 import Map from "~/components/Map";
@@ -407,23 +487,21 @@ export default {
     Footer
   },
   computed: {
-    ...mapGetters("auth", ["isAuthenticated"]),
-    ...mapGetters("user", ["getUser"])
+    ...mapGetters("user", ["getUser"]),
+    isAuth() {
+      return Cookie.get("EQUI_AUTH") ? true : false;
+    }
   },
   methods: {
     ...mapActions("auth", ["logout"]),
-    ...mapActions('govt', ['getSGs']),
+    ...mapActions("govt", ["getSGs"]),
     logoutUser() {
       this.logout();
     }
   },
-  mounted(){
-  }
-
+  mounted() {}
 };
 </script>
-
-
 
 <style scoped>
 .main-container {
@@ -637,11 +715,11 @@ footer p {
   line-height: 2rem;
 }
 
-@media (min-width: 1200px){
-header {
+@media (min-width: 1200px) {
+  header {
     max-width: calc(1360px + 6rem);
-    margin: auto
-}
+    margin: auto;
+  }
 }
 
 @media (min-width: 1200px) {

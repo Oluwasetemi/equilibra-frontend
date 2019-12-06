@@ -1,43 +1,53 @@
 <template>
   <div class="main-container">
     <div class="container-fluid px-0 header">
-        <header class="pt-4 px-lg-5">
-          <nav class="navbar navbar-expand-lg navbar-light d-flex justify-space-between px-0">
-            <nuxt-link to="/" class="navbar-brand pl-2">
-              <img src="~/assets/icons/logo.svg" alt style="position: absolute;top: 3px;"/>
-            </nuxt-link>
+      <header class="pt-4 px-lg-5">
+        <nav
+          class="navbar navbar-expand-lg navbar-light d-flex justify-space-between px-0"
+        >
+          <nuxt-link to="/" class="navbar-brand pl-2">
+            <img
+              src="~/assets/icons/logo.svg"
+              alt
+              style="position: absolute;top: 3px;"
+            />
+          </nuxt-link>
 
-            <button
-              class="navbar-toggler"
-              type="button"
-              data-toggle="collapse"
-              data-target="#navbarSupportedContent"
-              aria-controls="navbarSupportedContent"
-              aria-expanded="false"
-              aria-label="Toggle navigation"
-            >
-              <span class="navbar-toggler-icon"></span>
-            </button>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
 
-            <div
-              class="collapse navbar-collapse d-lg-flex justify-content-md-end"
-              id="navbarSupportedContent"
-            >
-              <ul class="navbar-nav">
-                <li class="nav-item">
-                  <nuxt-link to="/" class="nav-link">Home</nuxt-link>
-                  <!-- <a class="" href="#"></a> -->
-                </li>
-                <li class="nav-item">
-                  <nuxt-link to="/forums" class="nav-link">Forums</nuxt-link>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="http://www.theequilibra.com/blog/">Blog</a>
-                </li>
-                <li class="nav-item">
-                  <nuxt-link to="/contact-us" class="nav-link">Contact Us</nuxt-link>
-                </li>
-                <no-ssr>
+          <div
+            class="collapse navbar-collapse d-lg-flex justify-content-md-end"
+            id="navbarSupportedContent"
+          >
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <nuxt-link to="/" class="nav-link">Home</nuxt-link>
+                <!-- <a class="" href="#"></a> -->
+              </li>
+              <li class="nav-item">
+                <nuxt-link to="/forums" class="nav-link">Forums</nuxt-link>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="http://www.theequilibra.com/blog/"
+                  >Blog</a
+                >
+              </li>
+              <li class="nav-item">
+                <nuxt-link to="/contact-us" class="nav-link"
+                  >Contact Us</nuxt-link
+                >
+              </li>
+              <no-ssr>
                 <li class="nav-item ml-4">
                   <transition
                     enter-active-class="animated zoomIn"
@@ -48,7 +58,7 @@
                     <div
                       class="dropdown"
                       style="background: white;"
-                      v-if="isAuthenticated"
+                      v-if="isAuth"
                       :key="1"
                     >
                       <a
@@ -59,11 +69,18 @@
                         aria-haspopup="true"
                         aria-expanded="false"
                       >
-                        <img :src="getUser.image || avatar" alt height="38px" class="mr-1 avatar" />
+                        <img
+                          :src="getUser.image || avatar"
+                          alt
+                          height="38px"
+                          class="mr-1 avatar"
+                        />
                         <div
                           class="inline-block pl-2 user-name"
                           style="color: black"
-                        >{{getUser.username || getUser.fullName}}</div>
+                        >
+                          {{ getUser.username || getUser.fullName }}
+                        </div>
                         <img
                           src="~assets/icons/thin-downward-arrow.svg"
                           alt
@@ -71,35 +88,54 @@
                           style="left: 8px;"
                         />
                       </a>
-                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <nuxt-link class="dropdown-item" to="account-settings">Account Settings</nuxt-link>
+                      <div
+                        class="dropdown-menu"
+                        aria-labelledby="dropdownMenuButton"
+                      >
+                        <nuxt-link class="dropdown-item" to="account-settings"
+                          >Account Settings</nuxt-link
+                        >
                         <a class="dropdown-item" href="#">Feedback</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#" @click.stop="logoutUser()">Logout</a>
+                        <a
+                          class="dropdown-item"
+                          href="#"
+                          @click.stop="logoutUser()"
+                          >Logout</a
+                        >
                       </div>
                     </div>
 
-                    <nuxt-link to="/sign-up" tag="button" class="btn" v-else :key="2">Join Us</nuxt-link>
+                    <nuxt-link
+                      to="/sign-up"
+                      tag="button"
+                      class="btn"
+                      v-else
+                      :key="2"
+                      >Join Us</nuxt-link
+                    >
                   </transition>
                 </li>
-                </no-ssr>
-              </ul>
-            </div>
-          </nav>
-        </header>
+              </no-ssr>
+            </ul>
+          </div>
+        </nav>
+      </header>
       <div class="container">
-      
         <div class="row">
           <div class="col-md-12">
             <div class="hero-text mt-md-5 text-md-center">
-              <h1
-                class="font-weight-bold pt-5 pt-md-3"
-              >Lorem ipsum dolor sit amet, consectetur adipiscing elit</h1>
-              <h5
-                class="pt-3 mx-auto w-md-50"
-              >Ut enim ad minim veniam, quis nostrud exercitation aliquip ex ea commodo consequat</h5>
+              <h1 class="font-weight-bold pt-5 pt-md-3">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit
+              </h1>
+              <h5 class="pt-3 mx-auto w-md-50">
+                Ut enim ad minim veniam, quis nostrud exercitation aliquip ex ea
+                commodo consequat
+              </h5>
               <div class="pt-3">
-                <button class="white-btn px-5" style="width: unset">Get Started with Equilibra</button>
+                <button class="white-btn px-5" style="width: unset">
+                  Get Started with Equilibra
+                </button>
               </div>
             </div>
           </div>
@@ -120,7 +156,7 @@
             <div class="card border-0 my-4">
               <div
                 class="background-img d-flex align-items-end"
-                :style="{backgroundImage: `url(${item.backgroundImage})`}"
+                :style="{ backgroundImage: `url(${item.backgroundImage})` }"
               >
                 <img
                   src="~/assets/icons/forum-card-icon.svg"
@@ -137,9 +173,10 @@
                 <nuxt-link
                   tag="button"
                   class="border-0 p-3 w-100"
-                  :to="{path: item.link, params: {roomType: item.roomType}}"
+                  :to="{ path: item.link, params: { roomType: item.roomType } }"
                   style="background: #26B14F;"
-                >Join {{item.title}}</nuxt-link>
+                  >Join {{ item.title }}</nuxt-link
+                >
               </div>
             </div>
           </div>
@@ -149,17 +186,24 @@
         <div class="row">
           <div class="col-md-12">
             <h4 class="pb-2 pt-2">
-              <span class="ml-3">{{stateOfResidence | formatStateName}} - State of Residence</span>
+              <span class="ml-3"
+                >{{ stateOfResidence | formatStateName }} - State of
+                Residence</span
+              >
             </h4>
           </div>
         </div>
         <div class="row">
-          <div class="col-lg-4 col-md-6" v-for="(item, i) in originCards" :key="i">
+          <div
+            class="col-lg-4 col-md-6"
+            v-for="(item, i) in originCards"
+            :key="i"
+          >
             <div class="position-relative card-with-shadow pb-4">
               <div class="card border-0 my-4">
                 <div
                   class="background-img d-flex align-items-end"
-                  :style="{backgroundImage: `url(${item.backgroundImage})`}"
+                  :style="{ backgroundImage: `url(${item.backgroundImage})` }"
                 >
                   <img
                     src="~/assets/icons/forum-card-icon.svg"
@@ -169,24 +213,33 @@
                 </div>
                 <div class="card-content p-4">
                   <h3 class="pt-3">
-                    <span v-if="item.title == 'LGA'">{{localGovtResidence.name | formatStateName}}</span>
-                    <span v-else>{{item.title}}</span>
+                    <span v-if="item.title == 'LGA'">{{
+                      localGovtResidence.name | formatStateName
+                    }}</span>
+                    <span v-else>{{ item.title }}</span>
                   </h3>
                   <p>
-                    We are positively minded Nigerians, committed to unity and to
-                    encouraging fairness, just and equitable lifee.
+                    We are positively minded Nigerians, committed to unity and
+                    to encouraging fairness, just and equitable lifee.
                   </p>
                   <nuxt-link
                     tag="button"
                     class="border-0 p-3 w-100"
-                    :to="{path: item.link, query: {state:true, isOrigin:false, id: localGovtResidence.id}}"
+                    :to="{
+                      path: item.link,
+                      query: {
+                        state: true,
+                        isOrigin: false,
+                        id: localGovtResidence.id
+                      }
+                    }"
                     style="background: #26B14F;"
                   >
                     Join
-                    <span
-                      v-if="item.title == 'LGA'"
-                    >{{localGovtResidence.name | formatStateName}}</span>
-                    <span v-else>{{item.title}}</span>
+                    <span v-if="item.title == 'LGA'">{{
+                      localGovtResidence.name | formatStateName
+                    }}</span>
+                    <span v-else>{{ item.title }}</span>
                   </nuxt-link>
                 </div>
               </div>
@@ -199,17 +252,23 @@
         <div class="row">
           <div class="col-md-12">
             <h4 class="pb-2 pt-2">
-              <span class="ml-3">{{stateOfOrigin | formatStateName}} - State of Origin</span>
+              <span class="ml-3"
+                >{{ stateOfOrigin | formatStateName }} - State of Origin</span
+              >
             </h4>
           </div>
         </div>
         <div class="row">
-          <div class="col-lg-4 col-md-6" v-for="(item, i) in residenceCards" :key="i">
+          <div
+            class="col-lg-4 col-md-6"
+            v-for="(item, i) in residenceCards"
+            :key="i"
+          >
             <div class="position-relative card-with-shadow pb-4">
               <div class="card border-0 my-4">
                 <div
                   class="background-img d-flex align-items-end"
-                  :style="{backgroundImage: `url(${item.backgroundImage})`}"
+                  :style="{ backgroundImage: `url(${item.backgroundImage})` }"
                 >
                   <img
                     src="~/assets/icons/forum-card-icon.svg"
@@ -219,22 +278,33 @@
                 </div>
                 <div class="card-content p-4">
                   <h3 class="pt-3">
-                    <span v-if="item.title == 'LGA'">{{localGovtOrigin.name | formatStateName}}</span>
-                    <span v-else>{{item.title}}</span>
+                    <span v-if="item.title == 'LGA'">{{
+                      localGovtOrigin.name | formatStateName
+                    }}</span>
+                    <span v-else>{{ item.title }}</span>
                   </h3>
                   <p>
-                    We are positively minded Nigerians, committed to unity and to
-                    encouraging fairness, just and equitable lifee.
+                    We are positively minded Nigerians, committed to unity and
+                    to encouraging fairness, just and equitable lifee.
                   </p>
                   <nuxt-link
                     tag="button"
                     class="border-0 p-3 w-100"
-                    :to="{path: item.link, query: {state:true, isOrigin:true, id: localGovtOrigin.id}}"
+                    :to="{
+                      path: item.link,
+                      query: {
+                        state: true,
+                        isOrigin: true,
+                        id: localGovtOrigin.id
+                      }
+                    }"
                     style="background: #26B14F;"
                   >
                     Join
-                    <span v-if="item.title == 'LGA'">{{localGovtOrigin.name | formatStateName}}</span>
-                    <span v-else>{{item.title}}</span>
+                    <span v-if="item.title == 'LGA'">{{
+                      localGovtOrigin.name | formatStateName
+                    }}</span>
+                    <span v-else>{{ item.title }}</span>
                   </nuxt-link>
                 </div>
               </div>
@@ -247,6 +317,7 @@
 </template>
 
 <script>
+import Cookie from "js-cookie";
 import avatar from "~/assets/images/avatar.svg";
 // Federal Image backgrounds
 import judiciaryImage from "~/assets/images/judiciary_BG.svg";
@@ -314,6 +385,9 @@ export default {
   computed: {
     ...mapGetters("auth", ["isAuthenticated"]),
     ...mapGetters("user", ["getUser"]),
+    isAuth() {
+      return Cookie.get("EQUI_AUTH") ? true : false;
+    },
     originCards() {
       return [
         {
@@ -438,8 +512,6 @@ export default {
 };
 </script>
 
-
-
 <style scoped>
 .main-container {
   background: #fdfdfd;
@@ -558,11 +630,11 @@ p {
   color: black;
 }
 
-@media (min-width: 1200px){
-header {
+@media (min-width: 1200px) {
+  header {
     max-width: calc(1360px + 6rem);
-    margin: auto
-}
+    margin: auto;
+  }
 }
 
 @media (min-width: 1200px) {
