@@ -36,7 +36,7 @@
                 </figure>
                 <ul style="padding-inline-start: 0;" class="px-3">
                   <li
-                    v-if="reports.edges.length===0"
+                    v-if="reports.edges && reports.edges.length===0"
                     class="list-style-none py-3 border bg-white py-3 px-4 text-center"
                   >No Reported Comments</li>
                   <li
