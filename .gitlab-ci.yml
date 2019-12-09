@@ -21,4 +21,4 @@ test_server:
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
       # Install dependencie
       # Copy (Synchronize) the files to the deployed server
-    - rsync -avrc --delete --exclude=node_modules "$PWD/" root@afro.natterbase.com:/var/www/html/equilibra_frontend/
+    - rsync -avrc --delete --exclude=node_modules "$PWD/" root@test.natterbase.com:/var/www/html/equilibra_frontend/
