@@ -136,7 +136,7 @@
                     <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
                   </div>
 
-                  <div class="form-group pt-3" v-if="isNewActive">
+                  <div class="form-group pt-3">
                     <label for="title">Category</label>
                     <el-select
                       style="text-transform: capitalize;"
@@ -156,9 +156,13 @@
                     <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
                   </div>
 
-                  <div class="form-group pt-3" v-if="isNewActive">
+                  <div class="form-group pt-3">
                     <label for="title">Government</label>
-                    <el-select class="w-100" v-model="payload.government">
+                    <el-select
+                      class="w-100"
+                      v-model="payload.government"
+                      :disabled="!viewStateGovt"
+                    >
                       <el-option
                         v-for="(govt, i) in stateGovts"
                         :key="i"
@@ -253,7 +257,9 @@ export default {
       this.getGovts();
     },
     edit_room(room) {
-      this.payload = { ...room };
+      // this.payload = { ...room };
+      let { name, government, _id } = room;
+      this.payload = { name, government: government.id, _id };
       this.$router.push({ query: { update: room._id } });
     },
     disabledDate(date) {

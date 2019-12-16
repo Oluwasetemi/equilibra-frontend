@@ -126,8 +126,7 @@
                     </template>
                     <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
                   </div>
-
-                  <div class="form-group pt-3" v-if="isNewActive">
+                  <div class="form-group pt-3">
                     <label for="title">Category</label>
                     <el-select
                       style="text-transform: capitalize;"
@@ -146,10 +145,13 @@
                     </el-select>
                     <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
                   </div>
-
-                  <div class="form-group pt-3" v-if="isNewActive">
+                  <div class="form-group pt-3">
                     <label for="title">Government</label>
-                    <el-select class="w-100" v-model="payload.government">
+                    <el-select
+                      class="w-100"
+                      v-model="payload.government"
+                      :disabled="!viewStateGovt"
+                    >
                       <el-option
                         v-for="(govt, i) in stateGovts"
                         :key="i"
@@ -197,6 +199,7 @@ export default {
         _id: "",
         government: ""
       },
+      viewStateGovt: false,
       loading: false
     };
   },
@@ -244,7 +247,8 @@ export default {
       this.getGovts();
     },
     edit_room(room) {
-      this.payload = { ...room };
+      let { name, government, _id } = room;
+      this.payload = { name, government: government.id, _id };
       this.$router.push({ query: { update: room._id } });
     },
     disabledDate(date) {
@@ -307,7 +311,7 @@ export default {
             this.closeNewTopic();
           })
         : this.updateRoom({
-            room: { name: ds.payload.name },
+            room: { name: ds.payload.name, government: ds.payload.government },
             roomId: ds.payload._id
           }).then(async data => {
             this.loading = false;
@@ -358,8 +362,17 @@ export default {
   },
   mounted: async function() {
     if (this.$route.query.update) {
-      this.payload = {
+      // this.payload = {
+      //   ...this.rooms.edges.find(e => e._id === this.$route.query.update)
+      // };
+
+      let somethingy = {
         ...this.rooms.edges.find(e => e._id === this.$route.query.update)
+      };
+
+      this.payload = {
+        name: somethingy.name,
+        government: somethingy.government.id
       };
     } else {
       await Promise.all([this.getGovts(), this.getCategories()]);
