@@ -108,6 +108,29 @@ const actions = {
       });
   },
 
+  getRoomsByGovt({ commit, state, rootState }, payload) {
+    return this.app.apolloProvider.defaultClient
+      .query({
+        query: gql.Data.allRoomsByGovt,
+        variables: {
+          roomType: payload.roomType,
+          stateGvernmentId: payload.govtId
+        },
+        context: {
+          headers: {
+            Authorization: `Bearer ${rootState.admin.sub.token}`
+          }
+        }
+      })
+      .then(({ data }) => {
+        commit("setRooms", data.fetchConstituency);
+        return data.fetchConstituency;
+      })
+      .catch(err => {
+        return err;
+      });
+  },
+
   updateRoom({ commit, state, rootState }, payload) {
     return this.app.apolloProvider.defaultClient
       .mutate({

@@ -64,12 +64,29 @@ export default {
           _id
           government {
             id
+            name
           }
         }
         pageInfo {
           totalCount
           hasNextPage
         }
+      }
+    }
+  `,
+
+  allRoomsByGovt: gql`
+    query fetchConstituency(
+      $roomType: fetchConstituency
+      $stateGovernmentID: ID
+    ) {
+      fetchConstituency(
+        stateGovernmentID: $stateGovernmentID
+        roomType: $roomType
+      ) {
+        name
+        _id
+        government
       }
     }
   `,

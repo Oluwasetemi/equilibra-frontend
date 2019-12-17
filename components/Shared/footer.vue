@@ -76,13 +76,13 @@
                   <h6>SOCIAL</h6>
                   <ul class="py-2 px-0">
                     <li>
-                      <a href="https://facebook.com/TheEquilibra">Facebook</a>
+                      <a href="https://www.facebook.com/TheEquilibra">Facebook</a>
                     </li>
                     <li>
-                      <a href="https://facebook.com/theequilibra">Twitter</a>
+                      <a href="https://twitter.com/theequilibra/">Twitter</a>
                     </li>
                     <li>
-                      <a href="https://facebook.com/TheEquilibra">Instagram</a>
+                      <a href="https://www.instagram.com/theequilibra/">Instagram</a>
                     </li>
                   </ul>
                 </div>
@@ -95,13 +95,13 @@
             </div>
             <div class="col-md-3">
               <div class="social-media-icons">
-                <a href class="ml-md-4 mr-md-0 ml-0 mr-3">
+                <a href="https://facebook.com/TheEquilibra" class="ml-md-4 mr-md-0 ml-0 mr-3">
                   <img src="~assets/icons/facebook.svg" alt />
                 </a>
-                <a href class="ml-md-4 mr-md-0 ml-0 mr-3">
+                <a href="https://www.instagram.com/theequilibra/" class="ml-md-4 mr-md-0 ml-0 mr-3">
                   <img src="~assets/icons/instagram.svg" alt />
                 </a>
-                <a href class="ml-md-4 mr-md-0 ml-0 mr-3">
+                <a href="https://twitter.com/theequilibra/" class="ml-md-4 mr-md-0 ml-0 mr-3">
                   <img src="~assets/icons/twitter.svg" alt />
                 </a>
               </div>

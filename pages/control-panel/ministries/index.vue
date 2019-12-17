@@ -36,9 +36,18 @@
                     <img src="~/assets/images/total-insurance-icon.svg" alt />
                     <div class="title ml-3 pt-4 font-weight-bold">Existing Rooms</div>
                   </div>
-                  <button class="add-btn" @click="openNewItem()">
-                    <i class="ft-plus"></i>
-                  </button>
+                  <div class="d-flex position-relative">
+                    <el-select placeholder="Select State" class="mt-3 mr-2">
+                      <el-option
+                        style="color: #000"
+                        v-for="(state, index) in governments"
+                        :key="index"
+                      >{{state.name | capitalizeFirstLetter}}</el-option>
+                    </el-select>
+                    <button class="add-btn" @click="openNewItem()">
+                      <i class="ft-plus"></i>
+                    </button>
+                  </div>
                 </figure>
 
                 <figure
@@ -50,7 +59,7 @@
                     <img src="~/assets/images/total-insurance-icon.svg" alt />
                     <div>
                       <div class="title ml-3 pt-4">{{room.name}}</div>
-                      <!-- <small class="ml-3">{{govt.description}}</small> -->
+                      <small class="ml-3">{{room.government.name | capitalizeFirstLetter}}</small>
                     </div>
                   </div>
                   <div>
@@ -137,34 +146,10 @@
                   </div>
 
                   <div class="form-group pt-3">
-                    <label for="title">Category</label>
-                    <el-select
-                      style="text-transform: capitalize;"
-                      class="w-100"
-                      v-model="category"
-                      @change="changedCategory"
-                    >
-                      <el-option
-                        style="text-transform: capitalize;"
-                        v-for="(item, i) in categories"
-                        v-if="item.slug!=='LG'"
-                        :value="item.slug"
-                        :key="i"
-                        :label="item.name.toUpperCase()"
-                      ></el-option>
-                    </el-select>
-                    <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
-                  </div>
-
-                  <div class="form-group pt-3">
                     <label for="title">Government</label>
-                    <el-select
-                      class="w-100"
-                      v-model="payload.government"
-                      :disabled="!viewStateGovt"
-                    >
+                    <el-select class="w-100" v-model="payload.government">
                       <el-option
-                        v-for="(govt, i) in stateGovts"
+                        v-for="(govt, i) in governments"
                         :key="i"
                         :label="govt.name.toUpperCase()"
                         :value="govt.id"
@@ -226,6 +211,9 @@ export default {
   },
   computed: {
     ...mapGetters("admin/data", ["rooms", "categories"]),
+    governments() {
+      return this.$store.getters["governments"];
+    },
     isNewActive() {
       return this.$route.query.new;
     },
@@ -237,6 +225,16 @@ export default {
     },
     hasPrevious() {
       return this.skip >= this.limit;
+    }
+  },
+  filters: {
+    capitalizeFirstLetter(val) {
+      return val
+        .split(" ")
+        .map(word => {
+          return word.charAt(0).toUpperCase() + word.substring(1);
+        })
+        .join(" ");
     }
   },
   methods: {
