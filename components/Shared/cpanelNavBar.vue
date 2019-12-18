@@ -56,6 +56,39 @@
           </nuxt-link>
           <nuxt-link
             tag="li"
+            to="/control-panel/users"
+            class="nav-item d-flex flex-column align-items-lg-center justify-content-lg-center mx-2 py-lg-0 py-2"
+          >
+            <a class="nav-link py-0" href="#">
+              Users
+              <span class="sr-only">(current)</span>
+            </a>
+            <div class="underline"></div>
+          </nuxt-link>
+          <nuxt-link
+            tag="li"
+            to="/control-panel/adverts"
+            class="nav-item d-flex flex-column align-items-lg-center justify-content-lg-center mx-2 py-lg-0 py-2"
+          >
+            <a class="nav-link py-0" href="#">
+              Advertisements
+              <span class="sr-only">(current)</span>
+            </a>
+            <div class="underline"></div>
+          </nuxt-link>
+          <nuxt-link
+            tag="li"
+            to="/control-panel/moderators"
+            class="nav-item d-flex flex-column align-items-lg-center justify-content-lg-center mx-2 py-lg-0 py-2"
+          >
+            <a class="nav-link py-0" href="#">
+              Moderators
+              <span class="sr-only">(current)</span>
+            </a>
+            <div class="underline"></div>
+          </nuxt-link>
+          <nuxt-link
+            tag="li"
             to="/control-panel/reports"
             class="nav-item d-flex flex-column align-items-lg-center justify-content-lg-center mx-2 py-lg-0 py-2"
           >

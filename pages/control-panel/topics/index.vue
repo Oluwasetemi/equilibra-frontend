@@ -182,8 +182,55 @@
                   </div>
 
                   <div class="form-group pt-3">
-                    <label for="rooms">Schedule for Rooms (Required)</label>
+                    <label for="startDate">Start Date</label>
                     <el-select
+                      v-model="topicPayload.date"
+                      filterable
+                      class="w-100"
+                      placeholder="Select"
+                    >
+                      <el-option
+                        v-for="(item, i) in sundays"
+                        :key="i"
+                        :label="new Date(item).toDateString()"
+                        :value="new Date(item).toISOString()"
+                      ></el-option>
+                    </el-select>
+                  </div>
+                  <div class="form-group pt-3">
+                    <label for="rooms">Schedule for Rooms (Required)</label>
+                    <el-tree
+                      accordion
+                      :data="allRoomsByType"
+                      show-checkbox
+                      node-key="id"
+                      ref="tree"
+                      highlight-current
+                      :props="defaultProps"
+                    ></el-tree>
+                    <!-- <el-collapse v-model="activeName" accordion>
+                      <el-collapse-item v-for="(item, i) in allRoomsByType" :key="i" :name="i">
+                        <template slot="title">
+                          <el-checkbox
+                            class="mt-2"
+                            :indeterminate="isIndeterminate"
+                            v-model="checkAll"
+                            @change="handleCheckAllChange(i)"
+                          >{{item?item[0]?item[0].roomType:"":""}}</el-checkbox>
+                        </template>
+
+                        <div style="margin: 15px 0;"></div>
+                        <el-checkbox-group v-model="topicPayload.rooms" @change="handleRoomChange">
+                          <el-checkbox
+                            style="width: 100%"
+                            v-for="(room, i) in item"
+                            :label="room.name"
+                            :key="i"
+                          >{{room.name}}</el-checkbox>
+                        </el-checkbox-group>
+                      </el-collapse-item>
+                    </el-collapse>-->
+                    <!-- <el-select
                       class="w-100"
                       @focus="errorMessage=''"
                       id="rooms"
@@ -210,24 +257,8 @@
                         v-else-if="!$v.topicPayload.rooms.minLength"
                         class="invalid"
                       >Rooms should not be less than 1 items</p>
-                    </template>
+                    </template>-->
                     <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
-                  </div>
-                  <div class="form-group pt-3">
-                    <label for="startDate">Start Date</label>
-                    <el-select
-                      v-model="topicPayload.date"
-                      filterable
-                      class="w-100"
-                      placeholder="Select"
-                    >
-                      <el-option
-                        v-for="(item, i) in sundays"
-                        :key="i"
-                        :label="new Date(item).toDateString()"
-                        :value="new Date(item).toISOString()"
-                      ></el-option>
-                    </el-select>
                   </div>
 
                   <div class="form-group pt-3">
@@ -250,6 +281,10 @@ export default {
   layout: "controlPanelLayout",
   data() {
     return {
+      defaultProps: {
+        children: "children",
+        label: "name"
+      },
       skip: 0,
       limit: 10,
       total: 0,
@@ -277,6 +312,7 @@ export default {
         { name: "Javascript", code: "js" },
         { name: "Open Source", code: "os" }
       ],
+      allRoomsByType: [],
       transactions: [
         {
           type: "Third Party Motor Insurance",
@@ -330,6 +366,66 @@ export default {
     isNewActive() {
       return this.$route.query.new || this.$route.query.update;
     },
+    filterData() {
+      var rooms = [],
+        ministries = {
+          name: "Ministries",
+          children: []
+        },
+        lgas = {
+          name: "Local Governments",
+          children: []
+        },
+        hoas = {
+          name: "House of Assembly",
+          children: []
+        },
+        hors = {
+          name: "House of Representatives",
+          children: []
+        },
+        senate = {
+          name: "Senatorial Districts",
+          children: []
+        },
+        courts = {
+          name: "Courts",
+          children: []
+        };
+      if (this.rooms.length > 2) {
+        for (let item of this.rooms) {
+          switch (item.roomType) {
+            case "MINISTRY":
+              ministries.children.push(item);
+              break;
+            case "LGA":
+              lgas.children.push(item);
+              break;
+            case "HOA":
+              hoas.children.push(item);
+              break;
+            case "HOR":
+              hors.children.push(item);
+              break;
+            case "SENATE":
+              senate.children.push(item);
+              break;
+            case "COURT":
+              courts.children.push(item);
+              break;
+            default:
+              break;
+          }
+        }
+        rooms.push(courts);
+        rooms.push(ministries);
+        rooms.push(hoas);
+        rooms.push(hors);
+        rooms.push(lgas);
+        rooms.push(senate);
+      }
+      this.allRoomsByType = rooms;
+    },
     hasNext() {
       return this.skip < this.total - this.limit;
     },
@@ -356,6 +452,7 @@ export default {
       "deleteTopic",
       "updateTopic"
     ]),
+
     openNewTopic() {
       this.topicPayload = {
         rooms: [],
@@ -392,18 +489,27 @@ export default {
           this.$toast.error(data.graphQLErrors[0].message);
           return;
         }
+        this.filterData;
         return;
       } catch (error) {
         this.loading = false;
         return;
       }
     },
+    getCheked() {
+      var nodes = this.$refs.tree.getCheckedNodes();
+      for (let room of nodes) {
+        this.topicPayload.rooms.push(room._id);
+      }
+    },
     submitTopic() {
       this.$v.$touch();
       let isInvalid = this.$v.$invalid;
+      this.getCheked();
       if (isInvalid) return;
       this.loading = true;
       let self = this;
+      debugger;
       var { _id, title, rooms, description } = self.topicPayload;
       if (this.$route.query.update) {
         this.updateTopic({ topic: { title, rooms, description }, _id })
@@ -648,5 +754,12 @@ button:focus {
   .container {
     max-width: 1360px;
   }
+}
+</style>
+
+<style lang="css">
+.el-tree-node__content > .el-checkbox {
+  margin-top: 10px !important;
+  margin-right: 20px !important;
 }
 </style>

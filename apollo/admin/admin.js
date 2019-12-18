@@ -90,6 +90,8 @@ export default {
         edges {
           _id
           name
+          roomType
+          government
         }
       }
     }
