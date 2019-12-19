@@ -22,3 +22,26 @@ test_server:
     - rsync -avrc --delete --exclude=node_modules "$PWD/" root@test.natterbase.com:/var/www/html/equilibra_frontend/
 
     - ssh root@$SERVER_IP "cd /var/www/html/equilibra_frontend/; /root/.nvm/versions/node/v12.13.1/bin/npm i;"
+staging:
+  before_script:
+    - apt-get update
+    - apt-get --yes --force-yes install rsync
+  only:
+    refs:
+      - staging
+  script:
+    # Search for the ssh-agent
+    - "which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )"
+    # Start the ssh-agent
+    - eval $(ssh-agent -s)
+      # Add the SSH Key stored in the SSH_PRIVATE_KEY variable to the agent store
+    - ssh-add <(echo "$SSH_PRIVATE_KEY")
+      # Create the .ssh folder
+    - mkdir -p ~/.ssh
+      # Prevent ssh public key confirmation
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+      # Install dependencie
+      # Copy (Synchronize) the files to the deployed server
+    - rsync -avrc --delete --exclude=node_modules "$PWD/" root@test.natterbase.com:/var/www/html/equilibra_frontend_staging/
+
+    - ssh root@$SERVER_IP "cd /var/www/html/equilibra_frontend_staging/; /root/.nvm/versions/node/v12.13.1/bin/npm i;"
