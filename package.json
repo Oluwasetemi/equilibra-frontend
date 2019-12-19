@@ -1,3 +1,4 @@
+
 {
   "name": "equilibra",
   "version": "1.0.0",
@@ -5,7 +6,7 @@
   "author": "Iwuanyanwu Chiamaka, Ahman Emmanuel",
   "private": true,
   "scripts": {
-    "dev": "nuxt --open",
+    "dev": "nuxt --port 3001",
     "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate"

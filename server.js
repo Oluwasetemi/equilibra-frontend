@@ -1,6 +1,6 @@
 const { Nuxt, Builder } = require("nuxt");
 const app = require("express")();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 
 // We instantiate Nuxt.js with the options
 const config = require("./nuxt.config.js");
@@ -16,3 +16,4 @@ if (config.dev) {
 app.listen(port, "0.0.0.0").then(() => {
   console.log(`Server is listening on port: ${port}`);
 });
+
