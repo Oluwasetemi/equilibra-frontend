@@ -19,8 +19,8 @@ export default function(context) {
   );
   return {
     onError: errorLink,
-    httpEndpoint: "https://api.equilibra.test.natterbase.com",
-    wsEndpoint: "wss://api.equilibra.test.natterbase.com:5505/subscriptions",
+    httpEndpoint: "https://api-staging.equilibra.test.natterbase.com",
+    wsEndpoint: "wss://api-staging.equilibra.test.natterbase.com:555/subscriptions",
     persisting: false,
     websocketsOnly: false,
     httpLinkOptions: {
