@@ -95,7 +95,8 @@ export default {
   ],
 
   axios: {
-    baseURL: "https://api.equilibra.test.natterbase.com"
+    baseURL: "http://localhost:5505"
+    // baseURL: "https://api.equilibra.test.natterbase.com"
   },
 
   bootstrapVue: {
