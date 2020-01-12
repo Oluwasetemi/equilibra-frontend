@@ -8,7 +8,7 @@ export default {
       $start: Int
     ) {
       allGovernmentBasedOnCategory(slug: $slug, first: $first, start: $start) {
-        id
+        _id
         name
         category
         description
@@ -45,7 +45,7 @@ export default {
   governmentBySlug: gql`
     query governmentBySlug($slug: ID!) {
       governmentBySlug(slug: $slug) {
-        id
+        _id
         name
         category
         description
@@ -98,7 +98,7 @@ export default {
   localGovernments: gql`
     query localGovernments($stateGovernmentID: ID!) {
       localGovernments(stateGovernmentID: $stateGovernmentID) {
-        id
+        _id
         name
         category
         description
@@ -135,7 +135,7 @@ export default {
   governmentByID: gql`
     query governmentByID($governmentID: ID!) {
       governmentByID(governmentID: $governmentID) {
-        id
+        _id
         name
         category
         description
@@ -172,7 +172,7 @@ export default {
   governmentBySlug: gql`
     query governmentBySlug($slug: String!) {
       governmentBySlug(slug: $slug) {
-        id
+        _id
         name
       }
     }

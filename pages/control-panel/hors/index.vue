@@ -152,7 +152,7 @@
                         v-for="(govt, i) in governments"
                         :key="i"
                         :label="govt.name.toUpperCase()"
-                        :value="govt.id"
+                        :value="govt._id"
                       ></el-option>
                     </el-select>
                     <template v-if="$v.payload.government.$dirty">

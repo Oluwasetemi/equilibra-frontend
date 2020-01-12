@@ -16,7 +16,11 @@ export default {
           voteId
         }
         slug
-        members
+        members {
+          member
+          moderator
+          moderatorType
+        }
       }
     }
   `,
