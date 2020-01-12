@@ -28,7 +28,7 @@
                     <option
                       v-for="(govt, i) in governments"
                       :key="i"
-                      :value="govt.id"
+                      :value="govt._id"
                     >{{govt.name | formatStateName}}</option>
                   </select>
                   <img
@@ -60,7 +60,7 @@
                     <option
                       v-for="(govt, i) in localGovernments"
                       :key="i"
-                      :value="govt.id"
+                      :value="govt._id"
                     >{{govt.name | formatStateName}}</option>
                   </select>
                   <img
@@ -184,7 +184,9 @@
                 class="white-btn w-100 mt-2 auth d-inline-flex align-items-center justify-content-center"
                 @click="origin = false"
                 :disabled="loading"
-              ><span>BACK</span></a>
+              >
+                <span>BACK</span>
+              </a>
             </div>
             <div class="col-8">
               <button
@@ -249,6 +251,7 @@ export default {
   },
   data() {
     return {
+      governments: [],
       origin: false,
       loading: false,
       loadingLGA: false,
@@ -279,9 +282,6 @@ export default {
   },
   computed: {
     ...mapGetters("auth", ["getTempUserDetails", "getToken"]),
-    governments() {
-      return this.$store.getters["governments"];
-    },
     userDetails() {
       if (!this.origin) {
         return this.user.residence;
@@ -291,6 +291,7 @@ export default {
   },
   mounted() {
     this.resetTempUserDetails();
+    this.fetchStateGovts();
     if (this.userDetails.state) {
       this.fetchLGAs();
       this.fetchFedConstituencies();
@@ -324,6 +325,7 @@ export default {
       "completeSignup",
       "resetTempUserDetails"
     ]),
+    ...mapActions("govt", ["getSGs"]),
     fetchFedConstituencies() {
       const self = this;
       this.$store
@@ -337,6 +339,18 @@ export default {
             return;
           }
           this.fedConstituencies = data;
+        })
+        .catch(err => {});
+    },
+    fetchStateGovts() {
+      const self = this;
+      this.getSGs()
+        .then(data => {
+          if (data.graphQLErrors) {
+            this.$toast.error(data.graphQLErrors[0].message);
+            return;
+          }
+          this.governments = data;
         })
         .catch(err => {});
     },

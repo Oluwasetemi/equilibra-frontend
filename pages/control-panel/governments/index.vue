@@ -150,7 +150,7 @@
                           v-for="(govt, i) in stateGovts"
                           :key="i"
                           :label="govt.name"
-                          :value="govt.id"
+                          :value="govt._id"
                         ></el-option>
                       </el-select>
                       <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
@@ -533,7 +533,7 @@ export default {
     edit_govt(govt) {
       console.log(govt);
       this.govtPayload = { ...govt };
-      this.$router.push({ query: { update: govt.id, stage: 1 } });
+      this.$router.push({ query: { update: govt._id, stage: 1 } });
     },
     async changedCategory() {
       let catLg = this.categories.find(e => e.slug == "LG");

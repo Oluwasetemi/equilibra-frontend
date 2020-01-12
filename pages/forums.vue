@@ -455,20 +455,21 @@ export default {
     stateOfOrigin() {
       const self = this;
       let govtw = this.$store.getters["governments"].find(
-        govt => self.getUser.stateOfOrigin == govt.id
+        govt => self.getUser.stateOfOrigin == govt._id
       );
       return govtw ? govtw.name : "";
     },
     stateOfResidence() {
       const self = this;
       let govtw = this.$store.getters["governments"].find(
-        govt => self.getUser.stateOfResidence == govt.id
+        govt => self.getUser.stateOfResidence == govt._id
       );
       return govtw ? govtw.name : "";
     }
   },
   filters: {
     formatStateName(str) {
+      debugger
       return str
         .split(" ")
         .map(word => {
@@ -496,8 +497,8 @@ export default {
         .catch(err => {});
     },
     getState(LGAS, id, key) {
-      let lga = LGAS.find(lga => lga.id == id);
-      return lga ? { name: lga.name, id: lga.id } : {};
+      let lga = LGAS.find(lga => lga._id == id);
+      return lga ? { name: lga.name, id: lga._id } : {};
     },
     logoutUser() {
       this.logout();

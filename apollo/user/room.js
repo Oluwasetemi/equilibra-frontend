@@ -16,7 +16,11 @@ export default {
           voteId
         }
         slug
-        members
+        members {
+          member
+          moderator
+          moderatorType
+        }
       }
     }
   `,
@@ -35,7 +39,11 @@ export default {
           voteId
         }
         slug
-        members
+        members {
+          member
+          moderator
+          moderatorType
+        }
         # government
       }
     }
@@ -55,7 +63,11 @@ export default {
           voteId
         }
         slug
-        members
+        members {
+          member
+          moderator
+          moderatorType
+        }
         # government
       }
     }
@@ -83,7 +95,11 @@ export default {
           isClosed
         }
         slug
-        members
+        members {
+          member
+          moderator
+          moderatorType
+        }
         # government
         # roomType
       }
