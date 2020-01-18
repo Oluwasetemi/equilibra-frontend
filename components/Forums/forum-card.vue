@@ -92,7 +92,6 @@ export default {
         ? this.getUser.stateOfOrigin
         : this.getUser.stateOfResidence;
       const id = this.$route.query.state ? stateId : fedId;
-      debugger
       this.governmentByID({ governmentID: id })
         .then(data => {
           if (data.graphQLErrors) {

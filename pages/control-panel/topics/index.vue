@@ -509,7 +509,6 @@ export default {
       if (isInvalid) return;
       this.loading = true;
       let self = this;
-      debugger;
       var { _id, title, rooms, description } = self.topicPayload;
       if (this.$route.query.update) {
         this.updateTopic({ topic: { title, rooms, description }, _id })

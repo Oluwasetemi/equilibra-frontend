@@ -469,7 +469,6 @@ export default {
   },
   filters: {
     formatStateName(str) {
-      debugger
       return str
         .split(" ")
         .map(word => {
