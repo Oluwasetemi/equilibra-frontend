@@ -8,7 +8,7 @@ export default {
 			$slug: categoryEnum!
 		) {
 			allGovernmentBasedOnCategory(start: $start, first: $first, slug: $slug) {
-				id
+				_id
 				name
 				category
 				stateGovernment
