@@ -133,7 +133,7 @@ export default {
 	createGovt: gql`
 		mutation updateGovernment($id: ID!, $governmentInput: governmentInput!) {
 			updateGovernment(id: $id, governmentInput: $governmentInput) {
-				id
+				_id
 				name
 				category
 				stateGovernment
