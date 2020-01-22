@@ -116,6 +116,7 @@ export default {
     completeSignup({ commit }, payload) {
       return this.app.apolloProvider.defaultClient
         .mutate({
+          fetchPolicy: "no-cache",
           mutation: gql.completeSignup,
           variables: { userInput: payload }
         })
@@ -145,6 +146,7 @@ export default {
     login({ commit }, payload) {
       return this.app.apolloProvider.defaultClient
         .query({
+          fetchPolicy: "no-cache",
           query: gql.login,
           variables: { loginInput: payload }
         })
@@ -160,6 +162,7 @@ export default {
     loginWIthGoogle({ commit }, payload) {
       return this.app.apolloProvider.defaultClient
         .mutate({
+          fetchPolicy: "no-cache",
           mutation: gql.google,
           variables: { googleToken: payload }
         })
@@ -175,6 +178,7 @@ export default {
     loginWIthFacebook({ commit }, payload) {
       return this.app.apolloProvider.defaultClient
         .mutate({
+          fetchPolicy: "no-cache",
           mutation: gql.facebook,
           variables: { facebookToken: payload }
         })
@@ -190,6 +194,7 @@ export default {
     forgotPassword({ commit }, payload) {
       return this.app.apolloProvider.defaultClient
         .mutate({
+          fetchPolicy: "no-cache",
           mutation: gql.forgotPassword,
           variables: { email: payload }
         })
@@ -203,6 +208,7 @@ export default {
     resetPassword({ commit }, payload) {
       return this.app.apolloProvider.defaultClient
         .mutate({
+          fetchPolicy: "no-cache",
           mutation: gql.resetPassword,
           variables: { password: payload.password, token: payload.token }
         })
