@@ -74,6 +74,25 @@ export default {
         .catch(err => {
           return err;
         });
-    }
+    },
+    updateCountry({commit, rootState }, payload) {
+      return this.app.apolloProvider.defaultClient
+        .mutate({
+          mutation: gql.updateUserCountry,
+          variables: payload,
+          context: {
+            headers: {
+              Authorization: `Bearer ${rootState.auth.token}`
+            }
+          }
+        })
+        .then(({ data }) => {
+          commit('setUser', data.updateUserCountry);
+          return data.updateUserCountry;
+        })
+        .catch(err => {
+          return err;
+        });
+    },
   },
 };

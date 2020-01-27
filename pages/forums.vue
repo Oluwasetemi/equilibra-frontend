@@ -10,6 +10,7 @@
               src="~/assets/icons/logo.svg"
               alt
               style="position: absolute;top: 3px;"
+              class="logo"
             />
           </nuxt-link>
 
@@ -133,9 +134,9 @@
                 commodo consequat
               </h5>
               <div class="pt-3">
-                <button class="white-btn px-5" style="width: unset">
+                <nuxt-link tag="button" to="/sign-up" class="white-btn px-5" style="width: unset" v-if="!isAuthenticated">
                   Get Started with Equilibra
-                </button>
+                </nuxt-link>
               </div>
             </div>
           </div>
@@ -669,6 +670,9 @@ p {
     bottom: 0;
     background-blend-mode: darken;
     opacity: 0.8;
+  }
+  .logo {
+    height: 66px;
   }
 }
 @media (max-width: 800px) {

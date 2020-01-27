@@ -2,7 +2,7 @@
   <div class="tooltipp px-4 py-3" id="customdiv" style="display: none">
     <div class="mb-3 d-flex align-items-center">
       <figure class="d-inline-block mb-0 mr-2">
-        <img src="~assets/images/el-rufai.png" alt height="60px" />
+        <img :src="government.leaderPhoto" alt />
       </figure>
 
       <div class="details d-inline-block">
@@ -11,25 +11,35 @@
             class="name m-0"
             style="line-height: 1.3em;"
             v-if="government.leader"
-          >{{government.leader | capitalizeFirstLetter}}</span>
-          <span class="" v-else style="color: gainsboro; font-weight: 200">not available</span>
-          <span class="post m-0" style="line-height: 1.3em;">Executive Governor</span>
+            >{{ government.leader | capitalizeFirstLetter }}</span
+          >
+          <span class="" v-else style="color: gainsboro; font-weight: 200"
+            >not available</span
+          >
+          <span class="post m-0" style="line-height: 1.3em;"
+            >Executive Governor</span
+          >
         </div>
       </div>
     </div>
     <div class="state mb-2">
       <div class="d-inline-block state-initials mr-1" style>
-        <span>{{government.slug ? government.slug.toUpperCase()|| '': ''}}</span>
+        <span>{{
+          government.slug ? government.slug.toUpperCase() || "" : ""
+        }}</span>
       </div>
 
-      <span
-        class="state"
-        v-if="government.name"
-      >{{government.name.split(' ')[0] | capitalizeFirstLetter }}</span>
+      <span class="state" v-if="government.name">{{
+        government.name.split(" ")[0] | capitalizeFirstLetter
+      }}</span>
     </div>
-    <p
-      class="description mb-1"
-    >{{government.description ? `${government.description.substr(0, 207)}...` || '': ''}}</p>
+    <p class="description mb-1">
+      {{
+        government.description
+          ? `${government.description.substr(0, 207)}...` || ""
+          : ""
+      }}
+    </p>
     <nuxt-link :to="governmentLink">Read More</nuxt-link>
   </div>
 </template>
@@ -105,6 +115,10 @@ a {
 
 img {
   border-radius: 50%;
+  height: 60px;
+  width: 60px;
+  display: inline-block;
+  object-fit: contain
 }
 
 .state-initials {

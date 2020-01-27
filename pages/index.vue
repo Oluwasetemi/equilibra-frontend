@@ -10,7 +10,7 @@
               src="~/assets/icons/logo.svg"
               alt
               style="top: -20px;"
-              class="position-lg-absolute"
+              class="position-absolute logo"
             />
           </nuxt-link>
           <button
@@ -523,6 +523,10 @@ export default {
   color: white;
 }
 
+.logo {
+  height: 66px
+}
+
 h1 {
   font-size: 34px;
 }
@@ -740,6 +744,9 @@ footer p {
   }
   footer p {
     width: 80%;
+  }
+  .logo {
+    height: unset
   }
 }
 @media (max-width: 991px) {
