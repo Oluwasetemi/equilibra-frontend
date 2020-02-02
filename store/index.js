@@ -3,12 +3,14 @@ export default {
   state: () => ({
     governments: [],
     currentGovernment: {},
-    userGovernment: {}
+    userGovernment: {},
+    countries: []
   }),
 
   getters: {
     governments: state => state.governments,
-    currentGovernment: state => state.currentGovernment
+    currentGovernment: state => state.currentGovernment,
+    countries: state => state.countries,
   },
 
   mutations: {
@@ -17,6 +19,10 @@ export default {
     },
     setCurrentGovernment(state, data) {
       state.currentGovernment = data;
+    },
+    setCountries(state, data) {
+      const countries = data.map(country => country.name)
+      state.countries = countries.sort();
     },
     setUserGovernment(state, { roomType, data }) {
       if (roomType == "HOUSE_OF_REPRESENTATIVE") {
@@ -102,6 +108,20 @@ export default {
         .then(({ data }) => {
           commit("setUserGovernment", { roomType, data });
           return data.fetchConstituency;
+        })
+        .catch(err => {
+          return err;
+        });
+    },
+    fetchCountries({ commit }) {
+      return this.app.apolloProvider.clients.countries
+        .query({
+          query: gql.fetchCountries,
+          httpEndpoint: "https://countries.trevorblades.com/"
+        })
+        .then(({ data }) => {
+          commit("setCountries", data.countries);
+          return data.countries;
         })
         .catch(err => {
           return err;

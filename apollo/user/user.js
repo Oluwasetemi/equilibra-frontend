@@ -1,5 +1,5 @@
-import fragment from '~/apollo/fragment';
-import gql from 'graphql-tag';
+import fragment from "~/apollo/fragment";
+import gql from "graphql-tag";
 
 export default {
   changePassword: gql`
@@ -42,6 +42,7 @@ export default {
         stateOfResidenceFedConstituency
         senatorialDistrict
         stateOfResidenceSenatorialDistrict
+        currentCountry
         signupStatus
       }
     }
@@ -86,6 +87,40 @@ export default {
         stateOfResidenceFedConstituency
         senatorialDistrict
         stateOfResidenceSenatorialDistrict
+        signupStatus
+        currentCountry
+      }
+    }
+  `,
+  updateUserCountry: gql`
+    mutation updateUserCountry($newCountry: String!) {
+      updateUserCountry(newCountry: $newCountry) {
+        _id
+        fullName
+        successMessage
+        errorMessage
+        token
+        email
+        password
+        image
+        dob
+        createdAt
+        updatedAt
+        username
+        role
+        isVerified
+        isSuspended
+        stateOfOrigin
+        stateOfResidence
+        localGovtOrigin
+        localGovtResidence
+        stateConstituency
+        stateOfResidenceConstituency
+        stateFedConstituency
+        stateOfResidenceFedConstituency
+        senatorialDistrict
+        stateOfResidenceSenatorialDistrict
+        currentCountry
         signupStatus
       }
     }

@@ -76,6 +76,7 @@ export default {
     { src: "~/plugins/fb-sdk.js", mode: "client" },
     { src: "~/plugins/vuex-persist", mode: "client" },
     { src: "~/plugins/apollo.config.js", mode: "client" },
+    { src: "~/plugins/apollo-countries.js", mode: "client" },
     { src: "~/plugins/apollo-overrides.js", mode: "client" },
     { src: "~/plugins/vue-editor.js", ssr: false },
     { src: "~/plugins/vuelidate", mode: "client" },
@@ -124,7 +125,8 @@ export default {
   },
   apollo: {
     clientConfigs: {
-      default: "~/plugins/apollo.config.js"
+      default: "~/plugins/apollo.config.js",
+      countries: "~/plugins/apollo-countries.js"
     }
   },
   toast: {

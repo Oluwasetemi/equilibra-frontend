@@ -7,13 +7,19 @@
             <img src="~/assets/icons/placeholder-icon.svg" alt class="mr-2" />
             <h6 class="subheading d-inline-block">CHANGE OF DIASPORA</h6>
           </div>
-          <p
-            style="color: #091F0E"
-          >Use this page to update your contact information and change password.</p>
+          <p style="color: #091F0E">
+            Use this page to update your contact information and change
+            password.
+          </p>
         </div>
         <div class="row">
           <div class="col-md-10">
-            <form class="mt-3 px-4 mr-md-4">
+            <form
+              class="mt-3 px-4 mr-md-4"
+              @submit.prevent="
+                updateUserCountry({ newCountry: payloadC.newCountry })
+              "
+            >
               <div class="row">
                 <div class="col-lg-4 col-md-6 px-2">
                   <div class="form-input my-2">
@@ -23,6 +29,8 @@
                       name="current-country"
                       id="current-country"
                       class="form-control mt-0"
+                      :value="getUser.currentCountry"
+                      style="text-transform: capitalize"
                       disabled
                     />
                   </div>
@@ -31,21 +39,57 @@
                   <div class="form-input my-2">
                     <label for="new-country">NEW COUNTRY OF RESIDENCE</label>
                     <div class="select-box position-relative">
-                      <select name="new-country" id="new-country" class="form-control mt-0">
-                        <option value></option>
+                      <select
+                        name="new-country"
+                        id="new-country"
+                        class="form-control mt-0"
+                        v-model="payloadC.newCountry"
+                        :class="{ invalid: $v.payloadC.newCountry.$error }"
+                      >
+                        <option value>Select country</option>
+                        <template
+                          v-for="(country, i) in $store.getters['countries']"
+                        >
+                          <option
+                            v-if="country.toLowerCase() != 'nigeria'"
+                            :key="i"
+                            :value="country"
+                            >{{ country }}</option
+                          >
+                        </template>
                       </select>
                       <img
                         src="~/assets/icons/thin-downward-arrow.svg"
                         alt
                         class="position-absolute down-arrow"
                       />
+                      <template v-if="$v.payloadC.newCountry.$dirty">
+                        <p
+                          v-if="!$v.payloadC.newCountry.required"
+                          class="invalid"
+                        >
+                          This field is required
+                        </p>
+                      </template>
                     </div>
                   </div>
                 </div>
               </div>
               <div class="row">
                 <div class="col-md-12 px-2">
-                  <button class="green-btn mt-2">Save Changes</button>
+                  <button
+                    class="green-btn mt-2 d-flex align-items-center justify-content-center"
+                    :disabled="loadingC"
+                  >
+                    <div
+                      class="spinner-grow text-success"
+                      role="status"
+                      v-if="loadingC"
+                    >
+                      <span class="sr-only">Loading...</span>
+                    </div>
+                    <span>Save Changes</span>
+                  </button>
                 </div>
               </div>
             </form>
@@ -55,31 +99,25 @@
         <div class="row">
           <div class="col-md-10">
             <div class="px-3">
-              <p style="color: #091F0E">This section is for citizens returning to Nigeria</p>
+              <p style="color: #091F0E">
+                This section is for citizens returning to Nigeria
+              </p>
             </div>
-            <form class="mt-3 px-4 mr-md-4">
+            <form
+              class="mt-3 px-4 mr-md-4"
+              @submit.prevent="updateCountryToNigeria"
+            >
               <div class="row">
                 <div class="col-lg-4 col-md-6 px-2">
                   <div class="form-input my-2">
-                    <label for="current-country">CURRENT COUNTRY</label>
+                    <label for="new-residence">RETURNING TO</label>
                     <div class="select-box position-relative">
-                      <select name="current-country" id="current-country" class="form-control mt-0">
-                        <option value></option>
-                      </select>
-                      <img
-                        src="~/assets/icons/thin-downward-arrow.svg"
-                        alt
-                        class="position-absolute down-arrow"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div class="col-lg-4 col-md-6 px-2">
-                  <div class="form-input my-2">
-                    <label for="new-residence">NEW COUNTRY OF RESIDENCE</label>
-                    <div class="select-box position-relative">
-                      <select name="new-residence" id="new-residence" class="form-control mt-0">
-                        <option value></option>
+                      <select
+                        name="new-residence"
+                        id="new-residence"
+                        class="form-control mt-0"
+                      >
+                        <option value="Nigeria">Nigeria</option>
                       </select>
                       <img
                         src="~/assets/icons/thin-downward-arrow.svg"
@@ -93,16 +131,37 @@
               <div class="row">
                 <div class="col-lg-4 col-md-6 px-2">
                   <div class="form-input my-2">
-                    <label for="new-state">NEW COUNTRY OF RESIDENCE</label>
+                    <label for="new-state">NEW STATE OF RESIDENCE</label>
                     <div class="select-box position-relative">
-                      <select name id class="form-control mt-0">
-                        <option value></option>
+                      <select
+                        name="new-state"
+                        id="new-state"
+                        class="form-control mt-0"
+                        :class="{ invalid: $v.payload.stateOfResidence.$error }"
+                        v-model="payload.stateOfResidence"
+                        :disabled="loading"
+                      >
+                        <option></option>
+                        <option
+                          v-for="(govt, i) in governments"
+                          :key="i"
+                          :value="govt._id"
+                          >{{ govt.name | formatStateName }}</option
+                        >
                       </select>
                       <img
                         src="~/assets/icons/thin-downward-arrow.svg"
                         alt
                         class="position-absolute down-arrow"
                       />
+                      <template v-if="$v.payload.stateOfResidence.$dirty">
+                        <p
+                          v-if="!$v.payload.stateOfResidence.required"
+                          class="invalid"
+                        >
+                          This field is required
+                        </p>
+                      </template>
                     </div>
                   </div>
                 </div>
@@ -110,14 +169,37 @@
                   <div class="form-input my-2">
                     <label for="new-state">WHAT LGA DO YOU LIVE IN?</label>
                     <div class="select-box position-relative">
-                      <select name id class="form-control mt-0">
+                      <select
+                        name="lga"
+                        id="lga"
+                        class="form-control mt-0"
+                        :class="{
+                          invalid: $v.payload.localGovtResidence.$error
+                        }"
+                        v-model="payload.localGovtResidence"
+                        :disabled="loading"
+                      >
                         <option value></option>
+                        <option
+                          v-for="(govt, i) in localGovernments"
+                          :key="i"
+                          :value="govt._id"
+                          >{{ govt.name }}</option
+                        >
                       </select>
                       <img
                         src="~/assets/icons/thin-downward-arrow.svg"
                         alt
                         class="position-absolute down-arrow"
                       />
+                      <template v-if="$v.payload.localGovtResidence.$dirty">
+                        <p
+                          v-if="!$v.payload.localGovtResidence.required"
+                          class="invalid"
+                        >
+                          This field is required
+                        </p>
+                      </template>
                     </div>
                   </div>
                 </div>
@@ -125,14 +207,42 @@
                   <div class="form-input my-2">
                     <label for="new-state">FEDERAL CONSTITUENCIES</label>
                     <div class="select-box position-relative">
-                      <select name id class="form-control mt-0">
+                      <select
+                        name="fed-constituencies"
+                        id="fed-constituencies"
+                        class="form-control mt-0"
+                        :class="{
+                          invalid:
+                            $v.payload.residenceFederalConstituency.$error
+                        }"
+                        v-model="payload.residenceFederalConstituency"
+                        :disabled="loading"
+                      >
                         <option value></option>
+                        <option
+                          v-for="(govt, i) in fedConstituencies"
+                          :key="i"
+                          :value="govt._id"
+                          >{{ govt.name | formatStateName }}</option
+                        >
                       </select>
                       <img
                         src="~/assets/icons/thin-downward-arrow.svg"
                         alt
                         class="position-absolute down-arrow"
                       />
+                      <template
+                        v-if="$v.payload.residenceFederalConstituency.$dirty"
+                      >
+                        <p
+                          v-if="
+                            !$v.payload.residenceFederalConstituency.required
+                          "
+                          class="invalid"
+                        >
+                          This field is required
+                        </p>
+                      </template>
                     </div>
                   </div>
                 </div>
@@ -142,14 +252,45 @@
                   <div class="form-input my-2">
                     <label for="new-state">SENATORIAL DISTRICT</label>
                     <div class="select-box position-relative">
-                      <select name id class="form-control mt-0">
+                      <select
+                        name="senatorialDistrict"
+                        id="senatorialDistrict"
+                        class="form-control mt-0"
+                        :class="{
+                          invalid:
+                            $v.payload.stateOfResidenceSenatorialDistrict.$error
+                        }"
+                        v-model="payload.stateOfResidenceSenatorialDistrict"
+                        :disabled="loading"
+                      >
                         <option value></option>
+                        <option
+                          v-for="(govt, i) in senatorialDistricts"
+                          :key="i"
+                          :value="govt._id"
+                          >{{ govt.name }}</option
+                        >
                       </select>
                       <img
                         src="~/assets/icons/thin-downward-arrow.svg"
                         alt
                         class="position-absolute down-arrow"
                       />
+                      <template
+                        v-if="
+                          $v.payload.stateOfResidenceSenatorialDistrict.$dirty
+                        "
+                      >
+                        <p
+                          v-if="
+                            !$v.payload.stateOfResidenceSenatorialDistrict
+                              .required
+                          "
+                          class="invalid"
+                        >
+                          This field is required
+                        </p>
+                      </template>
                     </div>
                   </div>
                 </div>
@@ -157,14 +298,39 @@
                   <div class="form-input my-2">
                     <label for="new-state">STATE CONSTITUENCIES</label>
                     <div class="select-box position-relative">
-                      <select name id class="form-control mt-0">
+                      <select
+                        name="stateConstituency"
+                        id="stateConstituency"
+                        class="form-control mt-0"
+                        :class="{
+                          invalid: $v.payload.residenceStateConstituency.$error
+                        }"
+                        v-model="payload.residenceStateConstituency"
+                        :disabled="loading"
+                      >
                         <option value></option>
+                        <option
+                          v-for="(govt, i) in stateConstituencies"
+                          :key="i"
+                          :value="govt._id"
+                          >{{ govt.name }}</option
+                        >
                       </select>
                       <img
                         src="~/assets/icons/thin-downward-arrow.svg"
                         alt
                         class="position-absolute down-arrow"
                       />
+                      <template
+                        v-if="$v.payload.residenceStateConstituency.$dirty"
+                      >
+                        <p
+                          v-if="!$v.payload.residenceStateConstituency.required"
+                          class="invalid"
+                        >
+                          This field is required
+                        </p>
+                      </template>
                     </div>
                   </div>
                 </div>
@@ -183,12 +349,215 @@
 </template>
 
 <script>
-import {mapGetters, mapActions} from 'vuex'
+import { required } from "vuelidate/lib/validators";
+import { mapGetters, mapActions } from "vuex";
 export default {
+  data() {
+    return {
+      loading: false,
+      localGovernments: [],
+      fedConstituencies: [],
+      stateConstituencies: [],
+      senatorialDistricts: [],
+      payload: {
+        localGovtResidence: "",
+        stateOfResidence: "",
+        residenceStateConstituency: "",
+        residenceFederalConstituency: "",
+        stateOfResidenceSenatorialDistrict: ""
+      },
+      payloadC: {
+        newCountry: ""
+      },
+      loadingC: false,
+      loading: false
+    };
+  },
+  validations: {
+    payload: {
+      localGovtResidence: {
+        required
+      },
+      stateOfResidence: {
+        required
+      },
+      residenceStateConstituency: {
+        required
+      },
+      residenceFederalConstituency: {
+        required
+      },
+      stateOfResidenceSenatorialDistrict: {
+        required
+      }
+    },
+    payloadC: {
+      newCountry: {
+        required
+      }
+    }
+  },
   computed: {
-    ...mapGetters('user',['getUser'])
+    ...mapGetters("user", ["getUser"]),
+    stateOfResidence() {
+      const self = this;
+      return this.$store.getters["governments"].filter(
+        govt => self.getUser.stateOfResidence == govt._id
+      )[0];
+    },
+    governments() {
+      return this.$store.getters["governments"];
+    }
+  },
+  filters: {
+    formatStateName(str) {
+      return str
+        ? `${str
+            .split(" ")[0]
+            .charAt(0)
+            .toUpperCase()}${str.split(" ")[0].slice(1)}`
+        : "";
+    }
+  },
+  watch: {
+    "payload.stateOfResidence"(val) {
+      if (val) {
+        this.fetchLGAs();
+        this.fetchFedConstituencies();
+        this.fetchStateConstituencies();
+        this.fetchSenatorialDistricts();
+      }
+    }
+  },
+  methods: {
+    ...mapActions("user", ["updateCountry", "updateResidence"]),
+    updateCountryToNigeria() {
+      this.$v.payload.$touch();
+      if (this.$v.payload.$error === true) {
+        return;
+      }
+      this.updateUserCountry({ newCountry: "Nigeria" });
+      this.updateUserResidence();
+    },
+    updateUserCountry(payload) {
+      this.loadingC = true;
+      const self = this;
+      this.updateCountry(payload)
+        .then(data => {
+          if (data.graphQLErrors) {
+            self.errorMessage = data.graphQLErrors[0].message;
+            self.$toast.error(data.graphQLErrors[0].message);
+            this.loadingC = false;
+            return;
+          }
+          this.payloadC.newCountry = ""
+          this.loadingC = false;
+          self.$toast.success("Country information updated");
+          this.$v.$reset();
+          return;
+        })
+        .catch(err => {
+          this.loadingC = false;
+        });
+    },
+    updateUserResidence() {
+      this.loading = true;
+      const self = this;
+      this.updateResidence(this.payload)
+        .then(data => {
+          if (data.graphQLErrors) {
+            self.errorMessage = data.graphQLErrors[0].message;
+            self.$toast.error(data.graphQLErrors[0].message);
+            this.loading = false;
+            return;
+          }
+          this.loading = false;
+          self.$toast.success(data.successMessage);
+          this.resetForm();
+          this.$v.$reset();
+          return;
+        })
+        .catch(err => {
+          this.loading = false;
+        });
+    },
+    fetchFedConstituencies() {
+      const self = this;
+      this.$store
+        .dispatch("fetchConstituency", {
+          stateGovernmentID: self.payload.stateOfResidence,
+          roomType: "HOUSE_OF_REPRESENTATIVE"
+        })
+        .then(data => {
+          if (data.graphQLErrors) {
+            this.$toast.error(data.graphQLErrors[0].message);
+            return;
+          }
+          this.fedConstituencies = data;
+        })
+        .catch(err => {});
+    },
+    fetchSenatorialDistricts() {
+      const self = this;
+      this.$store
+        .dispatch("fetchConstituency", {
+          stateGovernmentID: self.payload.stateOfResidence,
+          roomType: "SENATE"
+        })
+        .then(data => {
+          if (data.graphQLErrors) {
+            this.$toast.error(data.graphQLErrors[0].message);
+            return;
+          }
+          this.senatorialDistricts = data;
+        })
+        .catch(err => {});
+    },
+    fetchStateConstituencies() {
+      const self = this;
+      this.$store
+        .dispatch("fetchConstituency", {
+          stateGovernmentID: self.payload.stateOfResidence,
+          roomType: "HOUSE_OF_ASSEMBLY"
+        })
+        .then(data => {
+          if (data.graphQLErrors) {
+            this.$toast.error(data.graphQLErrors[0].message);
+            return;
+          }
+          this.stateConstituencies = data;
+        })
+        .catch(err => {});
+    },
+    fetchLGAs() {
+      const self = this;
+      this.$store
+        .dispatch("localGovernments", {
+          stateGovernmentID: self.payload.stateOfResidence
+        })
+        .then(data => {
+          if (data.graphQLErrors) {
+            this.$toast.error(data.graphQLErrors[0].message);
+            return;
+          }
+          this.localGovernments = data;
+        })
+        .catch(err => {});
+    },
+    resetForm() {
+      this.payload = {
+        localGovtResidence: "",
+        stateOfResidence: "",
+        stateOfResidenceConstituency: "",
+        stateOfResidenceFedConstituency: "",
+        stateOfResidenceSenatorialDistrict: ""
+      };
+    }
+  },
+  mounted() {
+    this.$store.dispatch("fetchCountries");
   }
-}
+};
 </script>
 
 <style scoped>
@@ -272,6 +641,6 @@ input.form-control:disabled {
 }
 
 hr {
-    background: rgba(7, 131, 78, 0.2);
+  background: rgba(7, 131, 78, 0.2);
 }
 </style>

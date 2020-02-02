@@ -7,9 +7,10 @@
             <img src="~/assets/icons/placeholder-icon.svg" alt class="mr-2" />
             <h6 class="subheading d-inline-block">PERSONAL INFORMATION</h6>
           </div>
-          <p
-            style="color: #091F0E; font-size: 15px"
-          >Use this page to update your contact information and change password.</p>
+          <p style="color: #091F0E; font-size: 15px">
+            Use this page to update your contact information and change
+            password.
+          </p>
           <div class="change-photo d-md-flex">
             <label for="profile-pic" style="cursor: pointer">
               <img
@@ -28,7 +29,8 @@
                     href="#"
                     class="py-2"
                     style="letter-spacing: 0; pointer-events: none;"
-                  >Upload a new profile image</a>
+                    >Upload a new profile image</a
+                  >
                 </label>
                 <input
                   type="file"
@@ -40,7 +42,9 @@
                   :disabled="loading.profile"
                 />
 
-                <p class="py-1 m-0">Maximum size allowed is 600kb of PNG, JPEG ,JPG.</p>
+                <p class="py-1 m-0">
+                  Maximum size allowed is 600kb of PNG, JPEG ,JPG.
+                </p>
               </div>
             </div>
           </div>
@@ -72,8 +76,7 @@
                       name="name2"
                       id="name2"
                       class="form-control mt-0"
-                      @blur="$v.userDetail.fullName.$touch()"
-                      :class="{invalid: $v.userDetail.fullName.$error}"
+                      :class="{ invalid: $v.userDetail.fullName.$error }"
                       v-model="userDetail.fullName"
                       :disabled="loading.profile"
                     />
@@ -81,11 +84,15 @@
                       <p
                         v-if="!$v.userDetail.fullName.required"
                         class="invalid"
-                      >This field is required</p>
+                      >
+                        This field is required
+                      </p>
                       <p
                         v-else-if="!$v.userDetail.fullName.minLength"
                         class="invalid"
-                      >Name should not be less than 2 characters</p>
+                      >
+                        Name should not be less than 2 characters
+                      </p>
                     </template>
                   </div>
                 </div>
@@ -97,8 +104,7 @@
                       name="username2"
                       id="username2"
                       class="form-control mt-0"
-                      @blur="$v.userDetail.username.$touch()"
-                      :class="{invalid: $v.userDetail.username.$error}"
+                      :class="{ invalid: $v.userDetail.username.$error }"
                       v-model="userDetail.username"
                       :disabled="loading.profile"
                     />
@@ -106,11 +112,15 @@
                       <p
                         v-if="!$v.userDetail.username.required"
                         class="invalid"
-                      >This field is required</p>
+                      >
+                        This field is required
+                      </p>
                       <p
                         v-else-if="!$v.userDetail.username.minLength"
                         class="invalid"
-                      >Username should not be less than 6 characters</p>
+                      >
+                        Username should not be less than 6 characters
+                      </p>
                     </template>
                   </div>
                 </div>
@@ -124,7 +134,7 @@
                       class="form-control mt-0"
                       disabled
                       :value="userDetail.dob | formatDate($moment)"
-                      @input="value=>userDetail.dob=value"
+                      @input="value => (userDetail.dob = value)"
                     />
                   </div>
                 </div>
@@ -136,7 +146,11 @@
                     type="submit"
                     :disabled="loading.profile"
                   >
-                    <div class="spinner-grow text-success" role="status" v-if="loading.profile">
+                    <div
+                      class="spinner-grow text-success"
+                      role="status"
+                      v-if="loading.profile"
+                    >
                       <span class="sr-only">Loading...</span>
                     </div>
                     <span>Save Changes</span>
@@ -153,7 +167,9 @@
               v-if="errorMessage"
               class="invalid px-2"
               style="font-size: 14px !important; font-weight: 400; "
-            >{{errorMessage}}</p>
+            >
+              {{ errorMessage }}
+            </p>
             <form class="px-3 mr-md-4" @submit.prevent="updateUserPassword">
               <div class="row">
                 <div class="col-lg-4 col-md-6 my-2 px-2">
@@ -165,20 +181,31 @@
                       id="password2"
                       class="form-control mt-0"
                       @focus="errorMessage = ''"
-                      :class="{invalid: $v.payload.currentPassword.$error || errorMessage}"
-                      @blur="$v.payload.currentPassword.$touch()"
+                      :class="{
+                        invalid:
+                          $v.payload.currentPassword.$error || errorMessage
+                      }"
                       v-model="payload.currentPassword"
                       :disabled="loading.password"
                     />
-                    <template v-if="$v.payload.currentPassword.$dirty && $v.payload.currentPassword.$model">
+                    <template
+                      v-if="
+                        $v.payload.currentPassword.$dirty &&
+                          $v.payload.currentPassword.$model
+                      "
+                    >
                       <p
                         v-if="!$v.payload.currentPassword.required"
                         class="invalid"
-                      >This field is required</p>
+                      >
+                        This field is required
+                      </p>
                       <p
                         v-else-if="!$v.payload.currentPassword.minLength"
                         class="invalid"
-                      >Password should not be less than 6 characters</p>
+                      >
+                        Password should not be less than 6 characters
+                      </p>
                     </template>
                   </div>
                 </div>
@@ -191,8 +218,9 @@
                       id="new-password2"
                       class="form-control mt-0"
                       @focus="errorMessage = ''"
-                      :class="{invalid: $v.payload.newPassword.$error || errorMessage}"
-                      @blur="$v.payload.newPassword.$touch()"
+                      :class="{
+                        invalid: $v.payload.newPassword.$error || errorMessage
+                      }"
                       v-model="payload.newPassword"
                       :disabled="loading.password"
                     />
@@ -200,11 +228,15 @@
                       <p
                         v-if="!$v.payload.newPassword.required"
                         class="invalid"
-                      >This field is required</p>
+                      >
+                        This field is required
+                      </p>
                       <p
                         v-else-if="!$v.payload.newPassword.minLength"
                         class="invalid"
-                      >Password should not be less than 6 characters</p>
+                      >
+                        Password should not be less than 6 characters
+                      </p>
                     </template>
                   </div>
                 </div>
@@ -217,21 +249,25 @@
                       id="confirm-password2"
                       class="form-control mt-0"
                       @focus="errorMessage = ''"
-                      :class="{invalid: $v.confirmPassword.$error || errorMessage}"
-                      @blur="$v.confirmPassword.$touch()"
+                      :class="{
+                        invalid: $v.confirmPassword.$error || errorMessage
+                      }"
                       v-model="confirmPassword"
                       :disabled="loading.password"
                     />
                     <template v-if="$v.confirmPassword.$dirty">
-                      <p v-if="!$v.confirmPassword.required" class="invalid">This field is required</p>
+                      <p v-if="!$v.confirmPassword.required" class="invalid">
+                        This field is required
+                      </p>
                       <p
                         v-else-if="!$v.confirmPassword.minLength"
                         class="invalid"
-                      >Password should not be less than 6 characters</p>
-                      <p
-                        v-else-if="$v.confirmPassword.$error"
-                        class="invalid"
-                      >Passwords do not match</p>
+                      >
+                        Password should not be less than 6 characters
+                      </p>
+                      <p v-else-if="$v.confirmPassword.$error" class="invalid">
+                        Passwords do not match
+                      </p>
                     </template>
                   </div>
                 </div>
@@ -242,7 +278,11 @@
                     class="green-btn mt-2 d-flex justify-content-center align-items-center"
                     :disabled="loading.password"
                   >
-                    <div class="spinner-grow text-success" role="status" v-if="loading.password">
+                    <div
+                      class="spinner-grow text-success"
+                      role="status"
+                      v-if="loading.password"
+                    >
                       <span class="sr-only">Loading...</span>
                     </div>
                     <span>Save Changes</span>
@@ -257,7 +297,6 @@
   </div>
 </template>
 
-
 <script>
 import avatar from "~/assets/images/avatar.svg";
 import {
@@ -269,7 +308,6 @@ import {
 } from "vuelidate/lib/validators";
 import { mapActions, mapGetters } from "vuex";
 export default {
-
   data() {
     return {
       avatar,
@@ -326,6 +364,7 @@ export default {
   },
   methods: {
     ...mapActions("user", ["changePassword", "updateProfile"]),
+    ...mapActions("auth", ["signIn", "logout"]),
     previewImage() {
       this.file = event.target.files[0];
       const reader = new FileReader();
@@ -353,6 +392,11 @@ export default {
           this.loading.password = false;
           self.$toast.success(data.successMessage);
           this.resetPasswordForm();
+          // this.logout();
+          // this.signIn({
+          //   username: this.getUser.username,
+          //   password: this.payload.newPassword
+          // });
           return;
         })
         .catch(err => {
@@ -401,7 +445,6 @@ export default {
   }
 };
 </script>
-
 
 <style scoped>
 .container-fluid {

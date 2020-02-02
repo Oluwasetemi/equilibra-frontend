@@ -3,72 +3,127 @@
     <div class="forum-header px-4 py-2 d-flex align-items-center">
       <div class="header-content w-100">
         <div class="d-flex justify-content-between">
-          <h4 class="d-inline-block mb-lg-2 mb-0">{{currentRoom ? currentRoom.name : '--'}}</h4>
+          <h4 class="d-inline-block mb-lg-2 mb-0">
+            {{ currentRoom ? currentRoom.name : "--" }}
+          </h4>
           <div class="d-inline-block mb-2 mb-lg-0 text-right">
             <img src="~/assets/icons/avatar2.svg" alt class="mr-1" />
-            <span style="font-size: 14px; text-decoration: underline;">Hon. Danjuma Zaccheus</span>
+            <span style="font-size: 14px; text-decoration: underline;"
+              >Hon. Danjuma Zaccheus</span
+            >
           </div>
         </div>
-        <div class="d-flex justify-content-between">
-<p
-          class="description mb-2 mr-md-5 pr-md-5"
-          v-if="currentRoom && currentRoom.slug != 'Vent-The-Steam'"
-        >{{currentRoom.currentTopic ? currentRoom.currentTopic.title : 'This room has no topic' }}</p>
-        <div>
-          <div class="text-right" style="font-size: 12px" v-if="currentRoom.currentTopic ">
-            Total Comments: {{totalComments}}
+        <div class="row justify-content-between">
+          <div class="col-md-6">
+            <p
+              class="description mb-2 mr-md-5 pr-md-5"
+              v-if="currentRoom && currentRoom.slug != 'Vent-The-Steam'"
+            >
+              {{
+                currentRoom.currentTopic
+                  ? currentRoom.currentTopic.title
+                  : "This room has no topic"
+              }}
+            </p>
           </div>
-          <!-- <div>
-            Total Members: {{}}
-          </div> -->
+          <div class="col-md-6">
+            <div class="d-flex justify-content-end align-items-center">
+              <div
+                class="text-right"
+                style="font-size: 12px"
+              >
+                {{ totalComments }} Comments 
+              </div>
+              <span class="mx-3">|</span>
+              <div style="font-size: 12px">
+                {{ currentRoom.members.length }} Members
+              </div>
+            </div>
+          </div>
         </div>
-        </div>
-        
-        <div class="d-flex justify-content-lg-between align-items-end flex-wrap">
+
+        <div
+          class="d-flex justify-content-lg-between align-items-end flex-wrap"
+        >
           <span class="d-flex align-items-end">
             <div
               class="timer d-flex align-items-center mt-2"
-              v-if="currentRoom && currentRoom.currentTopic && currentRoom.slug != 'Vent-The-Steam'"
+              v-if="
+                currentRoom &&
+                  currentRoom.currentTopic &&
+                  currentRoom.slug != 'Vent-The-Steam'
+              "
             >
               <img src="~/assets/icons/timer.svg" alt class="mr-2" />
               <span class="position-relative">
-                <span style="font-size: 15px" class="pr-1">{{daysLeft}}</span>Day(s)
-                <span style="font-size: 14px" class="px-1">{{hoursLeft}}</span> Hour(s)
-                <span class="ml-2" style="font-size: 14px">{{minutesLeft}}</span> Minute(s)
-                <span class="secs">{{secondsLeft}}</span>
+                <span style="font-size: 15px" class="pr-1">{{ daysLeft }}</span
+                >Day(s)
+                <span style="font-size: 14px" class="px-1">{{
+                  hoursLeft
+                }}</span>
+                Hour(s)
+                <span class="ml-2" style="font-size: 14px">{{
+                  minutesLeft
+                }}</span>
+                Minute(s)
+                <span class="secs">{{ secondsLeft }}</span>
               </span>
             </div>
             <span
-              v-if="ongoingDiscussionVoting && ongoingDiscussionVoting.voteId && isMyRoom && !ongoingDiscussionVoting.resultsIn"
+              v-if="
+                ongoingDiscussionVoting &&
+                  ongoingDiscussionVoting.voteId &&
+                  isMyRoom &&
+                  !ongoingDiscussionVoting.resultsIn
+              "
               class="ml-2"
             >
               <a
                 href="#"
                 style="text-decoration: underline; font-size: 11px;"
                 @click="showModal('#voteDiscussionModal')"
-              >Voting in progress</a>
+                >Voting in progress</a
+              >
             </span>
             <span
-              v-if="ongoingDiscussionVoting && ongoingDiscussionVoting.voteId && isMyRoom && ongoingDiscussionVoting.resultsIn"
+              v-if="
+                ongoingDiscussionVoting &&
+                  ongoingDiscussionVoting.voteId &&
+                  isMyRoom &&
+                  ongoingDiscussionVoting.resultsIn
+              "
               class="ml-2"
             >
               <a
                 href="#"
                 style="text-decoration: underline; font-size: 11px;"
                 @click="showModal('#voteResults')"
-              >View voting results</a>
+                >View voting results</a
+              >
             </span>
           </span>
 
-          <div class="topic-actions mt-2 d-flex" v-if="currentRoom.slug != 'Vent-The-Steam'">
+          <div
+            class="topic-actions mt-2 d-flex"
+            v-if="currentRoom.slug != 'Vent-The-Steam'"
+          >
             <button
               class="suggest-topic mr-2"
-              @click="Number(daysLeft) > 5 ? showModal('#suggestTopic') : showModal('#changeTopic');$eventBus.$emit('triedChangeTopic')"
-            >Suggest Topic</button>
+              @click="showModal('#suggestTopic')"
+            >
+              Suggest Topic
+            </button>
             <button
               class="change-topic ml-2"
-              @click="showChangeTopicModal = true; showModal('#changeTopic')"
-            >Change Current Topic</button>
+              @click="
+                Number(daysLeft) > 5
+                  ? showModal('#suggestTopic')
+                  : showModal('#changeTopic');
+                $eventBus.$emit('triedChangeTopic');
+              "
+            >
+              Change Current Topic
+            </button>
           </div>
         </div>
       </div>
@@ -174,14 +229,12 @@ export default {
   },
   mounted() {
     this.getTime();
-    this.$eventBus.$on('totalComments', (data) => {
-      this.totalComments = data
-    })
+    this.$eventBus.$on("totalComments", data => {
+      this.totalComments = data;
+    });
   }
 };
 </script>
-
-
 
 <style>
 .modal-backdrop.show {
