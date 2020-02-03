@@ -5,15 +5,16 @@
         <header class="px-4 pb-2">
           <div class="row" style="min-height: 517px;">
             <div class="col-lg-7 d-flex flex-column justify-content-end">
-              <h2
-                class="font-weight-bold"
-                v-if="government.name"
-              >{{government.name.split(' ')[0] | capitalizeFirstLetter}}</h2>
+              <h2 class="font-weight-bold" v-if="government.name">
+                {{ government.name.split(" ")[0] | capitalizeFirstLetter }}
+              </h2>
               <p
                 class="subtitle"
                 style="font-size: 22px"
                 v-if="government.name"
-              >{{government.name.split(' ')[0] | capitalizeFirstLetter}}</p>
+              >
+                {{ government.name.split(" ")[0] | capitalizeFirstLetter }}
+              </p>
             </div>
             <transition
               enter-active-class="animated fadeInDown"
@@ -28,21 +29,29 @@
                         class="d-inline-block mb-0 mr-2 rounded-circle border p-1"
                         style="border-color: #EAF7ED !important;"
                       >
-                        <img src="~assets/images/el-rufai.png" alt class="rounded-circle photo" cl />
+                        <img
+                          :src="government.leaderPhoto"
+                          alt
+                          class="rounded-circle photo"
+                          cl
+                        />
                       </figure>
 
                       <div class="details d-inline-block">
                         <div class="d-flex flex-column justify-content-center">
-                          <span
-                            class="name m-0"
-                            style="line-height: 1.3em;"
-                          >{{government.leader | capitalizeFirstLetter}}</span>
-                          <span class="post m-0" style="line-height: 1.3em;">Executive Governor</span>
+                          <span class="name m-0" style="line-height: 1.3em;">{{
+                            government.leader | capitalizeFirstLetter
+                          }}</span>
+                          <span class="post m-0" style="line-height: 1.3em;"
+                            >Executive Governor</span
+                          >
                         </div>
                       </div>
                     </div>
                     <div class="detail d-flex align-items-center pb-3 mb-3">
-                      <figure class="detail-icon d-inline-block mb-0 mr-4 rounded-circle">
+                      <figure
+                        class="detail-icon d-inline-block mb-0 mr-4 rounded-circle"
+                      >
                         <img src="~assets/icons/population.svg" alt />
                       </figure>
                       <div class="details d-inline-block">
@@ -50,13 +59,16 @@
                           <span
                             class="figures m-0"
                             style="line-height: 1.3em;"
-                          >{{ government.population.toLocaleString()}}</span>
+                            >{{ government.population.toLocaleString() }}</span
+                          >
                           <span class="heading m-0">Population</span>
                         </div>
                       </div>
                     </div>
                     <div class="detail d-flex align-items-center pb-3 mb-3">
-                      <figure class="detail-icon d-inline-block mb-0 mr-4 rounded-circle">
+                      <figure
+                        class="detail-icon d-inline-block mb-0 mr-4 rounded-circle"
+                      >
                         <img src="~assets/icons/lgas.svg" alt />
                       </figure>
                       <div class="details d-inline-block">
@@ -64,111 +76,143 @@
                           <span
                             class="figures m-0"
                             style="line-height: 1.3em;"
-                          >{{government.totalLg}}</span>
+                            >{{ government.totalLg }}</span
+                          >
                           <span class="heading m-0">Number of LGAs</span>
                         </div>
                       </div>
                     </div>
                     <div class="detail d-flex align-items-center pb-3 mb-3">
-                      <figure class="detail-icon d-inline-block mb-0 mr-4 rounded-circle">
+                      <figure
+                        class="detail-icon d-inline-block mb-0 mr-4 rounded-circle"
+                      >
                         <img src="~assets/icons/senators.svg" alt />
                       </figure>
                       <div class="details d-inline-block">
                         <div class="d-flex flex-column justify-content-center">
-                          <span class="figures m-0" style="line-height: 1.3em;">3</span>
+                          <span class="figures m-0" style="line-height: 1.3em;"
+                            >3</span
+                          >
                           <span class="heading m-0">Senators</span>
                         </div>
                       </div>
                     </div>
                     <div class="detail d-flex align-items-center pb-3 mb-3">
-                      <figure class="detail-icon d-inline-block mb-0 mr-4 rounded-circle">
+                      <figure
+                        class="detail-icon d-inline-block mb-0 mr-4 rounded-circle"
+                      >
                         <img src="~assets/icons/population.svg" alt />
                       </figure>
                       <div class="details d-inline-block">
                         <div class="d-flex flex-column justify-content-center">
-                          <span class="figures m-0" style="line-height: 1.3em;">16</span>
-                          <span class="heading m-0">Federal Constituencies</span>
+                          <span class="figures m-0" style="line-height: 1.3em;"
+                            >16</span
+                          >
+                          <span class="heading m-0"
+                            >Federal Constituencies</span
+                          >
                         </div>
                       </div>
                     </div>
                     <div class="detail d-flex align-items-center pb-3 mb-3">
-                      <figure class="detail-icon d-inline-block mb-0 mr-4 rounded-circle">
+                      <figure
+                        class="detail-icon d-inline-block mb-0 mr-4 rounded-circle"
+                      >
                         <img src="~assets/icons/constituencies.svg" alt />
                       </figure>
                       <div class="details d-inline-block">
                         <div class="d-flex flex-column justify-content-center">
-                          <span class="figures m-0" style="line-height: 1.3em;">34</span>
+                          <span class="figures m-0" style="line-height: 1.3em;"
+                            >34</span
+                          >
                           <span class="heading m-0">State Constituencies</span>
                         </div>
                       </div>
                     </div>
                     <div class="detail d-flex align-items-center pb-3 mb-3">
-                      <figure class="detail-icon d-inline-block mb-0 mr-4 rounded-circle">
+                      <figure
+                        class="detail-icon d-inline-block mb-0 mr-4 rounded-circle"
+                      >
                         <img src="~assets/icons/population.svg" alt />
                       </figure>
                       <div class="details d-inline-block">
                         <div class="d-flex flex-column justify-content-center">
-                          <span
-                            class="figures m-0"
-                            style="line-height: 1.3em;"
-                          >{{government.infantMortalityRate}}%</span>
+                          <span class="figures m-0" style="line-height: 1.3em;"
+                            >{{ government.infantMortalityRate }}%</span
+                          >
                           <span class="heading m-0">Infant Mortality Rate</span>
                         </div>
                       </div>
                     </div>
                     <div class="detail d-flex align-items-center pb-3 mb-3">
-                      <figure class="detail-icon d-inline-block mb-0 mr-4 rounded-circle">
+                      <figure
+                        class="detail-icon d-inline-block mb-0 mr-4 rounded-circle"
+                      >
                         <img src="~assets/icons/infant-mortality.svg" alt />
                       </figure>
                       <div class="details d-inline-block">
                         <div class="d-flex flex-column justify-content-center">
-                          <span class="figures m-0" style="line-height: 1.3em;">31.91%</span>
-                          <span class="heading m-0">Access To Portable Water</span>
+                          <span class="figures m-0" style="line-height: 1.3em;"
+                            >31.91%</span
+                          >
+                          <span class="heading m-0"
+                            >Access To Portable Water</span
+                          >
                         </div>
                       </div>
                     </div>
                     <div class="detail d-flex align-items-center pb-3 mb-3">
-                      <figure class="detail-icon d-inline-block mb-0 mr-4 rounded-circle">
+                      <figure
+                        class="detail-icon d-inline-block mb-0 mr-4 rounded-circle"
+                      >
                         <img src="~assets/icons/literacy.svg" alt />
                       </figure>
                       <div class="details d-inline-block">
                         <div class="d-flex flex-column justify-content-center">
-                          <span
-                            class="figures m-0"
-                            style="line-height: 1.3em;"
-                          >{{government.literacyRate}}%</span>
+                          <span class="figures m-0" style="line-height: 1.3em;"
+                            >{{ government.literacyRate }}%</span
+                          >
                           <span class="heading m-0">Literacy Rate</span>
                         </div>
                       </div>
                     </div>
                     <div class="detail d-flex align-items-center pb-3 mb-3">
-                      <figure class="detail-icon d-inline-block mb-0 mr-4 rounded-circle">
+                      <figure
+                        class="detail-icon d-inline-block mb-0 mr-4 rounded-circle"
+                      >
                         <img src="~assets/icons/employment.svg" alt />
                       </figure>
                       <div class="details d-inline-block">
                         <div class="d-flex flex-column justify-content-center">
-                          <span
-                            class="figures m-0"
-                            style="line-height: 1.3em;"
-                          >{{government.unemploymentRate}}%</span>
+                          <span class="figures m-0" style="line-height: 1.3em;"
+                            >{{ government.unemploymentRate }}%</span
+                          >
                           <span class="heading m-0">Unemployment Rate</span>
                         </div>
                       </div>
                     </div>
                     <div class="detail d-flex align-items-center pb-3 mb-3">
-                      <figure class="detail-icon d-inline-block mb-0 mr-4 rounded-circle">
+                      <figure
+                        class="detail-icon d-inline-block mb-0 mr-4 rounded-circle"
+                      >
                         <img src="~assets/icons/girl-marriage.svg" alt />
                       </figure>
                       <div class="details d-inline-block">
                         <div class="d-flex flex-column justify-content-center">
-                          <span class="figures m-0" style="line-height: 1.3em;">Not available</span>
-                          <span class="heading m-0">Girls married before age 15</span>
+                          <span class="figures m-0" style="line-height: 1.3em;"
+                            >Not available</span
+                          >
+                          <span class="heading m-0"
+                            >Girls married before age 15</span
+                          >
                         </div>
                       </div>
                     </div>
                   </div>
                   <div class="pt-3">
-                    <nuxt-link tag="button" to="/sign-up" class="green-btn">Join Equilibra</nuxt-link>
+                    <nuxt-link tag="button" to="/sign-up" class="green-btn"
+                      >Join Equilibra</nuxt-link
+                    >
                   </div>
                 </div>
               </div>
@@ -182,27 +226,44 @@
         <div class="col-lg-7">
           <div class="row">
             <div class="col-lg-12">
-              <div class="description pt-4 mt-2">{{government.description}}</div>
+              <div class="description pt-4 mt-2">
+                {{ government.description }}
+              </div>
             </div>
           </div>
 
           <div class="row mt-3">
-            <div class="col-lg-4 col-md-6 py-2" v-for="(detail, i) in aboutState" :key="i">
+            <div
+              class="col-lg-4 col-md-6 py-2"
+              v-for="(detail, i) in aboutState"
+              :key="i"
+            >
               <div class="features mr-lg-3">
-                <span class="title mb-2 d-block">{{detail.title}}</span>
+                <span class="title mb-2 d-block">{{ detail.title }}</span>
                 <span
                   class="value d-block"
-                  v-if="!(government[detail.key] && government[detail.key].constructor === Array)"
-                >{{government[detail.key] || ' Not available'}}</span>
+                  v-if="
+                    !(
+                      government[detail.key] &&
+                      government[detail.key].constructor === Array
+                    )
+                  "
+                  >{{ government[detail.key] || " Not available" }}</span
+                >
                 <span
                   class="value d-block"
-                  v-else-if="government[detail.key] && government[detail.key].constructor === Array"
+                  v-else-if="
+                    government[detail.key] &&
+                      government[detail.key].constructor === Array
+                  "
                 >
                   <span v-if="government[detail.key].length > 0">
-                    <span
-                      v-for="(item, i) in government[detail.key]"
-                      :key="i"
-                    >{{item}}{{i != government[detail.key].length ? ',' : ''}}</span>
+                    <span v-for="(item, i) in government[detail.key]" :key="i"
+                      >{{ item
+                      }}{{
+                        i != government[detail.key].length ? "," : ""
+                      }}</span
+                    >
                   </span>
                   <span v-else>Not available</span>
                 </span>
@@ -218,129 +279,180 @@
                   class="d-inline-block mb-0 mr-2 rounded-circle border p-1"
                   style="border-color: #EAF7ED;"
                 >
-                  <img src="~assets/images/el-rufai.png" alt class="rounded-circle photo" cl />
+                  <img
+                    :src="government.leaderPhoto"
+                    alt
+                    class="rounded-circle photo"
+                    
+                  />
                 </figure>
 
                 <div class="details d-inline-block">
                   <div class="d-flex flex-column justify-content-center">
-                    <span class="name m-0" style="line-height: 1.3em;">Nasir El Rufai</span>
-                    <span class="post m-0" style="line-height: 1.3em;">Executive Governor</span>
+                    <span class="name m-0" style="line-height: 1.3em;"
+                      >Nasir El Rufai</span
+                    >
+                    <span class="post m-0" style="line-height: 1.3em;"
+                      >Executive Governor</span
+                    >
                   </div>
                 </div>
               </div>
               <div class="detail d-flex align-items-center pb-3 mb-3">
-                <figure class="detail-icon d-inline-block mb-0 mr-4 rounded-circle">
+                <figure
+                  class="detail-icon d-inline-block mb-0 mr-4 rounded-circle"
+                >
                   <img src="~assets/icons/population.svg" alt />
                 </figure>
                 <div class="details d-inline-block">
                   <div class="d-flex flex-column justify-content-center">
-                    <span class="figures m-0" style="line-height: 1.3em;">8.3 Million</span>
+                    <span class="figures m-0" style="line-height: 1.3em;"
+                      >8.3 Million</span
+                    >
                     <span class="heading m-0">Population</span>
                   </div>
                 </div>
               </div>
               <div class="detail d-flex align-items-center pb-3 mb-3">
-                <figure class="detail-icon d-inline-block mb-0 mr-4 rounded-circle">
+                <figure
+                  class="detail-icon d-inline-block mb-0 mr-4 rounded-circle"
+                >
                   <img src="~assets/icons/lgas.svg" alt />
                 </figure>
                 <div class="details d-inline-block">
                   <div class="d-flex flex-column justify-content-center">
-                    <span class="figures m-0" style="line-height: 1.3em;">23</span>
+                    <span class="figures m-0" style="line-height: 1.3em;"
+                      >23</span
+                    >
                     <span class="heading m-0">Number of LGAs</span>
                   </div>
                 </div>
               </div>
               <div class="detail d-flex align-items-center pb-3 mb-3">
-                <figure class="detail-icon d-inline-block mb-0 mr-4 rounded-circle">
+                <figure
+                  class="detail-icon d-inline-block mb-0 mr-4 rounded-circle"
+                >
                   <img src="~assets/icons/senators.svg" alt />
                 </figure>
                 <div class="details d-inline-block">
                   <div class="d-flex flex-column justify-content-center">
-                    <span class="figures m-0" style="line-height: 1.3em;">3</span>
+                    <span class="figures m-0" style="line-height: 1.3em;"
+                      >3</span
+                    >
                     <span class="heading m-0">Senators</span>
                   </div>
                 </div>
               </div>
               <div class="detail d-flex align-items-center pb-3 mb-3">
-                <figure class="detail-icon d-inline-block mb-0 mr-4 rounded-circle">
+                <figure
+                  class="detail-icon d-inline-block mb-0 mr-4 rounded-circle"
+                >
                   <img src="~assets/icons/population.svg" alt />
                 </figure>
                 <div class="details d-inline-block">
                   <div class="d-flex flex-column justify-content-center">
-                    <span class="figures m-0" style="line-height: 1.3em;">16</span>
+                    <span class="figures m-0" style="line-height: 1.3em;"
+                      >16</span
+                    >
                     <span class="heading m-0">Federal Constituencies</span>
                   </div>
                 </div>
               </div>
               <div class="detail d-flex align-items-center pb-3 mb-3">
-                <figure class="detail-icon d-inline-block mb-0 mr-4 rounded-circle">
+                <figure
+                  class="detail-icon d-inline-block mb-0 mr-4 rounded-circle"
+                >
                   <img src="~assets/icons/constituencies.svg" alt />
                 </figure>
                 <div class="details d-inline-block">
                   <div class="d-flex flex-column justify-content-center">
-                    <span class="figures m-0" style="line-height: 1.3em;">34</span>
+                    <span class="figures m-0" style="line-height: 1.3em;"
+                      >34</span
+                    >
                     <span class="heading m-0">State Constituencies</span>
                   </div>
                 </div>
               </div>
               <div class="detail d-flex align-items-center pb-3 mb-3">
-                <figure class="detail-icon d-inline-block mb-0 mr-4 rounded-circle">
+                <figure
+                  class="detail-icon d-inline-block mb-0 mr-4 rounded-circle"
+                >
                   <img src="~assets/icons/population.svg" alt />
                 </figure>
                 <div class="details d-inline-block">
                   <div class="d-flex flex-column justify-content-center">
-                    <span class="figures m-0" style="line-height: 1.3em;">NaN%</span>
+                    <span class="figures m-0" style="line-height: 1.3em;"
+                      >NaN%</span
+                    >
                     <span class="heading m-0">Infant Mortality Rate</span>
                   </div>
                 </div>
               </div>
               <div class="detail d-flex align-items-center pb-3 mb-3">
-                <figure class="detail-icon d-inline-block mb-0 mr-4 rounded-circle">
+                <figure
+                  class="detail-icon d-inline-block mb-0 mr-4 rounded-circle"
+                >
                   <img src="~assets/icons/infant-mortality.svg" alt />
                 </figure>
                 <div class="details d-inline-block">
                   <div class="d-flex flex-column justify-content-center">
-                    <span class="figures m-0" style="line-height: 1.3em;">31.91%</span>
+                    <span class="figures m-0" style="line-height: 1.3em;"
+                      >31.91%</span
+                    >
                     <span class="heading m-0">Access To Portable Water</span>
                   </div>
                 </div>
               </div>
               <div class="detail d-flex align-items-center pb-3 mb-3">
-                <figure class="detail-icon d-inline-block mb-0 mr-4 rounded-circle">
+                <figure
+                  class="detail-icon d-inline-block mb-0 mr-4 rounded-circle"
+                >
                   <img src="~assets/icons/literacy.svg" alt />
                 </figure>
                 <div class="details d-inline-block">
                   <div class="d-flex flex-column justify-content-center">
-                    <span class="figures m-0" style="line-height: 1.3em;">47.31%</span>
+                    <span class="figures m-0" style="line-height: 1.3em;"
+                      >47.31%</span
+                    >
                     <span class="heading m-0">Literacy Rate</span>
                   </div>
                 </div>
               </div>
               <div class="detail d-flex align-items-center pb-3 mb-3">
-                <figure class="detail-icon d-inline-block mb-0 mr-4 rounded-circle">
+                <figure
+                  class="detail-icon d-inline-block mb-0 mr-4 rounded-circle"
+                >
                   <img src="~assets/icons/employment.svg" alt />
                 </figure>
                 <div class="details d-inline-block">
                   <div class="d-flex flex-column justify-content-center">
-                    <span class="figures m-0" style="line-height: 1.3em;">30.3%</span>
+                    <span class="figures m-0" style="line-height: 1.3em;"
+                      >30.3%</span
+                    >
                     <span class="heading m-0">Unemployment Rate</span>
                   </div>
                 </div>
               </div>
               <div class="detail d-flex align-items-center pb-3 mb-3">
-                <figure class="detail-icon d-inline-block mb-0 mr-4 rounded-circle">
+                <figure
+                  class="detail-icon d-inline-block mb-0 mr-4 rounded-circle"
+                >
                   <img src="~assets/icons/girl-marriage.svg" alt />
                 </figure>
                 <div class="details d-inline-block">
                   <div class="d-flex flex-column justify-content-center">
-                    <span class="figures m-0" style="line-height: 1.3em;">30.3%</span>
+                    <span class="figures m-0" style="line-height: 1.3em;"
+                      >30.3%</span
+                    >
                     <span class="heading m-0">Girls married before age 15</span>
                   </div>
                 </div>
               </div>
             </div>
             <div class="pt-3">
-              <nuxt-link tag="button" to="/sign-up" class="green-btn">Join Equilibra</nuxt-link>
+              <nuxt-link tag="button" to="/sign-up" class="green-btn"
+                >Join Equilibra</nuxt-link
+              >
             </div>
           </div>
         </div>
@@ -348,7 +460,6 @@
     </article>
   </div>
 </template>
-
 
 <script>
 import { setTimeout } from "timers";
@@ -480,6 +591,9 @@ span.post {
 
 .photo {
   height: 100px;
+  width: 100px;
+  display: inline-block;
+  object-fit: contain
 }
 
 article {

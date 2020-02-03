@@ -30,6 +30,7 @@ export default {
         stateOfResidenceFedConstituency
         senatorialDistrict
         stateOfResidenceSenatorialDistrict
+        currentCountry
         signupStatus
       }
     }
@@ -62,6 +63,7 @@ export default {
         stateOfResidenceFedConstituency
         senatorialDistrict
         stateOfResidenceSenatorialDistrict
+        currentCountry
         signupStatus
       }
     }
@@ -94,6 +96,7 @@ export default {
         stateOfResidenceFedConstituency
         senatorialDistrict
         stateOfResidenceSenatorialDistrict
+        currentCountry
         signupStatus
       }
     }
@@ -135,6 +138,7 @@ export default {
         stateOfResidenceFedConstituency
         senatorialDistrict
         stateOfResidenceSenatorialDistrict
+        currentCountry
         signupStatus
       }
     }
@@ -167,6 +171,7 @@ export default {
         stateOfResidenceFedConstituency
         senatorialDistrict
         stateOfResidenceSenatorialDistrict
+        currentCountry
         signupStatus
       }
     }
@@ -199,6 +204,7 @@ export default {
         stateOfResidenceFedConstituency
         senatorialDistrict
         stateOfResidenceSenatorialDistrict
+        currentCountry
         signupStatus
       }
     }

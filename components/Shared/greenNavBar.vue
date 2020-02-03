@@ -37,6 +37,7 @@
           <li class="nav-item">
             <nuxt-link to="/contact-us" class="nav-link">Contact Us</nuxt-link>
           </li>
+          {{isAuth}}
           <no-ssr>
             <li class="nav-item ml-lg-4">
               <div class="dropdown" style="background: white;" v-if="isAuth">

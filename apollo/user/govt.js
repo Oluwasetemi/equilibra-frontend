@@ -39,6 +39,9 @@ export default {
         agriculture
         mineralResources
         museumsAndParks
+        speakerPhoto
+        senatePresidentPhoto
+        leaderPhoto
       }
     }
   `,
@@ -76,6 +79,9 @@ export default {
         agriculture
         mineralResources
         museumsAndParks
+        speakerPhoto
+        senatePresidentPhoto
+        leaderPhoto
       }
     }
   `,
@@ -129,6 +135,9 @@ export default {
         agriculture
         mineralResources
         museumsAndParks
+        speakerPhoto
+        senatePresidentPhoto
+        leaderPhoto
       }
     }
   `,
@@ -166,6 +175,9 @@ export default {
         agriculture
         mineralResources
         museumsAndParks
+        speakerPhoto
+        senatePresidentPhoto
+        leaderPhoto
       }
     }
   `,
@@ -176,5 +188,12 @@ export default {
         name
       }
     }
-  `
+  `,
+  fetchCountries: gql`
+    query fetchCountries {
+      countries {
+        name
+      }
+    }
+  `,
 };
