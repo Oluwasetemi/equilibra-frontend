@@ -163,8 +163,12 @@
                     </div>
                   </div>
                   <div class="form-group pt-3">
-                    <el-button :loading="loading" native-type="submit">Next</el-button>
-                    <el-button :loading="loading" @click="goTo2" native-type="button">Skip</el-button>
+                    <el-button
+                      :loading="loading"
+                      @click.prevent="submitGovt"
+                      native-type="submit"
+                    >Save</el-button>
+                    <el-button :loading="loading" @click="goTo2" native-type="button">Next</el-button>
                   </div>
                 </form>
 
@@ -254,8 +258,8 @@
 
                     <div class="form-group pt-3 pl-3">
                       <el-button :loading="loading" @click="goTo1" native-type="button">Back</el-button>
-                      <el-button :loading="loading" @click="goTo3" native-type="button">Skip</el-button>
-                      <el-button :loading="loading" native-type="submit">Next</el-button>
+                      <el-button :loading="loading" native-type="submit">Save</el-button>
+                      <el-button :loading="loading" @click="goTo3" native-type="button">Next</el-button>
                     </div>
                   </div>
                 </form>
