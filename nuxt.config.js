@@ -73,7 +73,7 @@ export default {
    */
   plugins: [
     "~/plugins/",
-    // { src: '~/plugins/fb-sdk.js', mode: 'client' },
+    { src: "~/plugins/fb-sdk.js", mode: "client" },
     { src: "~/plugins/vuex-persist", mode: "client" },
     { src: "~/plugins/apollo.config.js", mode: "client" },
     { src: "~/plugins/apollo-overrides.js", mode: "client" },

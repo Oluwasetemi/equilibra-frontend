@@ -152,7 +152,7 @@
                         v-for="(govt, i) in governments"
                         :key="i"
                         :label="govt.name.toUpperCase()"
-                        :value="govt.id"
+                        :value="govt._id"
                       ></el-option>
                     </el-select>
                     <template v-if="$v.payload.government.$dirty">
@@ -257,7 +257,7 @@ export default {
     edit_room(room) {
       // this.payload = { ...room };
       let { name, government, _id } = room;
-      this.payload = { name, government: government.id, _id };
+      this.payload = { name, government: government._id, _id };
       this.$router.push({ query: { update: room._id } });
     },
     disabledDate(date) {

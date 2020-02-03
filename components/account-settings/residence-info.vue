@@ -48,7 +48,7 @@
                         <option
                           v-for="(govt, i) in governments"
                           :key="i"
-                          :value="govt.id"
+                          :value="govt._id"
                         >{{govt.name | formatStateName}}</option>
                       </select>
                       <img
@@ -82,7 +82,7 @@
                         <option
                           v-for="(govt, i) in localGovernments"
                           :key="i"
-                          :value="govt.id"
+                          :value="govt._id"
                         >{{govt.name}}</option>
                       </select>
                       <img
@@ -270,7 +270,7 @@ export default {
     stateOfResidence() {
       const self = this;
       return this.$store.getters["governments"].filter(
-        govt => self.getUser.stateOfResidence == govt.id
+        govt => self.getUser.stateOfResidence == govt._id
       )[0];
     },
     governments() {
