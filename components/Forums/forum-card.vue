@@ -109,7 +109,7 @@ export default {
             this.$toast.error(data.graphQLErrors[0].message);
             return;
           }
-          this.getRoomByGovernmentId(data.id);
+          this.getRoomByGovernmentId(data._id);
         })
         .catch(err => {});
     }
